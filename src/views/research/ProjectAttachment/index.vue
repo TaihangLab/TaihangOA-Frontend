@@ -18,15 +18,27 @@
     </transition>
 
     <el-card shadow="hover">
+      <template #header>
+        <el-row :gutter="10">
+          <el-col :span="1.5">
+            <el-button type="primary" plain icon="Plus" @click="handleAdd()">新增</el-button>
+          </el-col>
+          <el-col :span="1.5">
+            <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+          </el-col>
+          <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
+        </el-row>
+      </template>
+
       <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="文件名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="300" />
-        <el-table-column label="文件格式" prop="roleName" :show-overflow-tooltip="true" width="300" />
-        <el-table-column label="上传人" prop="roleName" :show-overflow-tooltip="true" width="250" />
-        <el-table-column label="所属大事记" prop="roleName" :show-overflow-tooltip="true" width="300" />
-        <el-table-column label="文件上传时间" prop="roleName" :show-overflow-tooltip="true" width="250" />
+        <el-table-column label="文件名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="文件格式" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="上传人" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="所属大事记" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="文件上传时间" prop="roleName" :show-overflow-tooltip="true" min-width="15%" />
 
-        <el-table-column fixed="right" label="操作" width="50">
+        <el-table-column fixed="right" label="操作" min-width="5%">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 0" content="下载" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Download" @click="handleUpdate(scope.row)"></el-button>

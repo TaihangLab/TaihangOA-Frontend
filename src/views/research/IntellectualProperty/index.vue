@@ -47,13 +47,13 @@
 
       <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="关联项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="250" />
-        <el-table-column label="知识产权名" prop="roleName" :show-overflow-tooltip="true" width="300" />
-        <el-table-column label="知识产权类别" prop="roleName" :show-overflow-tooltip="true" width="300" />
-        <el-table-column label="知识产权状态" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="获得日期" prop="roleName" :show-overflow-tooltip="true" width="250" />
+        <el-table-column label="关联项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="知识产权名" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="知识产权类别" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="知识产权状态" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
+        <el-table-column label="获得日期" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
 
-        <el-table-column fixed="right" label="操作" width="150">
+        <el-table-column fixed="right" label="操作" min-width="10%">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 0" content="详情" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
