@@ -56,7 +56,7 @@
         </el-table-column>
       </el-table>
 
-      <memberDetail :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" ></memberDetail>
+      <memberDetail :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event"></memberDetail>
 
       <pagination
         v-if="total > 0"
@@ -66,10 +66,7 @@
         @pagination="getList"
       />
     </el-card>
-
-
   </div>
-
 </template>
 
 <script setup name="Role" lang="ts">
@@ -78,17 +75,14 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import memberDetail from '../components/memberDetails/memberDetails.vue'
-
+import memberDetail from '../components/memberDetails/memberDetails.vue';
 
 const isDetailDialogVisible = ref(false);
 
 const showDetailDialog = (row: RoleVO) => {
-
   // 在这里可以设置要显示的详情内容
   isDetailDialogVisible.value = true;
 };
-
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -237,7 +231,6 @@ const handleAdd = () => {
   dialog.visible = true;
   dialog.title = '添加角色';
 };
-
 
 /** 修改角色 */
 const handleUpdate = async (row?: RoleVO) => {
