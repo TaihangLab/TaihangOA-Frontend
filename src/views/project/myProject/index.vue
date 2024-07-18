@@ -77,7 +77,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import ProjectDetailDialog from '@/views/project/myProject/ProjectDetailDialog.vue';
+import ProjectDetailDialog from '@/views/project/components/ProjectDetailDialog/ProjectDetailDialog.vue';
 
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
