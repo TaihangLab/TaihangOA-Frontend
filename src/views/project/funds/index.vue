@@ -53,7 +53,7 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="支出录入" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="FolderAdd" @click="handleUpdate(scope.row)"></el-button>
@@ -64,6 +64,8 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
 
       <pagination
         v-if="total > 0"
@@ -81,6 +83,7 @@ import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updat
 import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
+import { ref } from 'vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -99,12 +102,20 @@ const deptExpand = ref(true);
 const deptNodeAll = ref(false);
 const deptOptions = ref<DeptTreeOption[]>([]);
 
+const isDetailDialogVisible = ref(false);
+
 /** 数据范围选项*/
 const queryFormRef = ref<ElFormInstance>();
 const roleFormRef = ref<ElFormInstance>();
 const dataScopeRef = ref<ElFormInstance>();
 const menuRef = ref<ElTreeInstance>();
 const deptRef = ref<ElTreeInstance>();
+
+const showDetailDialog = (row: RoleVO) => {
+  // 在这里可以设置要显示的详情内容
+  isDetailDialogVisible.value = true;
+  console.log(isDetailDialogVisible.value);
+};
 
 const initForm: RoleForm = {
   roleId: undefined,
