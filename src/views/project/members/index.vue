@@ -19,7 +19,6 @@
         </el-card>
       </div>
     </transition>
-
     <el-card shadow="hover">
       <template #header>
         <el-row :gutter="10">
@@ -51,11 +50,13 @@
         <el-table-column fixed="right" label="操作" width="50">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
+
+      <memberDetail :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" ></memberDetail>
 
       <pagination
         v-if="total > 0"
@@ -65,7 +66,10 @@
         @pagination="getList"
       />
     </el-card>
+
+
   </div>
+
 </template>
 
 <script setup name="Role" lang="ts">
@@ -73,6 +77,18 @@ import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updat
 import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
+import { ref } from 'vue';
+import memberDetail from '../components/memberDetails/memberDetails.vue'
+
+
+const isDetailDialogVisible = ref(false);
+
+const showDetailDialog = (row: RoleVO) => {
+
+  // 在这里可以设置要显示的详情内容
+  isDetailDialogVisible.value = true;
+};
+
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -221,6 +237,8 @@ const handleAdd = () => {
   dialog.visible = true;
   dialog.title = '添加角色';
 };
+
+
 /** 修改角色 */
 const handleUpdate = async (row?: RoleVO) => {
   reset();
