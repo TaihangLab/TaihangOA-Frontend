@@ -4,22 +4,22 @@
       <div v-show="showSearch" class="mb-[10px]">
         <el-card shadow="hover">
           <el-form ref="queryFromRef" :model="queryParams" :inline="true">
-            <el-form-item label="项目名称" prop="roleName" label-width="150">
+            <el-form-item label="项目名称" prop="roleName">
               <el-input v-model="queryParams.roleName" placeholder="请选择项目" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="知识产权名" prop="roleKey" label-width="150">
+            <el-form-item label="知识产权名" label-width="90px" prop="roleKey">
               <el-input v-model="queryParams.roleKey" placeholder="请输入知识产权名" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="知识产权类别" prop="roleKey" label-width="150">
+            <el-form-item label="知识产权类别" label-width="100px" prop="roleKey">
               <el-select v-model="queryParams.roleKey" placeholder="请输入知识产权名" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="知识产权状态" prop="roleKey" label-width="150">
+            <el-form-item label="知识产权状态" label-width="100px" prop="roleKey">
               <el-input v-model="queryParams.roleKey" placeholder="请选择知识产权状态" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="项目成员" prop="roleKey" label-width="150">
+            <el-form-item label="项目成员" prop="roleKey">
               <el-input v-model="queryParams.roleKey" placeholder="请选择项目成员" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="获得日期" prop="roleKey" label-width="150">
+            <el-form-item label="获得日期" label-width="90px" prop="roleKey">
               <el-input v-model="queryParams.roleKey" placeholder="请输入查询范围" clearable @keyup.enter="handleQuery" />
             </el-form-item>
 

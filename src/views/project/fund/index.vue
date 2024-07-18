@@ -5,11 +5,15 @@
         <el-card shadow="hover">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="项目成员" prop="roleName">
-              <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
+              <el-input v-model="queryParams.roleName" placeholder="请输入项目名称" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="项目名称" prop="roleKey">
-              <el-input v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable @keyup.enter="handleQuery" />
+            <el-form-item label="课题名称" prop="roleKey">
+              <el-input v-model="queryParams.roleKey" placeholder="请输入课题名称" clearable @keyup.enter="handleQuery" />
             </el-form-item>
+            <el-form-item label="项目级别" prop="roleKey">
+              <el-input v-model="queryParams.roleKey" placeholder="请输入项目级别" clearable @keyup.enter="handleQuery" />
+            </el-form-item>
+
 
             <el-form-item>
               <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -35,23 +39,27 @@
 
       <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="姓名" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="所属公司" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="所属部门" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="职称" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="学历" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="当前参与项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="当前参与国家级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="当前参与省部级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与国家级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与省部级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与自研项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
+        <el-table-column label="项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="课题名称" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="项目级别" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="项目经费总额（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="专项经费预算（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="专项经费已支付（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="专项经费未支付（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="自筹经费预算（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="自筹经费已支付（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
+        <el-table-column label="自筹经费未支付（万元）" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
 
-        <el-table-column fixed="right" label="操作" width="50">
+        <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip v-if="scope.row.roleId !== 1" content="支出录入" placement="top">
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="FolderAdd" @click="handleUpdate(scope.row)"></el-button>
+            </el-tooltip>
+            <el-tooltip v-if="scope.row.roleId !== 1" content="经费到账" placement="top">
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="handleUpdate(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
