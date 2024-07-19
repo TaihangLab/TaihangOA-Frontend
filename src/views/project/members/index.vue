@@ -23,9 +23,6 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd()">新增</el-button>
-          </el-col>
-          <el-col :span="1.5">
             <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
@@ -170,14 +167,6 @@ const resetQuery = () => {
   queryFormRef.value?.resetFields();
   handleQuery();
 };
-/**删除按钮操作 */
-const handleDelete = async (row?: RoleVO) => {
-  const roleids = row?.roleId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除角色编号为' + roleids + '数据项目');
-  await delRole(roleids);
-  getList();
-  proxy?.$modal.msgSuccess('删除成功');
-};
 
 /** 导出按钮操作 */
 const handleExport = () => {
@@ -224,14 +213,6 @@ const reset = () => {
   roleFormRef.value?.resetFields();
 };
 
-/** 添加角色 */
-const handleAdd = () => {
-  reset();
-  getMenuTreeselect();
-  dialog.visible = true;
-  dialog.title = '添加角色';
-};
-
 /** 修改角色 */
 const handleUpdate = async (row?: RoleVO) => {
   reset();
@@ -254,24 +235,6 @@ const getRoleMenuTreeselect = (roleId: string | number) => {
     menuOptions.value = res.data.menus;
     return res.data;
   });
-};
-/** 树权限（展开/折叠）*/
-const handleCheckedTreeExpand = (value: boolean, type: string) => {
-  if (type == 'menu') {
-    let treeList = menuOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (menuRef.value) {
-        menuRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  } else if (type == 'dept') {
-    let treeList = deptOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (deptRef.value) {
-        deptRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  }
 };
 
 onMounted(() => {
