@@ -45,7 +45,7 @@
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="关联项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
         <el-table-column label="知识产权名" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
