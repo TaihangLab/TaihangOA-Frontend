@@ -87,7 +87,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import IpDetailDialog from '@/views/research/components/IpDetail/IpDetails.vue';
+import IpDetailDialog from '@/views/research/components/IpDetails/IpDetails.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
