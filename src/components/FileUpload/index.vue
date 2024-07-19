@@ -55,9 +55,9 @@ const props = defineProps({
   // 数量限制
   limit: propTypes.number.def(5),
   // 大小限制(MB)
-  fileSize: propTypes.number.def(5),
+  fileSize: propTypes.number.def(500),
   // 文件类型, 例如['png', 'jpg', 'jpeg']
-  fileType: propTypes.array.def(['doc', 'xls', 'ppt', 'txt', 'pdf']),
+  fileType: propTypes.array.def(['doc', 'xls', 'ppt', 'txt', 'pdf', 'rar', 'zip']),
   // 是否显示提示
   isShowTip: propTypes.bool.def(true)
 });
