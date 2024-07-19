@@ -30,7 +30,7 @@
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="文件名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />
         <el-table-column label="文件格式" prop="roleName" :show-overflow-tooltip="true" min-width="20%" />

@@ -29,7 +29,7 @@
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="200" />
         <el-table-column label="所属公司" prop="roleName" :show-overflow-tooltip="true" width="200" />

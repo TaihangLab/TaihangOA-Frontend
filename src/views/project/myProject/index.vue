@@ -22,7 +22,7 @@
       <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
     </el-card>
   </div>
-  <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+  <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column label="项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="150" />
     <el-table-column label="项目牵头单位" prop="roleKey" :show-overflow-tooltip="true" width="200" />
@@ -80,6 +80,7 @@ import { ref } from 'vue';
 import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 
 const showSearch = ref(true);
+const loading = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 // const loading = ref(true);
 const isDetailDialogVisible = ref(false);
