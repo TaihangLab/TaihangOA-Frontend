@@ -55,8 +55,11 @@
             <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
             </el-tooltip>
+            <el-tooltip v-if="scope.row.roleId !== 1" content="查看支出" placement="top">
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="view" @click="showExpenditureCheckDialog(scope.row)"></el-button>
+            </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="支出录入" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="FolderAdd" @click="handleUpdate(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="document-add" @click="showExpenditureEditDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="经费到账" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="handleUpdate(scope.row)"></el-button>
@@ -66,6 +69,10 @@
       </el-table>
 
       <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
+      <ExpenditureCheck :visible="isExpenditureCheckDialogVisible" @close:visible="isExpenditureCheckDialogVisible = $event"
+                        @update:visible="isExpenditureCheckDialogVisible = $event"/>
+      <ExpenditureEntry :visible="isExpenditureEditDialogVisible" @close:visible="isExpenditureEditDialogVisible = $event"
+                        @update:visible="isExpenditureEditDialogVisible = $event"/>
 
       <pagination
         v-if="total > 0"
@@ -84,6 +91,8 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
+import ExpenditureCheck from '../components/funds/expenditureCheck.vue'
+import ExpenditureEntry from '../components/funds/expenditureEntry.vue'
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -103,6 +112,9 @@ const deptNodeAll = ref(false);
 const deptOptions = ref<DeptTreeOption[]>([]);
 
 const isDetailDialogVisible = ref(false);
+const isExpenditureCheckDialogVisible = ref(false);
+const isExpenditureEditDialogVisible = ref(false);
+
 
 /** 数据范围选项*/
 const queryFormRef = ref<ElFormInstance>();
@@ -116,6 +128,18 @@ const showDetailDialog = (row: RoleVO) => {
   isDetailDialogVisible.value = true;
   console.log(isDetailDialogVisible.value);
 };
+
+const showExpenditureCheckDialog = (row: RoleVO) => {
+  isExpenditureCheckDialogVisible.value = true;
+};
+
+const showExpenditureEditDialog = (row: RoleVO) => {
+  isExpenditureEditDialogVisible.value = true;
+}
+
+
+
+
 
 const initForm: RoleForm = {
   roleId: undefined,
