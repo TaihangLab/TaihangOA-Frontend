@@ -66,9 +66,9 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, defineEmits } from 'vue';
 import request from "@/utils/request";
-import ExpenditureAdd from "./ExpenditureAdd.vue";
+import ExpenditureAdd from "./expenditureAdd.vue";
 import { fundsAndBalance } from "@/api/project/funds";
-import ExpenditureImport from "./ExpenditureImport.vue";
+import ExpenditureImport from "./expenditureImport.vue";
 
 
 const props = defineProps<{
