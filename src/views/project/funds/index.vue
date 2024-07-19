@@ -82,7 +82,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import FundsDetail from '@/views/project/components/funds/FundsDetail.vue';
+import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 

@@ -174,7 +174,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
-import ProjectFunds from '@/views/project/components/ProjectDetailDialog/ProjectFunds.vue';
+import ProjectFunds from '@/views/project/components/ProjectDetail/ProjectFunds.vue';
 
 const props = defineProps<{ visible: boolean }>();
 const emits = defineEmits(['update:visible']);

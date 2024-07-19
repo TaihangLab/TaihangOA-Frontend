@@ -75,7 +75,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import memberDetail from '../components/memberDetails/memberDetails.vue';
+import memberDetail from '@/views/project/components/MemberDetails/MemberDetails.vue';
 
 const isDetailDialogVisible = ref(false);
 
