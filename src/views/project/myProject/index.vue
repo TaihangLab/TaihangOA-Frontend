@@ -11,7 +11,7 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd()">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="showDetailDialog()">新增</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button type="warning" disabled plain icon="Download" @click="handleExport">导出</el-button>
@@ -19,6 +19,7 @@
           <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
         </el-row>
       </template>
+      <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
     </el-card>
   </div>
   <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
@@ -56,7 +57,7 @@
           <el-button link type="primary" icon="Notebook" @click="handleUpdate(scope.row)"></el-button>
         </el-tooltip>
         <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
-          <el-button link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
+          <el-button link type="primary" icon="Reading" @click="showDetailDialog()"></el-button>
         </el-tooltip>
         <el-tooltip v-if="scope.row.roleId !== 1" content="修改" placement="top">
           <el-button link type="primary" icon="Edit" @click="handleDelete(scope.row)"></el-button>
@@ -71,10 +72,22 @@
 
 <script setup lang="ts">
 import { parseTime } from '@/utils/ruoyi';
+import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from '@/api/system/role';
+import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
+import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
+import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
+import { ref } from 'vue';
+import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 // const loading = ref(true);
+const isDetailDialogVisible = ref(false);
+const showDetailDialog = () => {
+  // 在这里可以设置要显示的详情内容
+  isDetailDialogVisible.value = true;
+  console.log(isDetailDialogVisible.value);
+};
 </script>
 
 <style scoped lang="scss"></style>

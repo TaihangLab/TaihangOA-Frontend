@@ -13,8 +13,6 @@
             <el-form-item label="项目级别" prop="roleKey">
               <el-input v-model="queryParams.roleKey" placeholder="请输入项目级别" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-
-
             <el-form-item>
               <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
               <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -37,7 +35,7 @@
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
+      <el-table ref="roleTableRef" v-loading="loading" :data="roleList" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
         <el-table-column label="课题名称" prop="roleName" :show-overflow-tooltip="true" min-width="10%" />
@@ -53,7 +51,7 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showFundsDetailDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="查看支出" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="view" @click="showExpenditureCheckDialog(scope.row)"></el-button>
@@ -73,6 +71,7 @@
                         @update:visible="isExpenditureCheckDialogVisible = $event"/>
       <ExpenditureEntry :visible="isExpenditureEditDialogVisible" @close:visible="isExpenditureEditDialogVisible = $event"
                         @update:visible="isExpenditureEditDialogVisible = $event"/>
+      <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />
 
       <pagination
         v-if="total > 0"
@@ -91,6 +90,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
+import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
 import ExpenditureCheck from '../components/funds/expenditureCheck.vue'
 import ExpenditureEntry from '../components/funds/expenditureEntry.vue'
 
@@ -115,6 +115,7 @@ const isDetailDialogVisible = ref(false);
 const isExpenditureCheckDialogVisible = ref(false);
 const isExpenditureEditDialogVisible = ref(false);
 
+const isFundsDetailVisible = ref(false);
 
 /** 数据范围选项*/
 const queryFormRef = ref<ElFormInstance>();
@@ -123,10 +124,10 @@ const dataScopeRef = ref<ElFormInstance>();
 const menuRef = ref<ElTreeInstance>();
 const deptRef = ref<ElTreeInstance>();
 
-const showDetailDialog = (row: RoleVO) => {
+const showFundsDetailDialog = (row: RoleVO) => {
   // 在这里可以设置要显示的详情内容
-  isDetailDialogVisible.value = true;
-  console.log(isDetailDialogVisible.value);
+  isFundsDetailVisible.value = true;
+  console.log(isFundsDetailVisible.value);
 };
 
 const showExpenditureCheckDialog = (row: RoleVO) => {

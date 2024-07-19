@@ -56,7 +56,7 @@
         <el-table-column fixed="right" label="操作" min-width="10%">
           <template #default="scope">
             <el-tooltip v-if="scope.row.roleId !== 0" content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="handleUpdate(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 0" content="修改" placement="top-start">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
@@ -67,6 +67,8 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <ipDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
 
       <pagination
         v-if="total > 0"
@@ -84,6 +86,8 @@ import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updat
 import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
+import { ref } from 'vue';
+import IpDetailDialog from '@/views/research/components/IpDetails/IpDetails.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -153,9 +157,7 @@ const dialog = reactive<DialogOption>({
   title: ''
 });
 
-/**
- * 查询角色列表
- */
+/** 查询角色列表 */
 const getList = () => {
   loading.value = true;
   listRole(proxy?.addDateRange(queryParams.value, dateRange.value)).then((res) => {
@@ -165,9 +167,7 @@ const getList = () => {
   });
 };
 
-/**
- * 搜索按钮操作
- */
+/** 搜索按钮操作 */
 const handleQuery = () => {
   queryParams.value.pageNum = 1;
   getList();
@@ -306,6 +306,14 @@ const handleCheckedTreeNodeAll = (value: any, type: string) => {
     deptRef.value?.setCheckedNodes(value ? (deptOptions.value as any) : []);
   }
 };
+
+//弹窗
+const showDetailDialog = (row: RoleVO) => {
+  // 在这里可以设置要显示的详情内容
+  isDetailDialogVisible.value = true;
+  console.log(isDetailDialogVisible.value);
+};
+const isDetailDialogVisible = ref(false);
 
 onMounted(() => {
   getList();
