@@ -1,6 +1,6 @@
 <template>
   <el-dialog :model-value="visible" title="详情" width="50%" @update:model-value="updateVisible">
-    <el-collapse>
+    <el-collapse v-model="activeNames[0]" accordion>
       <el-collapse-item name="1">
         <template #title>
           <span>知识产权成员列表</span>
@@ -14,12 +14,14 @@
           <el-table-column label="部门名称" :resizable="false" align="center" prop="deptName"> </el-table-column>
         </el-table>
       </el-collapse-item>
+    </el-collapse>
+    <el-collapse v-model="activeNames[1]" accordion>
       <el-collapse-item name="2">
         <template #title>
           <span>知识产权附件列表</span>
         </template>
         <el-table ref="multipleTable" border style="width: 100%" :row-style="{ height: '50px' }" :cell-style="{ padding: '0px' }">
-          <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="500">
+          <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="450">
             <template> {{}} </template>
           </el-table-column>
           <el-table-column :label="'文件格式'" align="center" prop="fileSuffix" :show-overflow-tooltip="true" width="120">
@@ -47,7 +49,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, watch } from 'vue';
+
+let activeNames = ['1', '2'];
 
 const props = defineProps<{ visible: boolean }>();
 const emits = defineEmits(['update:visible']);
@@ -64,11 +68,11 @@ const confirmDialog = () => {
   // 处理确定逻辑
   emits('update:visible', false);
 };
-// 使用 watch 监听 updateVisible 变化并打印到控制台
+
 watch(
   () => props.visible,
   (newValue, oldValue) => {
-    console.log('Visible changed:', newValue);
+    activeNames = ['1', '2'];
   }
 );
 </script>
