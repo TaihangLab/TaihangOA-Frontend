@@ -7,18 +7,18 @@ export function getExpenditure(bodyData: BodyData, queryParam: QueryParam): Prom
     url: '/project/funds/getProjectExpenditure',
     method: 'post',
     data: bodyData,
-    params: queryParam,
+    params: queryParam
   });
 }
 
 // 删除支出信息
-export function rollbackExpenditure(expenditureId: number): Promise<ResponseData<any>> {
+export function rollbackExpenditure(expenditureId: string): Promise<ResponseData<any>> {
   return request({
     url: '/project/funds/rollback',
     method: 'get',
     params: {
-      expenditureId: expenditureId,
-    },
+      expenditureId: expenditureId
+    }
   });
 }
 
@@ -28,7 +28,7 @@ export function exportExpenditure(projectExpenditureBO: ProjectExpenditureBO): P
     url: '/project/funds/exportData',
     method: 'post',
     data: projectExpenditureBO,
-    responseType: 'blob',
+    responseType: 'blob'
   });
 }
 
@@ -38,8 +38,8 @@ export function fundsAndBalance(projectId: number | string): Promise<ResponseDat
     url: '/project/balance/fundsAndBalance',
     method: 'get',
     params: {
-      projectId: projectId,
-    },
+      projectId: projectId
+    }
   });
 }
 
@@ -49,7 +49,7 @@ export function getFundsReceived(projectId: number | string): Promise<ResponseDa
     url: '/project/funds/getFundsReceived',
     method: 'get',
     params: {
-      projectId: projectId,
-    },
+      projectId: projectId
+    }
   });
 }

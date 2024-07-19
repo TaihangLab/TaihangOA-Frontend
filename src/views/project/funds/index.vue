@@ -57,7 +57,13 @@
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="view" @click="showExpenditureCheckDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="支出录入" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="document-add" @click="showExpenditureEditDialog(scope.row)"></el-button>
+              <el-button
+                v-hasPermi="['system:role:edit']"
+                link
+                type="primary"
+                icon="document-add"
+                @click="showExpenditureEditDialog(scope.row)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="经费到账" placement="top">
               <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="handleUpdate(scope.row)"></el-button>
@@ -67,10 +73,16 @@
       </el-table>
 
       <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
-      <ExpenditureCheck :visible="isExpenditureCheckDialogVisible" @close:visible="isExpenditureCheckDialogVisible = $event"
-                        @update:visible="isExpenditureCheckDialogVisible = $event"/>
-      <ExpenditureEntry :visible="isExpenditureEditDialogVisible" @close:visible="isExpenditureEditDialogVisible = $event"
-                        @update:visible="isExpenditureEditDialogVisible = $event"/>
+      <ExpenditureCheck
+        :visible="isExpenditureCheckDialogVisible"
+        @close:visible="isExpenditureCheckDialogVisible = $event"
+        @update:visible="isExpenditureCheckDialogVisible = $event"
+      />
+      <ExpenditureEntry
+        :visible="isExpenditureEditDialogVisible"
+        @close:visible="isExpenditureEditDialogVisible = $event"
+        @update:visible="isExpenditureEditDialogVisible = $event"
+      />
       <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />
 
       <pagination
@@ -91,8 +103,8 @@ import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/t
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
 import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
-import ExpenditureCheck from '../components/funds/expenditureCheck.vue'
-import ExpenditureEntry from '../components/funds/expenditureEntry.vue'
+import ExpenditureCheck from '../components/Funds/expenditureCheck.vue';
+import ExpenditureEntry from '../components/Funds/expenditureEntry.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -136,11 +148,7 @@ const showExpenditureCheckDialog = (row: RoleVO) => {
 
 const showExpenditureEditDialog = (row: RoleVO) => {
   isExpenditureEditDialogVisible.value = true;
-}
-
-
-
-
+};
 
 const initForm: RoleForm = {
   roleId: undefined,

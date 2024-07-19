@@ -1,12 +1,12 @@
-import request from "@/utils/request";
-import { Params, Data, UserDetails } from './types'
+import request from '@/utils/request';
+import { Params, Data, UserDetails } from './types';
 
 // 获取用户详情
 export function getDetails(params: Params): Promise<UserDetails> {
   return request({
     url: '/project/user/getDetails',
     method: 'get',
-    params: params,
+    params: params
   });
 }
 
@@ -16,6 +16,6 @@ export function getAllList(data: Data, params: Params): Promise<any> {
     url: '/project/user/getAllList',
     method: 'post',
     data: data,
-    params: params,
+    params: params
   });
 }
