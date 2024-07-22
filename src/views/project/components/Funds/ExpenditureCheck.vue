@@ -150,6 +150,7 @@ import { ref, watch, defineProps, defineEmits } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { exportExpenditure, fundsAndBalance, getExpenditure, rollbackExpenditure } from '@/api/project/funds';
 import { formatDate } from '@/utils';
+import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{
   projectId: number | string;
@@ -161,6 +162,7 @@ const updateVisible = (value: boolean) => {
 };
 const closeExpenselCheckDialog = () => {
   emits('close:visible', false);
+  resetQuery();
 };
 
 const loading = ref(true);
@@ -178,65 +180,9 @@ const filters = ref({
   endDate: ''
 });
 const subjectData = ref({
-  firstLevelSubjects: [
-    { value: '0', label: '设备费' },
-    { value: '1', label: '业务费' },
-    { value: '2', label: '劳务费' },
-    { value: '3', label: '材料费' },
-    { value: '4', label: '科研活动费' },
-    { value: '5', label: '科研服务费' },
-    { value: '6', label: '人员和劳务补助费' },
-    { value: '7', label: '绩效支出' },
-    { value: '8', label: '管理费' },
-    { value: '9', label: '房屋租赁费' },
-    { value: '10', label: '日常水电暖费' },
-    { value: '11', label: '资料费' },
-    { value: '12', label: '数据样本采集费' },
-    { value: '13', label: '测试化验加工费' },
-    { value: '14', label: '燃料动力费' },
-    { value: '15', label: '办公费' },
-    { value: '16', label: '印刷/出版费' },
-    { value: '17', label: '知识产权事务费' },
-    { value: '18', label: '车辆使用费' },
-    { value: '19', label: '差旅费' },
-    { value: '20', label: '会议/会务费' },
-    { value: '21', label: '专家咨询费' },
-    { value: '22', label: '其他费用' }
-  ],
-  secondLevelSubjects: [
-    { value: '0', label: '购置设备费' },
-    { value: '1', label: '试制设备费' },
-    { value: '2', label: '设备升级改造费' },
-    { value: '3', label: '设备租赁费' },
-    { value: '4', label: '材料费' },
-    { value: '5', label: '资料费' },
-    { value: '6', label: '数据样本采集费' },
-    { value: '7', label: '测试化验加工费' },
-    { value: '8', label: '燃料动力费' },
-    { value: '9', label: '办公费' },
-    { value: '10', label: '印刷/出版费' },
-    { value: '11', label: '知识产权事务费' },
-    { value: '12', label: '车辆使用费' },
-    { value: '13', label: '出版/文献/信息传播/知识产权事务费' },
-    { value: '14', label: '差旅费' },
-    { value: '15', label: '会议/会务费' },
-    { value: '16', label: '国内协作费' },
-    { value: '17', label: '国际合作交流费' },
-    { value: '18', label: '专家咨询费' },
-    { value: '19', label: '人员劳务费' },
-    { value: '20', label: '会议/差旅/国际合作与交流费' },
-    { value: '21', label: '无' }
-  ],
-  thirdLevelSubjects: [
-    { value: '0', label: '无' },
-    { value: '1', label: '知识产权事务费' },
-    { value: '2', label: '印刷打印制作费' },
-    { value: '3', label: '文献数据库费' },
-    { value: '4', label: '信息传播费' },
-    { value: '5', label: '会议费' },
-    { value: '6', label: '差旅费' },
-    { value: '7', label: '国际合作费' }
-  ]
+  firstLevelSubjects: [],
+  secondLevelSubjects: [],
+  thirdLevelSubjects: []
 });
 const selectedExpenditures = ref<any[]>([]);
 
@@ -247,6 +193,39 @@ watch(
   },
   { immediate: true }
 );
+
+const getFirstLevelSubject = () => {
+  getDicts('pro_first_subject').then((resp) => {
+    resp.data.forEach((item) => {
+      subjectData.value.firstLevelSubjects.push({
+        value: item.dictValue,
+        label: item.dictLabel
+      });
+    });
+  });
+};
+
+const getSecondLevelSubject = () => {
+  getDicts('pro_second_subject').then((resp) => {
+    resp.data.forEach((item) => {
+      subjectData.value.secondLevelSubjects.push({
+        value: item.dictValue,
+        label: item.dictLabel
+      });
+    });
+  });
+};
+
+const getThirdLevelSubjects = () => {
+  getDicts('pro_third_subject').then((resp) => {
+    resp.data.forEach((item) => {
+      subjectData.value.thirdLevelSubjects.push({
+        value: item.dictValue,
+        label: item.dictLabel
+      });
+    });
+  });
+};
 
 function formatDateFn(date: string): string {
   const parts = date.split('-');
@@ -367,6 +346,12 @@ function handleExport() {
       ElMessage.error('导出支出信息失败，请稍后重试！');
     });
 }
+
+onMounted(() => {
+  getFirstLevelSubject();
+  getSecondLevelSubject();
+  getThirdLevelSubjects();
+});
 </script>
 
 <style scoped>
