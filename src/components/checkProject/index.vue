@@ -27,13 +27,14 @@
     </el-form-item>
     <el-form-item label="立项时间">
       <el-date-picker
-        v-model:value="projectEstablishTime"
+        v-model="projectEstablishTime"
         type="daterange"
         unlink-panels
         clearable
         start-placeholder="请输入查询范围"
         end-placeholder="如：2000-01-01"
         value-format="yyyy-MM-dd"
+        range-separator="至"
         :picker-options="pickerOptions"
         @change="getList"
         @keyup.enter="handleQuery"
@@ -41,13 +42,14 @@
     </el-form-item>
     <el-form-item label="项目计划验收时间" label-width="125px">
       <el-date-picker
-        v-model:value="projectScheduledCompletionTime"
+        v-model="projectScheduledCompletionTime"
         type="daterange"
         unlink-panels
         clearable
         start-placeholder="请输入查询范围"
         end-placeholder="如：2000-01-01"
         value-format="yyyy-MM-dd"
+        range-separator="至"
         :picker-options="pickerOptions"
         @change="getList"
         @keyup.enter="handleQuery"
