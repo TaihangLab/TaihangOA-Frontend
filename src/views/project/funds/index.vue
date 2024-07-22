@@ -103,8 +103,8 @@ import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/t
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
 import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
-import ExpenditureCheck from '../components/Funds/expenditureCheck.vue';
-import ExpenditureEntry from '../components/Funds/expenditureEntry.vue';
+import ExpenditureCheck from '../components/Funds/ExpenditureCheck.vue';
+import ExpenditureEntry from '../components/Funds/ExpenditureEntry.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
