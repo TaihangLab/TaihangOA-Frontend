@@ -64,7 +64,7 @@
         >
         </el-table-column>
         <el-table-column :resizable="false" align="center" prop="amount" width="150px">
-          <template #header="scope">
+          <template #header>
             <div style="text-align: center">
               <span>金额</span>
               <span style="font-size: 12px; color: #f56c6c">（元）</span>
@@ -88,15 +88,15 @@
 <script setup lang="ts">
 import { defineProps, ref, watch, defineEmits } from 'vue';
 import request from '@/utils/request';
-import ExpenditureAdd from './expenditureAdd.vue';
+import ExpenditureAdd from './ExpenditureAdd.vue';
 import { fundsAndBalance } from '@/api/project/funds';
-import ExpenditureImport from './expenditureImport.vue';
+import ExpenditureImport from './ExpenditureImport.vue';
 
 const props = defineProps<{
   projectId: number | null;
   visible: boolean;
 }>();
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible', 'close:visible']);
 const closeExpenselEditDialog = () => {
   emits('close:visible', false);
 };
