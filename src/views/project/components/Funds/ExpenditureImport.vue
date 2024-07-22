@@ -37,7 +37,7 @@
 import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{ visible: boolean }>();
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible', 'close:visible']);
 const fileTemp = ref(null); // 存储用户选择的文件
 
 const closeExpenselImportDialog = () => {

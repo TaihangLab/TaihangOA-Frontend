@@ -74,11 +74,13 @@
 
       <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
       <ExpenditureCheck
+        :projectId="Number(projectId)"
         :visible="isExpenditureCheckDialogVisible"
         @close:visible="isExpenditureCheckDialogVisible = $event"
         @update:visible="isExpenditureCheckDialogVisible = $event"
       />
       <ExpenditureEntry
+        :projectId="Number(projectId)"
         :visible="isExpenditureEditDialogVisible"
         @close:visible="isExpenditureEditDialogVisible = $event"
         @update:visible="isExpenditureEditDialogVisible = $event"

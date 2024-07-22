@@ -53,9 +53,9 @@
           </el-col>
           <el-col :span="8">
             <el-form-item style="width: 80%">
-              <el-button type="primary" icon="search" size="mini" @click="handleQuery">搜索</el-button>
-              <el-button icon="refresh" size="mini" @click="resetQuery">重置</el-button>
-              <el-button type="success" icon="download" size="mini" @click="handleExport">导出</el-button>
+              <el-button type="primary" icon="search" size="small" @click="handleQuery">搜索</el-button>
+              <el-button icon="refresh" size="small" @click="resetQuery">重置</el-button>
+              <el-button type="success" icon="download" size="small" @click="handleExport">导出</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -63,7 +63,6 @@
       <el-table
         ref="multipleTable"
         :data="expenditureEntry"
-        border
         border
         style="width: 100%; max-height: 800px; overflow-y: auto"
         :row-style="{ height: '50px' }"
@@ -121,7 +120,7 @@
           <template #default="scope">
             <el-button
               v-hasPermi="['project:expense:cancel']"
-              size="mini"
+              size="small"
               type="text"
               icon="el-icon-refresh-left"
               @click="confirmDeleteExpenditure(scope.row.expenditureId)"
@@ -156,7 +155,7 @@ const props = defineProps<{
   projectId: number | string;
   visible: boolean;
 }>();
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible', 'close:visible']);
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
