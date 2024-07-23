@@ -21,6 +21,7 @@
       </template>
       <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" />
       <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
+      <MilestoneAdd :visible="isAddMilestoneDialogVisible" @update:visible="isAddMilestoneDialogVisible = $event" />
     </el-card>
   </div>
   <el-table ref="roleTableRef" v-loading="loading" :data="projectList" border @selection-change="handleSelectionChange">
@@ -55,7 +56,7 @@
     <el-table-column fixed="right" label="操作" width="180">
       <template #default="scope">
         <el-tooltip v-if="scope.row.roleId !== 1" content="大事记" placement="top">
-          <el-button link type="primary" icon="Notebook" @click="handleUpdate(scope.row)"></el-button>
+          <el-button link type="primary" icon="Notebook" @click="shouMilestoneDialog()"></el-button>
         </el-tooltip>
         <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
           <el-button link type="primary" icon="Reading" @click="showDetailDialog()"></el-button>
@@ -77,6 +78,7 @@ import { ref } from 'vue';
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
+import MilestoneAdd from '@/views/project/components/Milestone/MilestoneAdd.vue';
 
 interface Project {
   roleId: any;
@@ -91,6 +93,7 @@ const loading = ref(false);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
+const isAddMilestoneDialogVisible = ref(false);
 
 const projectList = ref<Project[]>([
   {
@@ -139,6 +142,11 @@ const handleExport = () => {
 
 const getList = () => {
   console.log('获取项目列表');
+};
+
+const shouMilestoneDialog = () => {
+  isAddMilestoneDialogVisible.value = true;
+  console.log('显示里程碑弹窗', isAddMilestoneDialogVisible.value);
 };
 </script>
 
