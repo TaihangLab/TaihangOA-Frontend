@@ -30,13 +30,29 @@
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectSpecialFund v-show="stepID===3" :cards1="cards1Form" :cards2="cards2Form" :table-data="tableDataForm"
-                              :cards3="cards3Form" ref="projectSpecialFund"></ProjectSpecialFund>
+          <ProjectSpecialFund
+            :visible="isSpecialFundDialogVisible"
+            @update:visible="isSpecialFundDialogVisible = $event"
+            v-show="stepID === 3"
+            ref="projectSpecialFund"
+            :cards1="cards1Form"
+            :cards2="cards2Form"
+            :table-data="tableDataForm"
+            :cards3="cards3Form"
+          ></ProjectSpecialFund>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectSelfFund v-show="stepID===4" :cards1="zcCards1Form" :cards2="zcCards2Form" :table-data="zcTableDataForm"
-                           :cards3="zcCards3Form" ref="projectSelfFund"></ProjectSelfFund>
+          <ProjectSelfFund
+            :visible="isSelfFundDialogVisible"
+            @update:visible="isSelfFundDialogVisible = $event"
+            v-show="stepID === 4"
+            ref="projectSelfFund"
+            :cards1="zcCards1Form"
+            :cards2="zcCards2Form"
+            :table-data="zcTableDataForm"
+            :cards3="zcCards3Form"
+          ></ProjectSelfFund>
         </el-collapse-transition>
 
         <el-collapse-transition>
@@ -79,6 +95,8 @@
 import { defineProps, defineEmits, watch } from 'vue';
 import ProjectFunds from '@/views/project/components/ProjectDetail/ProjectFunds.vue';
 import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
+import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
+import ProjectSelfFund from '@/views/project/components/ProjectDetail/ProjectSelfFund.vue';
 // import { Loading, Message } from 'element-ui';
 // import { addProject, getProject, updateProject } from '@/views/project/components/project';
 // import { resetObject } from '@/views/project/components/utils';
@@ -109,6 +127,8 @@ const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
 const emits = defineEmits(['update:visible']);
 const isInfoDialogVisible = ref(false);
+const isSpecialFundDialogVisible = ref(false);
+const isSelfFundDialogVisible = ref(false);
 
 const stepID = ref(0);
 const isStepHover = ref(false);
