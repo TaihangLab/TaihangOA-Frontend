@@ -23,7 +23,7 @@
       <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
     </el-card>
   </div>
-  <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
+  <el-table ref="roleTableRef" v-loading="loading" :data="projectList" border @selection-change="handleSelectionChange">
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column label="项目名称" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="150" />
     <el-table-column label="项目牵头单位" prop="roleKey" :show-overflow-tooltip="true" width="200" />
@@ -73,20 +73,41 @@
 
 <script setup lang="ts">
 import { parseTime } from '@/utils/ruoyi';
-import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from '@/api/system/role';
-import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
-import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
-import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
+import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
+
+interface Project {
+  roleId: any;
+  roleName: string;
+  roleKey: string;
+  createTime: string;
+  // 其他属性...
+}
 
 const showSearch = ref(true);
 const loading = ref(false);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-// const loading = ref(true);
 const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
+
+const projectList = ref<Project[]>([
+  {
+    roleId: 2,
+    roleName: '项目A',
+    roleKey: '单位A',
+    createTime: '2024-07-01 10:00:00'
+  },
+  {
+    roleId: 3,
+    roleName: '项目B',
+    roleKey: '单位B',
+    createTime: '2024-07-02 11:00:00'
+  }
+  // 可以添加更多的测试数据...
+]);
+
 const showDetailDialog = () => {
   // 在这里可以设置要显示的详情内容
   isDetailDialogVisible.value = true;
@@ -94,6 +115,30 @@ const showDetailDialog = () => {
 
 const showAddDialog = () => {
   isAddDialogVisible.value = true;
+};
+
+const handleUpdate = (row: Project) => {
+  console.log('更新项目:', row);
+};
+
+const handleDelete = (row: Project) => {
+  console.log('删除项目:', row);
+};
+
+const handleDataScope = (row: Project) => {
+  console.log('数据范围:', row);
+};
+
+const handleSelectionChange = (selection: Project[]) => {
+  console.log('选中的项目:', selection);
+};
+
+const handleExport = () => {
+  console.log('导出数据');
+};
+
+const getList = () => {
+  console.log('获取项目列表');
 };
 </script>
 
