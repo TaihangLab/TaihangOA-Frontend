@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" fullscreen @update:model-value="updateVisible" title="新增项目">
+  <el-dialog :model-value="visible" fullscreen title="新增项目" @update:model-value="updateVisible">
     <el-container>
       <el-header>
         <el-card shadow="hover">
@@ -12,60 +12,58 @@
       <el-main style="margin-top: 20px">
         <el-collapse-transition>
           <ProjectInfo
-            :visible="isInfoDialogVisible"
-            @update:visible="isInfoDialogVisible = $event"
             v-show="stepID === 0"
-            :form="projectInfoForm"
             ref="projectInfo"
+            :visible="isInfoDialogVisible"
+            :form="projectInfoForm"
+            @update:visible="isInfoDialogVisible = $event"
           ></ProjectInfo>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectMember2 v-show="stepID===1" :form="projectMemberForm" ref="projectMember"
-          ></ProjectMember2>
+          <ProjectMember2 v-show="stepID === 1" ref="projectMember" :form="projectMemberForm"></ProjectMember2>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectFunds v-show="stepID===2" :form="projectFundsForm" ref="projectFunds"></ProjectFunds>
+          <ProjectFunds v-show="stepID === 2" ref="projectFunds" :form="projectFundsForm"></ProjectFunds>
         </el-collapse-transition>
 
         <el-collapse-transition>
           <ProjectSpecialFund
-            :visible="isSpecialFundDialogVisible"
-            @update:visible="isSpecialFundDialogVisible = $event"
             v-show="stepID === 3"
             ref="projectSpecialFund"
+            :visible="isSpecialFundDialogVisible"
             :cards1="cards1Form"
             :cards2="cards2Form"
             :table-data="tableDataForm"
             :cards3="cards3Form"
+            @update:visible="isSpecialFundDialogVisible = $event"
           ></ProjectSpecialFund>
         </el-collapse-transition>
 
         <el-collapse-transition>
           <ProjectSelfFund
-            :visible="isSelfFundDialogVisible"
-            @update:visible="isSelfFundDialogVisible = $event"
             v-show="stepID === 4"
             ref="projectSelfFund"
+            :visible="isSelfFundDialogVisible"
             :cards1="zcCards1Form"
             :cards2="zcCards2Form"
             :table-data="zcTableDataForm"
             :cards3="zcCards3Form"
+            @update:visible="isSelfFundDialogVisible = $event"
           ></ProjectSelfFund>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <FundsSource v-show="stepID===5" :form="fundsSourceForm" ref="fundsSource"></FundsSource>
+          <FundsSource v-show="stepID === 5" ref="fundsSource" :form="fundsSourceForm"></FundsSource>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectIndicator v-show="stepID===6" :form="projectIndicatorForm"
-                            ref="projectIndicator"></ProjectIndicator>
+          <ProjectIndicator v-show="stepID === 6" ref="projectIndicator" :form="projectIndicatorForm"></ProjectIndicator>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectPlan v-show="stepID===7" :form="projectPlanForm" ref="projectPlanForm"></ProjectPlan>
+          <ProjectPlan v-show="stepID === 7" ref="projectPlanForm" :form="projectPlanForm"></ProjectPlan>
         </el-collapse-transition>
 
         <!--            <el-collapse-transition>-->
@@ -73,19 +71,17 @@
         <!--            </el-collapse-transition>-->
 
         <el-collapse-transition>
-          <OtherAttachment v-show="stepID===8" :form="otherAttachmentForm"
-                           ref="otherAttachment"></OtherAttachment>
+          <OtherAttachment v-show="stepID === 8" ref="otherAttachment" :form="otherAttachmentForm"></OtherAttachment>
         </el-collapse-transition>
         <el-collapse-transition>
-          <ProjectProgress v-show="stepID===9" :form="projectProgressForm"
-                           ref="projectProgress"></ProjectProgress>
+          <ProjectProgress v-show="stepID === 9" ref="projectProgress" :form="projectProgressForm"></ProjectProgress>
         </el-collapse-transition>
       </el-main>
 
       <el-footer>
-        <el-button v-show="stepID > 0" style="margin-top: 12px;" @click="previous">上一步</el-button>
-        <el-button style="margin-top: 12px;" @click="next" type="primary">{{ nextButtonText }}</el-button>
-        <el-button v-show="stepID < 10" style="margin-top: 12px;" @click="submit" type="success">现在提交</el-button>
+        <el-button v-show="stepID > 0" style="margin-top: 12px" @click="previous">上一步</el-button>
+        <el-button style="margin-top: 12px" type="primary" @click="next">{{ nextButtonText }}</el-button>
+        <el-button v-show="stepID < 10" style="margin-top: 12px" type="success" @click="submit">现在提交</el-button>
       </el-footer>
     </el-container>
   </el-dialog>
@@ -180,20 +176,8 @@ onMounted(async () => {
       categoryOption2.value = categoryOptions2;
       categoryOption4.value = categoryOptions4;
       categoryOption5.value = categoryOptions5;
-      reorganizeData(
-        categoryOption1.value,
-        projectAllFundsForm.value,
-        cards1Form.value,
-        cards2Form.value,
-        tableDataForm.value
-      );
-      reorganizeData(
-        categoryOption2.value,
-        projectAllFundsForm.value,
-        zcCards1Form.value,
-        zcCards2Form.value,
-        zcTableDataForm.value
-      );
+      reorganizeData(categoryOption1.value, projectAllFundsForm.value, cards1Form.value, cards2Form.value, tableDataForm.value);
+      reorganizeData(categoryOption2.value, projectAllFundsForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
       reorganizeJJData(categoryOption4.value, projectAllFundsForm.value, cards3Form.value);
       reorganizeJJData(categoryOption5.value, projectAllFundsForm.value, zcCards3Form.value);
     });
