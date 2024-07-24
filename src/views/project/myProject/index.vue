@@ -19,7 +19,14 @@
           <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
         </el-row>
       </template>
-      <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" />
+      <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" update-id="projectAdd" />
+      <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
+      <MilestoneAddDialog :visible="isAddMilestoneDialogVisible" @update:visible="isAddMilestoneDialogVisible = $event" update-id="milestoneAdd" />
+      <MilestoneDetailDialog
+        :visible="isMilestoneDetailDialogVisible"
+        @update:visible="isMilestoneDetailDialogVisible = $event"
+        update-id="milestoneDetail"
+      />
     </el-card>
   </div>
   <el-table ref="roleTableRef" v-loading="loading" :data="projectList" border @selection-change="handleSelectionChange">
@@ -53,8 +60,11 @@
 
     <el-table-column fixed="right" label="操作" width="180">
       <template #default="scope">
-        <el-tooltip v-if="scope.row.roleId !== 1" content="大事记" placement="top">
-          <el-button link type="primary" icon="Notebook" @click="shouMilestoneDialog()"></el-button>
+        <el-tooltip v-if="scope.row.roleId !== 1" content="查看大事记" placement="top">
+          <el-button link type="primary" icon="Notebook" @click="showMilestoneDetailDialog()"></el-button>
+        </el-tooltip>
+        <el-tooltip v-if="scope.row.roleId !== 1" content="新增大事记" placement="top">
+          <el-button link type="primary" icon="DocumentAdd" @click="showMilestoneAddDialog()"></el-button>
         </el-tooltip>
         <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
           <el-button link type="primary" icon="Reading" @click="showDetailDialog()"></el-button>
@@ -65,7 +75,6 @@
         <el-tooltip v-if="scope.row.roleId !== 1" content="删除" placement="top">
           <el-button link type="primary" icon="Delete" @click="handleDataScope(scope.row)"></el-button>
         </el-tooltip>
-        <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
       </template>
     </el-table-column>
   </el-table>
@@ -77,14 +86,14 @@ import { ref } from 'vue';
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
-import MilestoneAdd from '@/views/project/components/Milestone/MilestoneAdd.vue';
+import MilestoneAddDialog from '@/views/project/components/Milestone/MilestoneAdd.vue';
+import MilestoneDetailDialog from '@/views/project/components/Milestone/MilestoneDetail.vue';
 
 interface Project {
   roleId: any;
   roleName: string;
   roleKey: string;
   createTime: string;
-  // 其他属性...
 }
 
 const showSearch = ref(true);
@@ -94,34 +103,29 @@ const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
 const isAddMilestoneDialogVisible = ref(false);
+const isMilestoneDetailDialogVisible = ref(false);
 
 const projectList = ref<Project[]>([
   {
     roleId: 2,
     roleName: '项目A',
     roleKey: '单位A',
-    createTime: '2024-07-01 10:00:00'
+    createTime: '2024-07-01'
   },
   {
     roleId: 3,
     roleName: '项目B',
     roleKey: '单位B',
-    createTime: '2024-07-02 11:00:00'
+    createTime: '2024-07-02'
   }
-  // 可以添加更多的测试数据...
 ]);
 
 const showDetailDialog = () => {
-  // 在这里可以设置要显示的详情内容
   isDetailDialogVisible.value = true;
 };
 
 const showAddDialog = () => {
   isAddDialogVisible.value = true;
-};
-
-const handleUpdate = (row: Project) => {
-  console.log('更新项目:', row);
 };
 
 const handleDelete = (row: Project) => {
@@ -144,9 +148,13 @@ const getList = () => {
   console.log('获取项目列表');
 };
 
-const shouMilestoneDialog = () => {
+const showMilestoneAddDialog = () => {
   isAddMilestoneDialogVisible.value = true;
   console.log('显示里程碑弹窗', isAddMilestoneDialogVisible.value);
+};
+
+const showMilestoneDetailDialog = () => {
+  isMilestoneDetailDialogVisible.value = true;
 };
 </script>
 
