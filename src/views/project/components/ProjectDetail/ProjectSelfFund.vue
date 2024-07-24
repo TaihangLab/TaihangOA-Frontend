@@ -1,148 +1,152 @@
 <template>
-  <div>
-    <el-card shadow="hover">
-      <template #header>
-        <div class="card-header-content"><i class="el-icon-caret-right"></i> 直接经费（万元） <i class="el-icon-caret-left"></i></div>
-      </template>
-      <el-card
-        v-for="(card1, index1) in $props.cards1"
-        :key="index1"
-        shadow="hover"
-        class="custom-card"
-        @mouseover="setButtonShowList1(index1, true)"
-        @mouseleave="setButtonShowList1(index1, false)"
-      >
+  <el-row>
+    <el-col :span="16">
+      <el-card shadow="never">
         <template #header>
-          <div class="header-container">
-            <el-button
-              v-show="data.isButtonShowList1[index1]"
-              class="remove3-button"
-              icon="CirclePlus"
-              circle
-              type="success"
-              plain
-              @click="addCard()"
-            ></el-button>
-            <el-select v-model="card1.value" class="select-container" placeholder="请选择一级目录" size="default">
-              <el-option v-for="option in categoryOptions2" :key="option.value" :label="option.label" :value="option.value"></el-option>
-            </el-select>
-            <el-input v-model="card1.content" class="custom-input" type="number" size="default"></el-input>
-            <el-button v-show="data.isButtonShowList1[index1]" icon="Remove" circle type="danger" plain @click="removeCard(index1)"></el-button>
-            <el-button v-show="data.isButtonShowList1[index1]" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
-          </div>
+          <div class="card-header-content"><i class="el-icon-caret-right"></i> 直接经费（万元） <i class="el-icon-caret-left"></i></div>
         </template>
-        <div v-if="card1.value && filteredSecondOptions(index1)" class="card-container">
-          <el-card
-            v-for="(card2, index2) in cards2[index1]"
-            :key="index2"
-            shadow="hover"
-            style="width: 25%"
-            @mouseover="setButtonShowList2(index1, index2, true)"
-            @mouseleave="setButtonShowList2(index1, index2, false)"
-          >
-            <template #header>
-              <div class="header-container content-container">
-                <el-button
-                  v-show="data.isButtonShowList2[index1][index2]"
-                  class="remove-button"
-                  icon="Remove"
-                  circle
-                  type="danger"
-                  plain
-                  @click="removeCard2(index1, index2)"
-                ></el-button>
-                <el-select v-model="card2.value" class="select-container" placeholder="请选择二级目录" size="small">
-                  <el-option
-                    v-for="option in filteredSecondOptions(index1)"
-                    :key="option.value"
-                    :label="option.label"
-                    :value="option.value"
-                  ></el-option>
-                </el-select>
-                <el-input v-model="card2.content" class="custom-input" type="number" size="small"></el-input>
-                <el-button
-                  v-show="data.isButtonShowList2[index1][index2]"
-                  icon="CirclePlus"
-                  circle
-                  type="success"
-                  plain
-                  @click="addRow(index1, index2)"
-                ></el-button>
+        <el-card
+          v-for="(card1, index1) in $props.cards1"
+          :key="index1"
+          shadow="never"
+          class="custom-card"
+          @mouseover="setButtonShowList1(index1, true)"
+          @mouseleave="setButtonShowList1(index1, true)"
+        >
+          <template #header>
+            <div class="header-container">
+              <!-- 左侧按钮 -->
+              <div class="left-buttons">
+                <el-tooltip class="box-item" effect="dark" content="新增一级目录" placement="top">
+                  <el-button class="remove3-button" icon="FolderAdd" plain @click="addCard()"></el-button>
+                </el-tooltip>
+                <el-tooltip class="box-item" effect="dark" content="删除一级目录" placement="top">
+                  <el-button class="remove4-button" v-show="true" icon="FolderDelete" plain @click="removeCard(index1)"></el-button>
+                </el-tooltip>
               </div>
-            </template>
-            <el-table
-              v-if="isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2]"
-              :data="tableData[index1] && tableData[index1][index2]"
-              style="width: 100%"
+
+              <!-- 中间选择框和输入框 -->
+              <div class="center-inputs">
+                <el-select v-model="card1.value" class="select-container" placeholder="请选择一级目录" size="default">
+                  <el-option v-for="option in categoryOptions2" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                </el-select>
+                <el-input v-model="card1.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+              </div>
+
+              <!-- 右侧按钮 -->
+              <div class="right-buttons">
+                <el-tooltip class="box-item" effect="dark" content="新增二级目录" placement="top">
+                  <el-button class="remove5-button" v-show="true" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
+                </el-tooltip>
+                <el-tooltip class="box-item" effect="dark" content="删除二级目录" placement="top">
+                  <el-button v-show="true" class="remove-button" icon="Remove" circle type="danger" plain @click="removeCard2(index1, index2)"></el-button>
+                </el-tooltip>
+              </div>
+            </div>
+          </template>
+          <div v-if="card1.value && filteredSecondOptions(index1)" class="card-container">
+            <el-card
+              v-for="(card2, index2) in cards2[index1]"
+              :key="index2"
+              shadow="always"
+              style="width: 50%"
+              @mouseover="setButtonShowList2(index1, index2, true)"
+              @mouseleave="setButtonShowList2(index1, index2, true)"
             >
-              <el-table-column label="三级标签" align="center" :width="150">
-                <template #default="scope">
-                  <el-select v-model="scope.row.value" placeholder="请选择三级级目录" size="small">
+              <template #header>
+                <div class="header-container content-container">
+                  <el-select v-model="card2.value" class="select-container" placeholder="请选择二级目录" size="default">
                     <el-option
-                      v-for="category in filteredThirdOptions(index1, index2)"
-                      :key="category.value"
-                      :label="category.label"
-                      :value="category.value"
+                      v-for="option in filteredSecondOptions(index1)"
+                      :key="option.value"
+                      :label="option.label"
+                      :value="option.value"
                     ></el-option>
                   </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column label="涉及金额" align="center" :width="140">
-                <template #default="scope">
-                  <el-input v-model="scope.row.content" type="number" size="small" style="width: 100%"></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column label="操作" align="center">
-                <template #default="scope">
-                  <el-button type="danger" icon="Remove" circle plain @click="removeRow(index1, index2, scope.$index)"></el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+                  <el-input v-model="card2.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+                </div>
+              </template>
+              <el-table
+                v-if="isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2]"
+                :data="tableData[index1] && tableData[index1][index2]"
+                style="width: 100%"
+              >
+                <el-table-column label="三级标签" align="center" :width="150">
+                  <template #default="scope">
+                    <el-select v-model="scope.row.value" placeholder="请选择三级级目录" size="small">
+                      <el-option
+                        v-for="category in filteredThirdOptions(index1, index2)"
+                        :key="category.value"
+                        :label="category.label"
+                        :value="category.value"
+                      ></el-option>
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column label="涉及金额" align="center" :width="140">
+                  <template #default="scope">
+                    <el-input v-model="scope.row.content" placeholder="请输入金额" size="small" style="width: 100%"></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                  <template #default="scope">
+                    <el-tooltip class="box-item" effect="dark" content="增加三级目录" placement="top">
+                      <el-button v-show="true" icon="CirclePlus" circle type="success" plain @click="addRow(index1, index2)"></el-button>
+                    </el-tooltip>
+                    <el-tooltip class="box-item" effect="dark" content="删除三级目录" placement="top">
+                      <el-button type="danger" icon="Remove" circle plain @click="removeRow(index1, index2, scope.$index)"></el-button>
+                    </el-tooltip>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </div>
+        </el-card>
+      </el-card>
+    </el-col>
+    <el-col :span="8">
+      <el-card shadow="hover">
+        <template #header>
+          <div class="card-header-content"><i class="el-icon-caret-right"></i> 间接经费（万元） <i class="el-icon-caret-left"></i></div>
+        </template>
+        <div class="card-container">
+          <el-card
+            v-for="(card, index) in cards3"
+            :key="index"
+            shadow="hover"
+            class="custom-card"
+            @mouseover="setButtonShowList3(index, true)"
+            @mouseleave="setButtonShowList3(index, false)"
+          >
+            <div class="header-container content-container" style="margin-top: -8px">
+              <el-button
+                v-show="data.isButtonShowList3[index]"
+                class="remove1-button"
+                icon="Remove"
+                circle
+                type="danger"
+                plain
+                @click="removeIndirectCost(index)"
+              ></el-button>
+              <el-select v-model="card.value" class="select-container" placeholder="请选择经费条目" size="default">
+                <el-option v-for="option in categoryOptions5" :key="option.value" :label="option.label" :value="option.value"></el-option>
+              </el-select>
+              <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+              <el-button
+                v-show="data.isButtonShowList3[index]"
+                class="remove2-button"
+                icon="circlePlus"
+                circle
+                type="success"
+                plain
+                @click="addIndirectCost"
+              ></el-button>
+            </div>
           </el-card>
         </div>
       </el-card>
-    </el-card>
-    <el-card style="margin-top: 4px" shadow="hover">
-      <template #header>
-        <div class="card-header-content"><i class="el-icon-caret-right"></i> 间接经费（万元） <i class="el-icon-caret-left"></i></div>
-      </template>
-      <div class="card-container">
-        <el-card
-          v-for="(card, index) in cards3"
-          :key="index"
-          shadow="hover"
-          style="width: 25%; height: 50px"
-          @mouseover="setButtonShowList3(index, true)"
-          @mouseleave="setButtonShowList3(index, false)"
-        >
-          <div class="header-container content-container" style="margin-top: -8px">
-            <el-button
-              v-show="data.isButtonShowList3[index]"
-              class="remove1-button"
-              icon="Remove"
-              circle
-              type="danger"
-              plain
-              @click="removeIndirectCost(index)"
-            ></el-button>
-            <el-select v-model="card.value" class="select-container" placeholder="请选择经费条目" size="small">
-              <el-option v-for="option in categoryOptions5" :key="option.value" :label="option.label" :value="option.value"></el-option>
-            </el-select>
-            <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" type="number" size="small"></el-input>
-            <el-button
-              v-show="data.isButtonShowList3[index]"
-              class="remove2-button"
-              icon="circlePlus"
-              circle
-              type="success"
-              plain
-              @click="addIndirectCost"
-            ></el-button>
-          </div>
-        </el-card>
-      </div>
-    </el-card>
-  </div>
+    </el-col>
+  </el-row>
 </template>
 
 <script setup lang="ts">
@@ -172,6 +176,7 @@ function setButtonShowList1(index1: number, show: boolean) {
 }
 
 function setButtonShowList2(index1: number, index2: number, show: boolean) {
+  index2 = props.tableData[index1].length - 1;
   data.isButtonShowList2[index1][index2] = show;
 }
 
@@ -229,6 +234,8 @@ const addCard2 = (index1: number) => {
   data.isTableVisible[index1].push(false);
   props.cards2[index1].push({ value: '', content: '' });
   props.tableData[index1].push([]);
+  let size = props.tableData[index1].length;
+  addRow(index1, size - 1);
 };
 
 const removeCard = (index1: number) => {
@@ -243,9 +250,12 @@ const removeCard = (index1: number) => {
 };
 
 const removeCard2 = (index1: number, index2: number) => {
-  props.cards2[index1].splice(index2, 1);
-  props.tableData[index1].splice(index2, 1);
-  data.isTableVisible[index1].splice(index2, 1);
+  // props.cards2[index1].splice(index2, 1);
+  // props.tableData[index1].splice(index2, 1);
+  // data.isTableVisible[index1].splice(index2, 1);
+  props.cards2[index1].pop();
+  props.tableData[index1].pop();
+  data.isTableVisible[index1].pop();
 };
 
 const addRow = (index1: number, index2: number) => {
@@ -258,8 +268,10 @@ const addRow = (index1: number, index2: number) => {
   }
   props.tableData[index1][index2].push({ value: '' });
   data.isTableVisible[index1][index2] = true; // 确保可见性为true
+  console.log('index1', index1);
   console.log('index2', index2);
   console.log('this.tableData[index1][index2]', props.tableData[index1][index2]);
+  console.log('data.isTableVisible[index1][index2]', data.isTableVisible[index1][index2]);
 };
 
 const removeRow = (index1: number, index2: number, rowIndex: number) => {
@@ -334,7 +346,13 @@ watch(
   margin-right: -10px;
 }
 .remove3-button {
-  margin-right: 10px;
+  color: blue;
+}
+.remove4-button {
+  color: red;
+}
+.remove5-button {
+  right: 5px;
 }
 .el-button {
   border: none;
@@ -343,10 +361,10 @@ watch(
 }
 .select-container {
   margin-right: 10px;
-  width: 180px;
+  width: 200px;
 }
 .custom-input {
-  width: 120px; /* 设置合适的宽度值 */
+  width: 150px; /* 设置合适的宽度值 */
   margin-right: 10px;
 }
 .custom-divider {
@@ -355,10 +373,26 @@ watch(
 .custom-card {
   border-color: #c9c9c9;
   margin-top: 2px;
+
 }
 .header-container {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 分配左右两侧的空间 */
+  padding: 0 20px; /* 添加左右内边距 */
+}
+.left-buttons,
+.right-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 按钮之间的间距 */
+}
+.center-inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* 选择框和输入框之间的间距 */
+  flex-grow: 1; /* 使中间部分占满可用空间 */
+  justify-content: center; /* 居中对齐 */
 }
 .content-container {
   justify-content: center; /* 将内容水平居中对齐 */
@@ -369,7 +403,9 @@ watch(
 }
 .card-header-content {
   text-align: center; /* 文本居中 */
-  color: #fb6113; /* 字体颜色为蓝色 */
-  font-size: 15px; /* 增大字体大小 */
+  color: rgba(0, 0, 0, 0.8); /* 字体颜色为黑色 */
+  font-size: 15px; /* 字体大小 */
+  font-weight: bold; /* 字体加粗 */
+  font-family: 'Microsoft YaHei', sans-serif; /* 字体设置为微软雅黑 */
 }
 </style>

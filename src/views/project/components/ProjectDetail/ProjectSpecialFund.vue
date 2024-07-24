@@ -26,7 +26,7 @@
             <el-select v-model="card1.value" class="select-container" placeholder="请选择一级目录" size="default">
               <el-option v-for="option in categoryOptions1" :key="option.value" :label="option.label" :value="option.value"></el-option>
             </el-select>
-            <el-input v-model="card1.content" class="custom-input" type="number" size="default"></el-input>
+            <el-input v-model="card1.content" class="custom-input" size="default"></el-input>
             <el-button v-show="data.isButtonShowList1[index1]" icon="Remove" circle type="danger" plain @click="removeCard(index1)"></el-button>
             <el-button v-show="data.isButtonShowList1[index1]" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
           </div>
@@ -59,7 +59,7 @@
                     :value="option.value"
                   ></el-option>
                 </el-select>
-                <el-input v-model="card2.content" class="custom-input" type="number" size="small"></el-input>
+                <el-input v-model="card2.content" class="custom-input" size="small"></el-input>
                 <el-button
                   v-show="data.isButtonShowList2[index1][index2]"
                   icon="CirclePlus"
@@ -89,7 +89,7 @@
               </el-table-column>
               <el-table-column label="涉及金额" align="center" :width="140">
                 <template #default="scope">
-                  <el-input v-model="scope.row.content" type="number" size="small" style="width: 100%"></el-input>
+                  <el-input v-model="scope.row.content" size="small" style="width: 100%"></el-input>
                 </template>
               </el-table-column>
               <el-table-column label="操作" align="center">
@@ -128,7 +128,7 @@
             <el-select v-model="card.value" class="select-container" placeholder="请选择经费条目" size="small">
               <el-option v-for="option in categoryOptions4" :key="option.value" :label="option.label" :value="option.value"></el-option>
             </el-select>
-            <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" type="number" size="small"></el-input>
+            <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" size="small"></el-input>
             <el-button
               v-show="data.isButtonShowList3[index]"
               class="remove2-button"
@@ -369,7 +369,9 @@ watch(
 }
 .card-header-content {
   text-align: center; /* 文本居中 */
-  color: #fb6113; /* 字体颜色为蓝色 */
-  font-size: 15px; /* 增大字体大小 */
+  color: #000000; /* 字体颜色为黑色 */
+  font-size: 15px; /* 字体大小 */
+  font-weight: bold; /* 字体加粗 */
+  font-family: 'Microsoft YaHei', sans-serif; /* 字体设置为微软雅黑 */
 }
 </style>
