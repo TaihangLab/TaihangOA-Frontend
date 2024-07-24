@@ -19,7 +19,7 @@
       </template>
       <el-empty v-else :description="'消息为空'"></el-empty>
     </div>
-    <div v-if="newsList.length > 0" class="foot-box" @click="onGoToGiteeClick">云时代官网</div>
+    <div v-if="newsList.length > 0" class="foot-box" @click="onGoToGiteeClick">山西云时代技术有限公司官网</div>
   </div>
 </template>
 

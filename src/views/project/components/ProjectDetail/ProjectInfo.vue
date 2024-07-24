@@ -12,7 +12,6 @@
             <el-input v-model="form.leadingUnit"></el-input>
           </el-form-item>
         </el-col>
-
         <el-col :span="8">
           <el-form-item label-width="120px" label="项目名称" prop="name" :rules="[{ required: true, message: '请输入 项目名称', trigger: 'blur' }]">
             <el-input v-model="form.name"></el-input>
@@ -69,19 +68,6 @@
             <el-input v-model="form.contact"></el-input>
           </el-form-item>
         </el-col>
-        <!--                <el-col :span="8">-->
-        <!--                    <el-form-item label-width="120px" label="推进情况" prop="progressStatus"-->
-        <!--                                  :rules="[{ required: true, message: '请输入 推进情况', trigger: 'change' }]">-->
-        <!--                        <el-select v-model="form.progressStatus" clearable placeholder="请选择">-->
-        <!--                            <el-option-->
-        <!--                                v-for="(item, index) in progressStatus"-->
-        <!--                                :key="index"-->
-        <!--                                :label="item.name"-->
-        <!--                                :value="item.value">-->
-        <!--                            </el-option>-->
-        <!--                        </el-select>-->
-        <!--                    </el-form-item>-->
-        <!--                </el-col>-->
         <el-col :span="8">
           <el-form-item
             label-width="120px"
@@ -105,6 +91,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+
       <el-row :gutter="20" type="flex" justify="left">
         <el-col :span="8">
           <el-form-item
@@ -141,37 +128,6 @@
         </el-col>
       </el-row>
 
-      <!--            <el-row :gutter="20" type="flex" justify="left">-->
-      <!--                <el-col :span="8">-->
-      <!--                    <el-form-item label-width="120px" label="获奖情况" prop="awardStatus">-->
-      <!--                        <el-input v-model="form.awardStatus"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--                <el-col :span="8">-->
-      <!--                    <el-form-item label-width="120px" label="论文情况" prop="paperStatus">-->
-      <!--                        <el-input v-model="form.paperStatus"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--                <el-col :span="8">-->
-      <!--                    <el-form-item label-width="120px" label="专利情况" prop="patentStatus">-->
-      <!--                        <el-input v-model="form.patentStatus"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--            </el-row>-->
-
-      <!--            <el-row :gutter="20" type="flex" justify="left">-->
-      <!--                <el-col :span="8">-->
-      <!--                    <el-form-item label-width="120px" label="软著情况" prop="rzStatus">-->
-      <!--                        <el-input v-model="form.rzStatus"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--                <el-col :span="8">-->
-      <!--                    <el-form-item label-width="120px" label="标准情况" prop="standardStatus">-->
-      <!--                        <el-input v-model="form.standardStatus"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--            </el-row>-->
-
       <el-row :gutter="20" type="flex" justify="left">
         <el-col :span="12">
           <el-form-item label-width="120px" label="合作单位" prop="coopUnit">
@@ -184,20 +140,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-
-      <!--            <el-row :gutter="20" type="flex" justify="left">-->
-      <!--                <el-col :span="12">-->
-      <!--                    <el-form-item label-width="120px" label="意义及必要性" prop="meaning">-->
-      <!--                        <el-input type="textarea" v-model="form.meaning"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-
-      <!--                <el-col :span="12">-->
-      <!--                    <el-form-item label-width="120px" label="完成进度" prop="completionProgress">-->
-      <!--                        <el-input type="textarea" v-model="form.completionProgress"></el-input>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-col>-->
-      <!--            </el-row>-->
 
       <el-row :gutter="20" type="flex" justify="left">
         <el-col :span="24">
