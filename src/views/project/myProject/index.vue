@@ -20,8 +20,6 @@
         </el-row>
       </template>
       <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" />
-      <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
-      <MilestoneAdd :visible="isAddMilestoneDialogVisible" @update:visible="isAddMilestoneDialogVisible = $event" />
     </el-card>
   </div>
   <el-table ref="roleTableRef" v-loading="loading" :data="projectList" border @selection-change="handleSelectionChange">
@@ -67,6 +65,7 @@
         <el-tooltip v-if="scope.row.roleId !== 1" content="删除" placement="top">
           <el-button link type="primary" icon="Delete" @click="handleDataScope(scope.row)"></el-button>
         </el-tooltip>
+        <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
       </template>
     </el-table-column>
   </el-table>
@@ -91,6 +90,7 @@ interface Project {
 const showSearch = ref(true);
 const loading = ref(false);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+// const loading = ref(true);
 const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
 const isAddMilestoneDialogVisible = ref(false);

@@ -146,7 +146,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount } from 'vue';
+import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount, ref } from 'vue';
 import categoryOptions1, { categoryOptions4 } from '@/api/project/funds/fundkeys';
 
 const emits = defineEmits(['update:visible']);

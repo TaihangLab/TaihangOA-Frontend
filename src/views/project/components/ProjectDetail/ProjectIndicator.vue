@@ -13,7 +13,7 @@
         <el-col :span="1" style="text-align: center">
           <el-button
             v-show="index === form.items.length - 1 && isButtonShowList[index]"
-            icon="el-icon-circle-plus"
+            icon="CirclePlus"
             circle
             type="success"
             plain
@@ -44,7 +44,7 @@
         <el-col :span="1" style="text-align: center">
           <el-button
             v-show="form.items.length !== 1 && isButtonShowList[index]"
-            icon="el-icon-remove"
+            icon="RemoveFilled"
             circle
             type="danger"
             plain

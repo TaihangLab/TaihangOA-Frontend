@@ -6,12 +6,18 @@
         :key="index"
         justify="center"
         type="flex"
-        @mouseover="Mouseover(index, true)"
-        @mouseout="Mouseout(index)"
+        @mouseover="Mousedata(index, true)"
+        @mouseout="Mousedata(index, false)"
       >
         <el-col :span="1" class="text-center">
-          <el-button v-show="isButtonShowList[index]" icon="CirclePlus" circle type="success" plain @click="add"></el-button>
-          <!--v-show="index === form.items.length - 1 && isButtonShowList[index]"-->
+          <el-button
+            v-show="index === form.items.length - 1 && data.isButtonShowList[index]"
+            icon="CirclePlus"
+            circle
+            type="success"
+            plain
+            @click="add"
+          ></el-button>
         </el-col>
 
         <el-col :span="12">
@@ -36,8 +42,14 @@
         </el-col>
 
         <el-col :span="1" style="text-align: center">
-          <el-button v-show="true" icon="RemoveFilled" circle type="danger" plain @click="remove(index)"></el-button>
-          <!--v-show="form.items.length !== 1 && isButtonShowList[index]"-->
+          <el-button
+            v-show="form.items.length !== 1 && data.isButtonShowList[index]"
+            icon="RemoveFilled"
+            circle
+            type="danger"
+            plain
+            @click="remove(index)"
+          ></el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -68,9 +80,9 @@ onMounted(() => {
   props.form.items = [{ id: '', role: '' }];
 });
 
-const isButtonShowList = ref([]);
-const id = ref(1);
-const list = ref([]);
+const data = reactive({
+  isButtonShowList: [] as boolean[]
+});
 
 // 新增一条
 function add() {
@@ -79,12 +91,13 @@ function add() {
     id: '',
     role: ''
   });
-  isButtonShowList.value.push(false);
+  data.isButtonShowList.values.push(false);
 }
 // 删除一条
 function remove(index) {
+  // eslint-disable-next-line vue/no-mutating-props
   props.form.items.splice(index, 1);
-  isButtonShowList.value.splice(index, 1);
+  data.isButtonShowList.values.splice(index, 1);
 }
 
 // 重置表单
@@ -138,16 +151,9 @@ function adaptUserData(data) {
   });
 }
 
-function Mouseover(index: number, show: boolean) {
-  isButtonShowList[index] = show;
-  console.log(index);
-  console.log(show);
-};
-const Mouseout = (index) => {
-  isButtonShowList[index] = false;
-  console.log(index);
-  console.log(false);
-};
+function Mousedata(index: number, show: boolean) {
+  data.isButtonShowList[index] = show;
+}
 </script>
 
 <style scoped>
