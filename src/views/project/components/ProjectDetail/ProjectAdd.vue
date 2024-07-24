@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" fullscreen title="新增项目" @update:model-value="updateVisible">
+  <el-dialog :model-value="visible" fullscreen title="新增项目" @update:model-value="updateVisible" @close="reset()">
     <el-container>
       <el-header>
         <el-card shadow="hover">
