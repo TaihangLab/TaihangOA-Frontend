@@ -27,10 +27,10 @@
 
               <!-- 中间选择框和输入框 -->
               <div class="center-inputs">
-                <el-select v-model="card1.value" class="select-container" placeholder="请选择一级目录" size="default">
+                <el-select v-model="card1.value" class="select-container" clearable placeholder="请选择一级目录" size="default">
                   <el-option v-for="option in categoryOptions2" :key="option.value" :label="option.label" :value="option.value"></el-option>
                 </el-select>
-                <el-input v-model="card1.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+                <el-input v-model="card1.content" class="custom-input" clearable placeholder="请输入金额" size="default"></el-input>
               </div>
 
               <!-- 右侧按钮 -->
@@ -39,7 +39,15 @@
                   <el-button class="remove5-button" v-show="true" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
                 </el-tooltip>
                 <el-tooltip class="box-item" effect="dark" content="删除二级目录" placement="top">
-                  <el-button v-show="true" class="remove-button" icon="Remove" circle type="danger" plain @click="removeCard2(index1, index2)"></el-button>
+                  <el-button
+                    v-show="true"
+                    class="remove-button"
+                    icon="Remove"
+                    circle
+                    type="danger"
+                    plain
+                    @click="removeCard2(index1)"
+                  ></el-button>
                 </el-tooltip>
               </div>
             </div>
@@ -55,7 +63,7 @@
             >
               <template #header>
                 <div class="header-container content-container">
-                  <el-select v-model="card2.value" class="select-container" placeholder="请选择二级目录" size="default">
+                  <el-select v-model="card2.value" class="select-container" clearable placeholder="请选择二级目录" size="default">
                     <el-option
                       v-for="option in filteredSecondOptions(index1)"
                       :key="option.value"
@@ -63,7 +71,7 @@
                       :value="option.value"
                     ></el-option>
                   </el-select>
-                  <el-input v-model="card2.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+                  <el-input v-model="card2.content" class="custom-input" clearable placeholder="请输入金额" size="default"></el-input>
                 </div>
               </template>
               <el-table
@@ -73,7 +81,7 @@
               >
                 <el-table-column label="三级标签" align="center" :width="150">
                   <template #default="scope">
-                    <el-select v-model="scope.row.value" placeholder="请选择三级级目录" size="small">
+                    <el-select v-model="scope.row.value" clearable placeholder="请选择三级级目录" size="small">
                       <el-option
                         v-for="category in filteredThirdOptions(index1, index2)"
                         :key="category.value"
@@ -85,7 +93,7 @@
                 </el-table-column>
                 <el-table-column label="涉及金额" align="center" :width="140">
                   <template #default="scope">
-                    <el-input v-model="scope.row.content" placeholder="请输入金额" size="small" style="width: 100%"></el-input>
+                    <el-input v-model="scope.row.content" clearable placeholder="请输入金额" size="small" style="width: 100%"></el-input>
                   </template>
                 </el-table-column>
                 <el-table-column label="操作" align="center">
@@ -94,7 +102,14 @@
                       <el-button v-show="true" icon="CirclePlus" circle type="success" plain @click="addRow(index1, index2)"></el-button>
                     </el-tooltip>
                     <el-tooltip class="box-item" effect="dark" content="删除三级目录" placement="top">
-                      <el-button type="danger" icon="Remove" circle plain @click="removeRow(index1, index2, scope.$index)"></el-button>
+                      <el-button
+                        v-show="scope.$index !== 0"
+                        type="danger"
+                        icon="Remove"
+                        circle
+                        plain
+                        @click="removeRow(index1, index2, scope.$index)"
+                      ></el-button>
                     </el-tooltip>
                   </template>
                 </el-table-column>
@@ -152,8 +167,8 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount } from 'vue';
 import { categoryOptions2, categoryOptions5 } from '@/api/project/funds/fundkeys';
+import { ElMessage } from 'element-plus';
 
-const emits = defineEmits(['update:visible']);
 const props = defineProps<{
   cards1: Array<{ value: string; content: string }>;
   cards2: Array<Array<{ value: string; content: string }>>;
@@ -231,6 +246,11 @@ const addCard = () => {
 };
 
 const addCard2 = (index1: number) => {
+  // 判断一级目录是否选择
+  if (!props.cards1[index1].value) {
+    ElMessage.warning('请选择一级目录');
+    return;
+  }
   data.isTableVisible[index1].push(false);
   props.cards2[index1].push({ value: '', content: '' });
   props.tableData[index1].push([]);
@@ -249,7 +269,7 @@ const removeCard = (index1: number) => {
   }
 };
 
-const removeCard2 = (index1: number, index2: number) => {
+const removeCard2 = (index1: number) => {
   // props.cards2[index1].splice(index2, 1);
   // props.tableData[index1].splice(index2, 1);
   // data.isTableVisible[index1].splice(index2, 1);
@@ -304,6 +324,7 @@ const reset = () => {
   addCard();
   addIndirectCost();
 };
+defineExpose({ reset });
 
 onBeforeMount(() => {
   if (props.cards1.length === 0) {
@@ -311,27 +332,6 @@ onBeforeMount(() => {
     addIndirectCost();
   }
 });
-
-const updateVisible = (value: boolean) => {
-  emits('update:visible', value);
-};
-
-const closeDialog = () => {
-  emits('update:visible', false);
-};
-
-const confirmDialog = () => {
-  // 处理确定逻辑
-  emits('update:visible', false);
-};
-
-let activeNames = 'first';
-watch(
-  () => props.visible,
-  (newValue, oldValue) => {
-    activeNames = 'first';
-  }
-);
 </script>
 
 <style scoped>

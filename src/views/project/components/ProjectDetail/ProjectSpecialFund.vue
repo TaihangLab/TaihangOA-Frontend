@@ -292,6 +292,7 @@ const reset = () => {
   addCard();
   addIndirectCost();
 };
+defineExpose({ reset });
 
 onBeforeMount(() => {
   if (props.cards1.length === 0) {

@@ -175,17 +175,4 @@ const data = reactive({
     { name: '未通过评审', value: 7 }
   ]
 });
-
-const updateVisible = (value: boolean) => {
-  emits('update:visible', value);
-};
-
-const closeDialog = () => {
-  emits('update:visible', false);
-};
-
-const confirmDialog = () => {
-  // 处理确定逻辑
-  emits('update:visible', false);
-};
 </script>

@@ -31,22 +31,24 @@
         <el-collapse-transition>
           <ProjectSpecialFund
             v-show="stepID === 3"
-            ref="projectSpecialFund"
+            ref="projectSpecialFundRef"
             :cards1="cards1Form"
             :cards2="cards2Form"
             :table-data="tableDataForm"
             :cards3="cards3Form"
+            visible
           ></ProjectSpecialFund>
         </el-collapse-transition>
 
         <el-collapse-transition>
           <ProjectSelfFund
             v-show="stepID === 4"
-            ref="projectSelfFund"
+            ref="projectSelfFundRef"
             :cards1="zcCards1Form"
             :cards2="zcCards2Form"
             :table-data="zcTableDataForm"
             :cards3="zcCards3Form"
+            visible
           ></ProjectSelfFund>
         </el-collapse-transition>
 
@@ -81,6 +83,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
+import { resetObject } from '@/api/project/funds/utils';
 import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
 import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
 import ProjectSelfFund from '@/views/project/components/ProjectDetail/ProjectSelfFund.vue';
@@ -91,38 +94,10 @@ import ProjectIndicator from '@/views/project/components/ProjectDetail/ProjectIn
 import ProjectPlan from '@/views/project/components/ProjectDetail/ProjectPlans.vue';
 import OtherAttachment from '@/views/project/components/ProjectDetail/OtherAttachment.vue';
 import ProjectProgress from '@/views/project/components/ProjectDetail/ProjectProgress.vue';
-// import { Loading, Message } from 'element-ui';
-// import { addProject, getProject, updateProject } from '@/views/project/components/project';
-// import { resetObject } from '@/views/project/components/utils';
-// import {
-//   categoryOptions1,
-//   categoryOptions2,
-//   categoryOptions4,
-//   categoryOptions5,
-//   reorganizeData,
-//   reorganizeJJData
-// } from '@/views/project/components/fundkeys';
-
-// import ZCFundsDetail from '@/views/project/components/ZCFundsDetail.vue';
-// import ZXFundsDetail from './ZXFundsDetail.vue';
-// import ProjectMember from '@/views/project/components/ProjectMember.vue';
-// import ProjectMember2 from '@/views/project/components/ProjectMember2.vue';
-// import ProjectIndicator from '@/views/project/components/ProjectIndicator.vue';
-//
-// import FundsSource from '@/views/project/components/FundsSource.vue';
-// import MainAttachment from '@/views/project/components/MainAttachment.vue';
-// import OtherAttachment from '@/views/project/components/OtherAttachment.vue';
-// import ProjectPlan from '@/views/project/components/ProjectPlan.vue';
-// import ProjectProgress from '@/views/project/components/ProjectProgress.vue';
-// import ProjectSpecialFund from '@/views/project/components/ProjectSpecialFund.vue';
-// import ProjectSelfFund from '@/views/project/components/ProjectSelfFund.vue';
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
 const emits = defineEmits(['update:visible']);
-const isInfoDialogVisible = ref(false);
-const isSpecialFundDialogVisible = ref(false);
-const isSelfFundDialogVisible = ref(false);
 
 const stepID = ref(0);
 const isStepHover = ref(false);
@@ -194,32 +169,29 @@ const previous = () => {
   }
 };
 
+const projectSpecialFundRef = ref();
+const projectSelfFundRef = ref();
+
 const reset = () => {
   resetObject(projectInfoForm.value);
-  // @ts-ignore
-  refs.projectMember.reset();
+  // projectMemberRef.value?.reset();
   resetObject(projectFundsForm.value);
   resetObject(zxFundsDetailForm.value); // 弃用
   resetObject(zcFundsDetailForm.value); // 弃用
   resetObject(fundsSourceForm.value);
-  // @ts-ignore
-  refs.projectPlanForm.reset();
-  // @ts-ignore
-  refs.projectIndicator.reset();
-  // @ts-ignore
-  refs.otherAttachment.$refs.fileUpload.reset();
+  // projectPlanRef.value?.reset();
+  // projectIndicatorRef.value?.reset();
+  // otherAttachmentRef.value?.$refs.fileUpload.reset();
   resetObject(projectProgressForm.value);
-  // @ts-ignore
-  refs.projectSpecialFund.reset();
-  // @ts-ignore
-  refs.projectSelfFund.reset();
+  projectSpecialFundRef.value?.reset();
+  projectSelfFundRef.value?.reset();
   stepID.value = 0;
 };
 
 const submit = async () => {
   try {
     // @ts-ignore
-    await refs.projectInfo.$refs.form.validate();
+    await ref.projectInfo.$refs.form.validate();
   } catch (e) {
     Message({
       showClose: true,
