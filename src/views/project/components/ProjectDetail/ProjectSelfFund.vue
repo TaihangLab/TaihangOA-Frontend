@@ -239,7 +239,9 @@ const isTableDataNotEmpty = (index1: number, index2: number) => {
 const addCard = () => {
   const newCard1 = { value: '', content: '' };
   const newCard2: { value: string; content: string }[] = [];
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards1.push(newCard1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2.push(newCard2);
   props.tableData.push([]);
   data.isTableVisible.push([]);
@@ -295,6 +297,7 @@ const addRow = (index1: number, index2: number) => {
 };
 
 const removeRow = (index1: number, index2: number, rowIndex: number) => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1][index2].splice(rowIndex, 1);
   if (props.tableData[index1][index2].length === 0) {
     data.isTableVisible[index1][index2] = false;
@@ -305,11 +308,13 @@ const removeRow = (index1: number, index2: number, rowIndex: number) => {
 };
 
 const addIndirectCost = () => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards3.push({ content: '', value: '' });
 };
 
 const removeIndirectCost = (index: number) => {
   if (props.cards3.length > 1) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards3.splice(index, 1);
   } else {
     console.warn('Cannot delete the last item in cards3');
@@ -317,9 +322,13 @@ const removeIndirectCost = (index: number) => {
 };
 
 const reset = () => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards1.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards3.length = 0;
   addCard();
   addIndirectCost();
