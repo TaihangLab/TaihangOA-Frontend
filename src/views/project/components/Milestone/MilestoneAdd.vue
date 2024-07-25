@@ -20,7 +20,7 @@
           <!--            </el-tag>-->
           <!--          </div>-->
           <el-select v-model="selectedTag" placeholder="请选择标签" style="flex: 1; width: 120px" @change="addTag">
-            <el-option v-for="tag in tagOptions" :key="tag.value" :label="tag.label" :value="tag.label"></el-option>
+            <el-option v-for="tag in projectMilestoneType" :key="tag.projectMilestoneTypeId" :label="tag.projectMilestoneTypeName" :value="tag.projectMilestoneTypeName"></el-option>
           </el-select>
         </div>
       </el-form-item>
@@ -51,6 +51,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, reactive, ref, watch } from 'vue';
 import FileUpload from '@/components/FileUpload/index.vue';
+import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{ visible: boolean; updateId: string }>();
 const emits = defineEmits(['update:visible']);
@@ -66,6 +67,7 @@ const form = reactive({
 const ossids = ref<string[]>([]);
 const tagOptions = ref<{ label: string; value: number }[]>([]);
 const selectedTag = ref<string>('');
+const projectMilestoneType = ref([]);
 
 const rules = {
   milestoneTitle: [{ required: true, message: '请输入名称', trigger: 'blur' }],
@@ -136,6 +138,17 @@ const handleCloseTag = (tag: string) => {
 
 const milestoneCategorySelectList = async () => {
   console.log('选择标签');
+};
+
+const getMilestoneTagOptions = () => {
+  getDicts('pro_milestone_type').then((resp) => {
+    resp.data.forEach((item) => {
+      projectMilestoneType.value.push({
+        projectMilestoneTypeId: item.dictValue,
+        projectMilestoneTypeName: item.dictLabel
+      });
+    });
+  });
 };
 
 const getTagType = (tag: string) => {
@@ -250,6 +263,9 @@ const addMilestone = async () => {
     return;
   }
 };
+onMounted(() => {
+  getMilestoneTagOptions();
+});
 </script>
 
 <style scoped lang="scss">
