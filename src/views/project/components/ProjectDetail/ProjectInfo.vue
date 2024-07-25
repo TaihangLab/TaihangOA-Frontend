@@ -155,7 +155,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, reactive } from 'vue';
 
-const props = defineProps<{ visible: boolean; form: any }>();
+const props = defineProps<{ form: any }>();
 const emits = defineEmits(['update:visible']);
 
 const data = reactive({

@@ -91,7 +91,7 @@
                     </el-select>
                   </template>
                 </el-table-column>
-                <el-table-column label="涉及金额" align="center" :width="140">
+                <el-table-column label="涉及金额" align="center" :width="120">
                   <template #default="scope">
                     <el-input v-model="scope.row.content" clearable placeholder="请输入金额" size="small" style="width: 100%"></el-input>
                   </template>
