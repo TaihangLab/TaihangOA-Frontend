@@ -59,37 +59,43 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, reactive, ref } from 'vue';
+import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
 
 const { proxy } = getCurrentInstance();
 const props = defineProps(['form']);
+const data = reactive({
+  isButtonShowList: [] as boolean[]
+});
 defineExpose({
   reset
 });
 
-props.form.items = [{ date: undefined, task: '' }];
-const data = reactive({
-  isButtonShowList: [] as boolean[]
+onMounted(() => {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.items = [{ date: undefined, task: '' }];
 });
 
 // 新增一条
 function add() {
+  // eslint-disable-next-line vue/no-mutating-props
   props.form.items.push({
     date: undefined,
     task: ''
   });
-  data.isButtonShowList.values.push(false);
+  data.isButtonShowList.push(false);
   // $forceUpdate();
 }
 
 // 删除一条
 function remove(index) {
+  // eslint-disable-next-line vue/no-mutating-props
   props.form.items.splice(index, 1);
-  data.isButtonShowList.values.splice(index, 1);
+  data.isButtonShowList.splice(index, 1);
 }
 
 // 重置表单
 function reset() {
+  // eslint-disable-next-line vue/no-mutating-props
   props.form.items = [{ date: undefined, task: '' }];
   proxy.$forceUpdate();
 }

@@ -6,22 +6,19 @@
   </el-card>
 </template>
 
-<script>
+<script setup lang="ts">
 import FileUpload from '@/views/project/components/ProjectDetail/FileUpload.vue';
 
-export default {
-  components: {
-    FileUpload
-  },
-  // eslint-disable-next-line vue/require-prop-types
-  props: ['form'],
-  data() {
-    return {};
-  },
-  created() {
-    this.$props.form.uploadList = [];
-    this.$props.form.value = [];
-  },
-  methods: {}
+// eslint-disable-next-line vue/require-prop-types
+const props = defineProps(['form']);
+const data = {
+  return: {}
 };
+
+function created() {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.uploadList = [];
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.value = [];
+}
 </script>

@@ -91,13 +91,13 @@ function add() {
     id: '',
     role: ''
   });
-  data.isButtonShowList.values.push(false);
+  data.isButtonShowList.push(false);
 }
 // 删除一条
 function remove(index) {
   // eslint-disable-next-line vue/no-mutating-props
   props.form.items.splice(index, 1);
-  data.isButtonShowList.values.splice(index, 1);
+  data.isButtonShowList.splice(index, 1);
 }
 
 // 重置表单

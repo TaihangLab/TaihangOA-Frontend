@@ -310,7 +310,6 @@ const closeDialog = () => {
 };
 
 const confirmDialog = () => {
-  // 处理确定逻辑
   emits('update:visible', false);
 };
 </script>

@@ -7,12 +7,12 @@
         justify="center"
         :gutter="10"
         type="flex"
-        @mouseover="isButtonShowList[index] = true"
-        @mouseleave="isButtonShowList[index] = false"
+        @mouseover="Mousedata(index, true)"
+        @mouseout="Mousedata(index, false)"
       >
         <el-col :span="1" style="text-align: center">
           <el-button
-            v-show="index === form.items.length - 1 && isButtonShowList[index]"
+            v-show="index === form.items.length - 1 && showdata.isButtonShowList[index]"
             icon="CirclePlus"
             circle
             type="success"
@@ -43,7 +43,7 @@
 
         <el-col :span="1" style="text-align: center">
           <el-button
-            v-show="form.items.length !== 1 && isButtonShowList[index]"
+            v-show="form.items.length !== 1 && showdata.isButtonShowList[index]"
             icon="RemoveFilled"
             circle
             type="danger"
@@ -56,48 +56,58 @@
   </el-card>
 </template>
 
-<script>
-export default {
-  // eslint-disable-next-line vue/require-prop-types
-  props: ['form'],
-  data() {
-    return {
-      isButtonShowList: [false],
-      id: 1,
-      list: []
-    };
-  },
-  mounted() {
-    this.$props.form.items = [{ title: undefined, midterm: '', finish: '' }];
-  },
-  methods: {
-    // 新增一条
-    add() {
-      this.$props.form.items.push({
-        title: '',
-        midterm: '',
-        finish: ''
-      });
-      this.isButtonShowList.push(false);
-      this.$forceUpdate();
-    },
-    // 删除一条
-    remove(index) {
-      this.$props.form.items.splice(index, 1);
-      this.isButtonShowList.splice(index, 1);
-      this.$forceUpdate();
-    },
-    // 输入实时回显
-    input() {
-      this.$forceUpdate();
-    },
-    // 重置表单
-    reset() {
-      this.$set(this.$props.form, 'items', [{ title: undefined, midterm: '', finish: '' }]);
-      this.$forceUpdate();
-    }
+<script setup lang="ts">
+import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
+
+const props = defineProps(['form']);
+const instance = getCurrentInstance();
+const data = {
+  return: {
+    id: 1,
+    list: []
   }
 };
+const showdata = reactive({
+  isButtonShowList: [] as boolean[]
+});
+
+onMounted(() => {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.items = [{ title: undefined, midterm: '', finish: '' }];
+});
+
+// 新增一条
+function add() {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.items.push({
+    title: '',
+    midterm: '',
+    finish: ''
+  });
+  showdata.isButtonShowList.push(false);
+  instance.proxy.$forceUpdate();
+}
+// 删除一条
+function remove(index) {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.items.splice(index, 1);
+  showdata.isButtonShowList.splice(index, 1);
+  instance.proxy.$forceUpdate();
+}
+// 输入实时回显
+function input() {
+  instance.proxy.$forceUpdate();
+}
+// 重置表单
+function reset() {
+  // eslint-disable-next-line vue/no-mutating-props
+  props.form.items = [{ title: undefined, midterm: '', finish: '' }];
+  instance.proxy.$forceUpdate();
+}
+
+function Mousedata(index: number, show: boolean) {
+  showdata.isButtonShowList[index] = show;
+}
 </script>
 
 <style scoped>

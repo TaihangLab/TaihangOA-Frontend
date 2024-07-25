@@ -33,7 +33,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="专项直接">
-            <el-input v-model.number="$props.form.zxzjx" ></el-input>
+            <el-input v-model.number="$props.form.zxzjx"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -98,51 +98,67 @@
   </el-card>
 </template>
 
-<script>
-export default {
-  props: ['form'],
-  data() {
-    return {};
-  },
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue';
 
-  computed: {
-    jfze: {
-      get() {
-        if (!this.form.zcjfze || !this.form.zxjfze) return 0;
-        return this.form.zcjfze + this.form.zxjfze;
-      }
-    },
-
-    zxXY: {
-      get() {
-        if (this.form.zxjfze === undefined || this.form.zxsbf === undefined) return [0, 0];
-        return this.computeXY(this.form.zxjfze, this.form.zxsbf);
-      }
-    },
-
-    zcXY() {
-      if (this.form.zcjfze === undefined || this.form.zcsbf === undefined) return [0, 0];
-      return this.computeXY(this.form.zcjfze, this.form.zcsbf);
-    }
-  },
-  mounted() {},
-  methods: {
-    computeXY(ze, sbf) {
-      let res = [0, 0];
-      if (ze - sbf <= 500) {
-        res[0] = (ze + sbf * 0.3) / 1.3;
-        res[1] = (res[0] - sbf) * 0.3;
-      } else if (ze - sbf <= 1000) {
-        res[0] = (ze - 500 * 0.3 + 500 * 0.25 + 0.25 * sbf) / 1.25;
-        res[1] = 500 * 0.3 + (res[0] - sbf - 500) * 0.25;
-      } else {
-        res[0] = (ze - 500 * 0.3 - 500 * 0.25 + 0.2 * sbf + 0.2 * 1000) / 1.2;
-        res[1] = 500 * 0.3 + 500 * 0.25 + (res[0] - sbf - 1000) * 0.2;
-      }
-      return res;
-    }
-  }
+// eslint-disable-next-line vue/require-prop-types
+const props = defineProps(['form']);
+const data = {
+  return: {}
 };
+
+interface Form {
+  zcjfze?: number;
+  zxjfze?: number;
+  zxsbf?: number;
+  zcsbf?: number;
+}
+
+function mounted() {}
+
+let number1 = ref<number>(100);
+const number2 = ref<number>(200);
+let testComputed = computed<number>(() => {
+  return number1.value + number2.value;
+});
+function computeXY(ze: number, sbf: number): [number, number] {
+  const RANGE1 = 500;
+  const RANGE2 = 1000;
+  const FACTOR1 = 0.3;
+  const FACTOR2 = 0.25;
+  const FACTOR3 = 0.2;
+  const FACTOR4 = 1.3;
+  const FACTOR5 = 1.25;
+  const FACTOR6 = 1.2;
+
+  let res: [number, number] = [0, 0];
+  if (ze - sbf <= RANGE1) {
+    res[0] = (ze + sbf * FACTOR1) / FACTOR4;
+    res[1] = (res[0] - sbf) * FACTOR1;
+  } else if (ze - sbf <= RANGE2) {
+    res[0] = (ze - RANGE1 * FACTOR1 + RANGE1 * FACTOR2 + FACTOR2 * sbf) / FACTOR5;
+    res[1] = RANGE1 * FACTOR1 + (res[0] - sbf - RANGE1) * FACTOR2;
+  } else {
+    res[0] = (ze - RANGE1 * FACTOR1 - RANGE1 * FACTOR2 + FACTOR3 * sbf + FACTOR3 * RANGE2) / FACTOR6;
+    res[1] = RANGE1 * FACTOR1 + RANGE1 * FACTOR2 + (res[0] - sbf - RANGE2) * FACTOR3;
+  }
+  return res;
+}
+let jfze = computed<number>(() => {
+  const { zcjfze = 0, zxjfze = 0 } = props.form;
+  if (!zcjfze || !zxjfze) return 0;
+  return zcjfze + zxjfze;
+});
+
+let zxXY = computed<[number, number]>(() => {
+  const { zxjfze, zxsbf } = props.form;
+  return zxjfze !== undefined && zxsbf !== undefined ? computeXY(zxjfze, zxsbf) : [0, 0];
+});
+
+let zcXY = computed<[number, number]>(() => {
+  const { zcjfze, zcsbf } = props.form;
+  return zcjfze !== undefined && zcsbf !== undefined ? computeXY(zcjfze, zcsbf) : [0, 0];
+});
 </script>
 
 <style scoped>
