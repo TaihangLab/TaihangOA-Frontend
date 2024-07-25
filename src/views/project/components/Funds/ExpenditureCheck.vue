@@ -3,62 +3,47 @@
     <div>
       <el-form ref="dataForm" :inline="true" :model="filters" class="demo-form-inline" style="margin-left: 30px; margin-top: 20px">
         <!-- 第一行 -->
-        <el-row :gutter="20">
-          <el-col :span="8">
-            <el-form-item label="一级科目" style="width: 80%">
-              <el-select v-model="filters.firstLevelSubject" placeholder="请选择一级科目" clearable style="width: 100%">
-                <el-option v-for="item in subjectData.firstLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="二级科目" style="width: 80%">
-              <el-select v-model="filters.secondLevelSubject" placeholder="请选择二级科目" clearable style="width: 100%">
-                <el-option v-for="item in subjectData.secondLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="三级科目" style="width: 80%">
-              <el-select v-model="filters.thirdLevelSubject" placeholder="请选择三级科目" clearable style="width: 100%">
-                <el-option v-for="item in subjectData.thirdLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
 
-        <!-- 第二行 -->
-        <el-row :gutter="20" style="margin-top: 10px">
-          <el-col :span="8">
-            <el-form-item label="起始时间" style="width: 80%">
-              <el-date-picker
-                v-model="filters.startDate"
-                type="date"
-                placeholder="请选择起始时间"
-                value-format="yyyy-MM-dd"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="结束时间" style="width: 80%">
-              <el-date-picker
-                v-model="filters.endDate"
-                type="date"
-                placeholder="请选择结束时间"
-                value-format="yyyy-MM-dd"
-                style="width: 100%"
-              ></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item style="width: 80%">
-              <el-button type="primary" icon="search" size="small" @click="handleQuery">搜索</el-button>
-              <el-button icon="refresh" size="small" @click="resetQuery">重置</el-button>
-              <el-button type="success" icon="download" size="small" @click="handleExport">导出</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-form-item label="一级科目" style="width: 250px">
+          <el-select v-model="filters.firstLevelSubject" placeholder="请选择一级科目" clearable style="width: 100%">
+            <el-option v-for="item in subjectData.firstLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="二级科目" style="width: 250px">
+          <el-select v-model="filters.secondLevelSubject" placeholder="请选择二级科目" clearable style="width: 100%">
+            <el-option v-for="item in subjectData.secondLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="三级科目" style="width: 250px">
+          <el-select v-model="filters.thirdLevelSubject" placeholder="请选择三级科目" clearable style="width: 100%">
+            <el-option v-for="item in subjectData.thirdLevelSubjects" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="起始时间" style="width: 250px">
+          <el-date-picker
+            v-model="filters.startDate"
+            type="date"
+            placeholder="请选择起始时间"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          ></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="结束时间" style="width: 250px">
+          <el-date-picker
+            v-model="filters.endDate"
+            type="date"
+            placeholder="请选择结束时间"
+            value-format="yyyy-MM-dd"
+            style="width: 100%"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item style="width: 500px">
+          <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
+          <el-button icon="refresh" @click="resetQuery">重置</el-button>
+          <el-button type="success" icon="download" @click="handleExport">导出</el-button>
+        </el-form-item>
       </el-form>
       <el-table
         ref="multipleTable"
