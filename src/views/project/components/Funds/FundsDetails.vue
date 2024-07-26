@@ -1,11 +1,11 @@
 <template>
   <el-dialog :model-value="visible" width="85%" @update:model-value="updateVisible">
-    <template #footer>
+    <template #default>
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
           <el-descriptions-item label="基本信息" :span="2"></el-descriptions-item>
-          <el-descriptions class="margin-top" title="" :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
+          <el-descriptions :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
             <el-descriptions-item label="项目名称">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
             <el-descriptions-item label="负责课题">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
