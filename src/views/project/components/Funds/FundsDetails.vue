@@ -77,7 +77,7 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="经费明细汇总" name="经费明细汇总">
+        <el-tab-pane label="经费明细汇总" name="经费明细汇总" class="budget-summary-tab">
           <div style="margin-top: 5px"></div>
           <el-table
             style="width: 100%"
@@ -137,5 +137,13 @@ watch(
 </script>
 
 <style scoped>
-/* 你的样式 */
+::v-deep .budget-summary-tab .el-table tbody tr:hover > td {
+  background-color: rgb(44, 133, 44) !important;
+  color: #eef1f6;
+}
+
+::v-deep .budget-summary-tab .el-table__body tr.current-row > td {
+  background-color: rgb(44, 133, 44) !important;
+  color: #eef1f6;
+}
 </style>
