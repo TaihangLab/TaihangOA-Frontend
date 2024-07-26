@@ -267,6 +267,7 @@ const addMilestone = async () => {
   if (!form.milestoneTitle || !form.milestoneDate || !form.milestoneRemark) {
     return;
   }
+}
 // 重置函数
 const reset = () => {
   form.projectId = props.updateId;
