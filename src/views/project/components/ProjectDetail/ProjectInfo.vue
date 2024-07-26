@@ -100,7 +100,7 @@
             prop="startTime"
             :rules="[{ required: true, message: '请输入 立项时间', trigger: 'blur' }]"
           >
-            <el-date-picker v-model="form.startTime" placeholder="立项时间" type="date" value-format="yyyy-MM-dd"> </el-date-picker>
+            <el-date-picker v-model="form.startTime" placeholder="立项时间" type="date" value-format="YYYY-MM-DD"> </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -110,7 +110,7 @@
             prop="endTime"
             :rules="[{ required: true, message: '请选择 验收时间', trigger: 'change' }]"
           >
-            <el-date-picker v-model="form.endTime" placeholder="验收时间" type="date" value-format="yyyy-MM-dd"> </el-date-picker>
+            <el-date-picker v-model="form.endTime" placeholder="验收时间" type="date" value-format="YYYY-MM-DD"> </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">

@@ -108,7 +108,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="过期时间" prop="expireTime">
-          <el-date-picker v-model="form.expireTime" clearable type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择过期时间">
+          <el-date-picker v-model="form.expireTime" clearable type="datetime" value-format="YYYY-MM-DD HH:MM:SS" placeholder="请选择过期时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="用户数量" prop="accountCount">

@@ -25,7 +25,7 @@
             v-model="filters.startDate"
             type="date"
             placeholder="请选择起始时间"
-            value-format="yyyy-MM-dd"
+            value-format="YYYY-MM-DD"
             style="width: 100%"
           ></el-date-picker>
         </el-form-item>
@@ -35,7 +35,7 @@
             v-model="filters.endDate"
             type="date"
             placeholder="请选择结束时间"
-            value-format="yyyy-MM-dd"
+            value-format="YYYY-MM-DD"
             style="width: 100%"
           ></el-date-picker>
         </el-form-item>
