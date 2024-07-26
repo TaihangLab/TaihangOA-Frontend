@@ -77,7 +77,38 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="经费明细汇总" name="经费明细汇总">经费明细汇总</el-tab-pane>
+        <el-tab-pane label="经费明细汇总" name="经费明细汇总">
+          <div style="margin-top: 5px"></div>
+          <el-table
+            style="width: 100%"
+            height="525px"
+            row-key="id"
+            border
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            highlight-current-row
+          >
+            <el-table-column prop="label" width="180">
+              <template #header>
+                <div style="text-align: center">
+                  <span>预算科目名称</span>
+                  <br />
+                  <span style="font-size: 12px; color: #f56c6c">（单位：万元）</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="预算">
+              <el-table-column align="center" label="合计" prop="budget"></el-table-column>
+              <el-table-column align="center" label="专项经费" prop="specialBudget"></el-table-column>
+              <el-table-column align="center" label="自筹经费" prop="selfBudget"></el-table-column>
+            </el-table-column>
+            <el-table-column align="center" label="专项已支付" prop="specialPaid"></el-table-column>
+            <el-table-column align="center" label="专项未支付" prop="specialUnpaid"></el-table-column>
+            <el-table-column align="center" label="自筹已支付" prop="selfPaid"></el-table-column>
+            <el-table-column align="center" label="自筹未支付" prop="selfUnpaid"></el-table-column>
+            <el-table-column align="center" label="已支付" prop="totalPaid"></el-table-column>
+            <el-table-column align="center" label="未支付" prop="totalUnpaid"></el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </template>
   </el-dialog>
