@@ -1,11 +1,11 @@
 <template>
   <el-dialog :model-value="visible" width="85%" @update:model-value="updateVisible">
-    <template #footer>
+    <template #default>
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
           <el-descriptions-item label="基本信息" :span="2"></el-descriptions-item>
-          <el-descriptions class="margin-top" title="" :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
+          <el-descriptions :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
             <el-descriptions-item label="项目名称">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
             <el-descriptions-item label="负责课题">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
@@ -77,7 +77,38 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
-        <el-tab-pane label="经费明细汇总" name="经费明细汇总">经费明细汇总</el-tab-pane>
+        <el-tab-pane label="经费明细汇总" name="经费明细汇总" class="budget-summary-tab">
+          <div style="margin-top: 5px"></div>
+          <el-table
+            style="width: 100%"
+            height="525px"
+            row-key="id"
+            border
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            highlight-current-row
+          >
+            <el-table-column prop="label" width="180">
+              <template #header>
+                <div style="text-align: center">
+                  <span>预算科目名称</span>
+                  <br />
+                  <span style="font-size: 12px; color: #f56c6c">（单位：万元）</span>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="预算">
+              <el-table-column align="center" label="合计" prop="budget"></el-table-column>
+              <el-table-column align="center" label="专项经费" prop="specialBudget"></el-table-column>
+              <el-table-column align="center" label="自筹经费" prop="selfBudget"></el-table-column>
+            </el-table-column>
+            <el-table-column align="center" label="专项已支付" prop="specialPaid"></el-table-column>
+            <el-table-column align="center" label="专项未支付" prop="specialUnpaid"></el-table-column>
+            <el-table-column align="center" label="自筹已支付" prop="selfPaid"></el-table-column>
+            <el-table-column align="center" label="自筹未支付" prop="selfUnpaid"></el-table-column>
+            <el-table-column align="center" label="已支付" prop="totalPaid"></el-table-column>
+            <el-table-column align="center" label="未支付" prop="totalUnpaid"></el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </template>
   </el-dialog>
@@ -106,5 +137,13 @@ watch(
 </script>
 
 <style scoped>
-/* 你的样式 */
+::v-deep .budget-summary-tab .el-table tbody tr:hover > td {
+  background-color: rgb(44, 133, 44) !important;
+  color: #eef1f6;
+}
+
+::v-deep .budget-summary-tab .el-table__body tr.current-row > td {
+  background-color: rgb(44, 133, 44) !important;
+  color: #eef1f6;
+}
 </style>

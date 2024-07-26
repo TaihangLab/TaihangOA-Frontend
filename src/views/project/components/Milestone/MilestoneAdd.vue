@@ -1,26 +1,31 @@
 <template>
   <el-dialog :model-value="visible" width="50%" @close="handleClose">
-    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+    <!--ref="form" 更改为了 ref="form1"，否则前端显示会出BUG-->
+    <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
       <el-form-item label="标题" prop="milestoneTitle">
         <el-input v-model="form.milestoneTitle"></el-input>
       </el-form-item>
       <!-- 标签选择 -->
       <el-form-item label="标签" prop="tags">
         <div class="tag-container">
-          <!--          <div class="selected-tags">-->
-          <!--            <el-tag-->
-          <!--              v-for="(tag, index) in form.projectMilestoneTypes"-->
-          <!--              :key="index"-->
-          <!--              closable-->
-          <!--              :type="getTagType(tag)"-->
-          <!--              :style="{ color: getTextColor(tag) }"-->
-          <!--              @close="handleCloseTag(tag)"-->
-          <!--            >-->
-          <!--              {{ tag }}-->
-          <!--            </el-tag>-->
-          <!--          </div>-->
-          <el-select v-model="selectedTag" placeholder="请选择标签" style="flex: 1; width: 120px" @change="addTag">
-            <el-option v-for="tag in projectMilestoneType" :key="tag.projectMilestoneTypeId" :label="tag.projectMilestoneTypeName" :value="tag.projectMilestoneTypeName"></el-option>
+          <el-tag
+            v-for="(tag, index) in form.projectMilestoneTypes"
+            :key="index"
+            closable
+            @close="handleCloseTag(tag)"
+            :type="getTagType(tag)"
+            :style="{ color: getTextColor(tag) }"
+            style="height: 30px; margin: 2px; /* 设置每个标签的外边距 */"
+          >
+            {{ tag }}
+          </el-tag>
+          <el-select v-model="selectedTag" placeholder="请选择标签" style="flex: 1; width: 140px" clearable @change="addTag">
+            <el-option
+              v-for="tag in projectMilestoneType"
+              :key="tag.projectMilestoneTypeId"
+              :label="tag.projectMilestoneTypeName"
+              :value="tag.projectMilestoneTypeName"
+            ></el-option>
           </el-select>
         </div>
       </el-form-item>
@@ -54,7 +59,7 @@ import FileUpload from '@/components/FileUpload/index.vue';
 import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{ visible: boolean; updateId: string }>();
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible', 'close-dialog']);
 
 const form = reactive({
   projectId: props.updateId,
@@ -128,7 +133,7 @@ const handleClose = () => {
 const addTag = () => {
   if (selectedTag.value && !form.projectMilestoneTypes.includes(selectedTag.value)) {
     form.projectMilestoneTypes.push(selectedTag.value);
-    selectedTag.value = '';
+    // selectedTag.value = '';
   }
 };
 
@@ -262,6 +267,19 @@ const addMilestone = async () => {
   if (!form.milestoneTitle || !form.milestoneDate || !form.milestoneRemark) {
     return;
   }
+}
+// 重置函数
+const reset = () => {
+  form.projectId = props.updateId;
+  form.milestoneTitle = '';
+  form.milestoneRemark = '';
+  form.milestoneDate = '';
+  form.ossIds = [];
+
+  ossids.value = [];
+  fileList.value = [];
+  selectedTag.value = ''; // 重置选择的标签
+  projectMilestoneTypes.value = []; // 重置动态标签列表
 };
 onMounted(() => {
   getMilestoneTagOptions();
@@ -284,6 +302,8 @@ onMounted(() => {
 
 .tag-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* 设置标签之间的间距 */
 }
 
 .selected-tags {

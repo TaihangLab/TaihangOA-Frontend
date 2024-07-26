@@ -11,13 +11,7 @@
 
       <el-main style="margin-top: 20px">
         <el-collapse-transition>
-          <ProjectInfo
-            v-show="stepID === 0"
-            ref="projectInfo"
-            :visible="isInfoDialogVisible"
-            :form="projectInfoForm"
-            @update:visible="isInfoDialogVisible = $event"
-          ></ProjectInfo>
+          <ProjectInfo v-show="stepID === 0" ref="projectInfo" :form="projectInfoForm"></ProjectInfo>
         </el-collapse-transition>
 
         <el-collapse-transition>
@@ -268,6 +262,7 @@ const submit = async () => {
       loading.close();
     });
   emit('update:visible', false);
+  // 这行代码会导致修改后重新加载页面
   setTimeout(() => location.reload(), 900);
 };
 

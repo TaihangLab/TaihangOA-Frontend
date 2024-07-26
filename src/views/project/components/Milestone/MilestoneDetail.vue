@@ -1,10 +1,34 @@
 <template>
   <el-dialog :model-value="visible" width="50%" @close="handleClose">
-    <el-page-header :icon="ArrowLeft" class="page-header">
-      <template #content>
-        <span class="text-large font-600 mr-3"> 项目名称 </span>
-      </template>
-    </el-page-header>
+    <template #title>
+      <span style="font-weight: bold; font-size: large">项目名称</span>
+    </template>
+    <div class="search-bar">
+      <el-form :model="searchForm" inline>
+        <el-form-item label="关键字">
+          <el-input v-model="searchForm.keyword" placeholder="请输入关键字" style="width: 150px"></el-input>
+        </el-form-item>
+        <el-form-item label="时间范围">
+          <el-date-picker
+            v-model="searchForm.dateRange"
+            type="daterange"
+            style="width: 300px"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        </el-form-item>
+        <el-form-item label="标签">
+          <el-select v-model="searchForm.tag" placeholder="选择标签" style="width: 150px">
+            <el-option v-for="tag in allTags" :key="tag" :label="tag" :value="tag"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
+          <el-button icon="Refresh" @click="handleReset">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-timeline class="timeline">
       <el-timeline-item
         v-for="(activity, index) in activities"
@@ -56,6 +80,25 @@ const activities = [
     timestamp: '2018/4/3'
   }
 ];
+
+const allTags = ['Tag 1', 'Tag 2', 'Tag 3', 'Tag 4'];
+const searchForm = ref({
+  keyword: '',
+  dateRange: [],
+  tag: ''
+});
+
+const handleSearch = () => {
+  // 执行搜索逻辑
+};
+
+const handleReset = () => {
+  searchForm.value = {
+    keyword: '',
+    dateRange: [],
+    tag: ''
+  };
+};
 
 watch(
   () => props.visible,
