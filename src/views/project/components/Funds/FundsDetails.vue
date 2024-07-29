@@ -84,6 +84,7 @@
             height="525px"
             row-key="id"
             border
+            :cell-style="columnStyle"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
             highlight-current-row
           >
@@ -123,6 +124,23 @@ const activeTab = ref('基本信息');
 
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
+};
+
+// columnStyle 方法定义
+const columnStyle = ({ columnIndex }) => {
+  if (columnIndex === 0) {
+    return 'background:#f3f5f8';
+  } else if (columnIndex === 1) {
+    return 'background:#e2e280';
+  } else if (columnIndex === 2 || columnIndex === 3) {
+    return 'background:#c9db7e';
+  } else if (columnIndex === 4 || columnIndex === 5) {
+    return 'background:#aed37f';
+  } else if (columnIndex === 6 || columnIndex === 7) {
+    return 'background:#96cb7e';
+  } else if (columnIndex === 8 || columnIndex === 9) {
+    return 'background:#7bc37b';
+  }
 };
 
 // 使用 watch 监听 updateVisible 变化并打印到控制台

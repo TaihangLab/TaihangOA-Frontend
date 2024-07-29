@@ -88,7 +88,6 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import IpDetailDialog from '@/views/research/components/IpDetails/IpDetails.vue';
 import NewIp from '@/views/research/components/NewIp/NewIp.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -107,15 +106,6 @@ const menuNodeAll = ref(false);
 const deptExpand = ref(true);
 const deptNodeAll = ref(false);
 const deptOptions = ref<DeptTreeOption[]>([]);
-
-/** 数据范围选项*/
-const dataScopeOptions = ref([
-  { value: '1', label: '全部数据权限' },
-  { value: '2', label: '自定数据权限' },
-  { value: '3', label: '本部门数据权限' },
-  { value: '4', label: '本部门及以下数据权限' },
-  { value: '5', label: '仅本人数据权限' }
-]);
 
 const queryFormRef = ref<ElFormInstance>();
 const roleFormRef = ref<ElFormInstance>();
@@ -281,24 +271,6 @@ const getRoleDeptTreeSelect = async (roleId: string | number) => {
   const res = await deptTreeSelect(roleId);
   deptOptions.value = res.data.depts;
   return res.data;
-};
-/** 树权限（展开/折叠）*/
-const handleCheckedTreeExpand = (value: boolean, type: string) => {
-  if (type == 'menu') {
-    let treeList = menuOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (menuRef.value) {
-        menuRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  } else if (type == 'dept') {
-    let treeList = deptOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (deptRef.value) {
-        deptRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  }
 };
 /** 树权限（全选/全不选） */
 const handleCheckedTreeNodeAll = (value: any, type: string) => {

@@ -13,7 +13,7 @@
             <el-form-item label="创建时间" style="width: 308px">
               <el-date-picker
                 v-model="dateRange"
-                value-format="YYYY-MM-DD HH:MM:SS"
+                value-format="YYYY-MM-DD"
                 type="daterange"
                 range-separator="-"
                 start-placeholder="开始日期"
