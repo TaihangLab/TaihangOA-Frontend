@@ -80,32 +80,6 @@ const rules = {
   milestoneRemark: [{ required: true, message: '请填写详情', trigger: 'blur' }]
 };
 
-const labelMappings: { [key: number]: string } = {
-  0: '其他',
-  1: '申报书',
-  2: '任务书',
-  3: '科研协作合同',
-  4: '专项经费文件',
-  5: '经费管理表',
-  6: '中期文件',
-  7: '验收文件',
-  8: '结题文件',
-  9: '知识产权',
-  10: '论文',
-  11: '专利',
-  12: '软著',
-  13: '标准',
-  14: '示范应用',
-  15: '获奖',
-  16: '报告',
-  17: '专家咨询',
-  18: '经费变更',
-  19: '人员变更',
-  20: '批复文件',
-  21: '通知',
-  22: '合同'
-};
-
 watch(
   () => props.visible,
   (newValue) => {
@@ -267,7 +241,7 @@ const addMilestone = async () => {
   if (!form.milestoneTitle || !form.milestoneDate || !form.milestoneRemark) {
     return;
   }
-}
+};
 // 重置函数
 const reset = () => {
   form.projectId = props.updateId;

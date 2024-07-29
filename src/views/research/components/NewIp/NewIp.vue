@@ -125,38 +125,6 @@ const findPathByValue = (data: any[], targetValue: number, path: number[] = []):
   return null;
 };
 
-const getProjectTree = async () => {
-  try {
-    const resp = await request({
-      url: '/ip/getProjectMapping',
-      method: 'get',
-      params: {} // Ensure to provide correct params
-    });
-    projectTree = resp.data;
-  } catch (error) {
-    console.error('获取用户数据时出错：', error);
-  }
-};
-
-const getDeptAndUserList = async () => {
-  await getDeptTree();
-  await getList();
-  cascadeOptions = adaptData(deptOptions);
-};
-
-let deptOptions: any[] = [];
-let userList: any[] = [];
-
-const getDeptTree = async () => {
-  const response = await deptTreeSelect();
-  deptOptions = response.data;
-};
-
-const getList = async () => {
-  const response = await listUser();
-  userList = response.rows;
-};
-
 const adaptData = (data: any[]) => {
   return data.map((item) => {
     const newItem = {
