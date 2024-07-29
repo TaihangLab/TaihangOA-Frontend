@@ -23,14 +23,14 @@
         <el-col :span="12">
           <el-form-item label="知识产权类别" prop="ipType">
             <el-select v-model="form.ipType" clearable placeholder="请选择类别">
-              <el-option v-for="(item1, index1) in ipTypeOptions" :key="index1" :label="item1.ipTypeName" :value="item1.ipTypeId"> </el-option>
+              <el-option v-for="(item, index) in ipTypes" :key="index" :label="item.ipTypeName" :value="item.ipTypeId"> </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="知识产权状态" prop="ipStatus">
             <el-select v-model="form.ipStatus" clearable placeholder="请选择状态">
-              <el-option v-for="(item2, index2) in ipStatusOptions" :key="index2" :label="item2.ipStatusName" :value="item2.ipStatusId"> </el-option>
+              <el-option v-for="(item, index) in ipStatuses" :key="index" :label="item.ipStatusName" :value="item.ipStatusId"> </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -76,6 +76,7 @@
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue';
 import { listUser, deptTreeSelect } from '@/api/system/user';
+import { getDicts } from '@/api/system/dict/data';
 import request from '@/utils/request';
 
 const props = defineProps<{ visible: boolean; ipId: string }>();
@@ -101,6 +102,7 @@ let projectId: undefined | number = undefined;
 let cascadeOptions: any[] = [];
 let projectTree: any[] = [];
 
+const ipTypes = ref([]);
 const ipTypeOptions = [
   { ipTypeId: '0', ipTypeName: '国内发明专利' },
   { ipTypeId: '1', ipTypeName: '软件著作权' },
@@ -108,6 +110,7 @@ const ipTypeOptions = [
   { ipTypeId: '3', ipTypeName: '标准' }
 ];
 
+const ipStatuses = ref([]);
 const ipStatusOptions = [
   { ipStatusId: '0', ipStatusName: '专利受理' },
   { ipStatusId: '1', ipStatusName: '专利授权' },
@@ -243,6 +246,32 @@ const reset = () => {
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
+
+const getIpTypeOptions = () => {
+  getDicts('ip_type').then((resp) => {
+    resp.data.forEach((item) => {
+      ipTypes.value.push({
+        ipTypeId: item.dictValue,
+        ipTypeName: item.dictLabel
+      });
+    });
+  });
+};
+const getIpStatusOptions = () => {
+  getDicts('ip_status').then((resp) => {
+    resp.data.forEach((item) => {
+      ipStatuses.value.push({
+        ipStatusId: item.dictValue,
+        ipStatusName: item.dictLabel
+      });
+    });
+  });
+};
+
+onMounted(() => {
+  getIpTypeOptions();
+  getIpStatusOptions();
+});
 </script>
 
 <style scoped>
