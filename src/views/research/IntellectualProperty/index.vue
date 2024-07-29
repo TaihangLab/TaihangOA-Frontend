@@ -36,7 +36,7 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd()">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="AddIp()">新增</el-button>
           </el-col>
           <el-col :span="1.5">
             <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
@@ -68,6 +68,7 @@
         </el-table-column>
       </el-table>
 
+      <NewIp :visible="isNewIpVisible" @update:visible="isNewIpVisible = $event" />
       <ipDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
 
       <pagination
@@ -88,6 +89,7 @@ import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/t
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
 import IpDetailDialog from '@/views/research/components/IpDetails/IpDetails.vue';
+import NewIp from '@/views/research/components/NewIp/NewIp.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -308,10 +310,13 @@ const handleCheckedTreeNodeAll = (value: any, type: string) => {
 };
 
 //弹窗
+const AddIp = () => {
+  isNewIpVisible.value = true;
+};
+const isNewIpVisible = ref(false);
+
 const showDetailDialog = (row: RoleVO) => {
-  // 在这里可以设置要显示的详情内容
   isDetailDialogVisible.value = true;
-  console.log(isDetailDialogVisible.value);
 };
 const isDetailDialogVisible = ref(false);
 

@@ -59,16 +59,13 @@ const emits = defineEmits(['update:visible']);
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
-
 const closeDialog = () => {
   emits('update:visible', false);
 };
-
 const confirmDialog = () => {
   // 处理确定逻辑
   emits('update:visible', false);
 };
-
 watch(
   () => props.visible,
   (newValue, oldValue) => {
