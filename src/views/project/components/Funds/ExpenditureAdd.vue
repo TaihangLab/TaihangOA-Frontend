@@ -65,7 +65,7 @@
                   type="date"
                   placeholder="选择日期"
                   style="width: 192px"
-                  value-format="yyyy-MM-dd"
+                  value-format="YYYY-MM-DD"
                 ></el-date-picker>
               </el-col>
             </el-form-item>
