@@ -58,7 +58,7 @@
   </div>
 </template>
 
-<script setup name="Role" lang="ts">
+<script setup lang="ts">
 import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from '@/api/system/role';
 import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
@@ -82,13 +82,6 @@ const deptNodeAll = ref(false);
 const deptOptions = ref<DeptTreeOption[]>([]);
 
 /** 数据范围选项*/
-const dataScopeOptions = ref([
-  { value: '1', label: '全部数据权限' },
-  { value: '2', label: '自定数据权限' },
-  { value: '3', label: '本部门数据权限' },
-  { value: '4', label: '本部门及以下数据权限' },
-  { value: '5', label: '仅本人数据权限' }
-]);
 
 const queryFormRef = ref<ElFormInstance>();
 const roleFormRef = ref<ElFormInstance>();
@@ -158,14 +151,6 @@ const resetQuery = () => {
   queryFormRef.value?.resetFields();
   handleQuery();
 };
-/**删除按钮操作 */
-const handleDelete = async (row?: RoleVO) => {
-  const roleids = row?.roleId || ids.value;
-  await proxy?.$modal.confirm('是否确认删除角色编号为' + roleids + '数据项目');
-  await delRole(roleids);
-  getList();
-  proxy?.$modal.msgSuccess('删除成功');
-};
 
 /** 导出按钮操作 */
 const handleExport = () => {
@@ -184,33 +169,10 @@ const handleSelectionChange = (selection: RoleVO[]) => {
   multiple.value = !selection.length;
 };
 
-/** 角色状态修改 */
-const handleStatusChange = async (row: RoleVO) => {
-  let text = row.status === '0' ? '启用' : '停用';
-  try {
-    await proxy?.$modal.confirm('确认要"' + text + '""' + row.roleName + '"角色吗?');
-    await changeRoleStatus(row.roleId, row.status);
-    proxy?.$modal.msgSuccess(text + '成功');
-  } catch {
-    row.status = row.status === '0' ? '1' : '0';
-  }
-};
-
 /** 查询菜单树结构 */
 const getMenuTreeselect = async () => {
   const res = await menuTreeselect();
   menuOptions.value = res.data;
-};
-/** 所有部门节点数据 */
-const getDeptAllCheckedKeys = (): any => {
-  // 目前被选中的部门节点
-  let checkedKeys = deptRef.value?.getCheckedKeys();
-  // 半选中的部门节点
-  let halfCheckedKeys = deptRef.value?.getHalfCheckedKeys();
-  if (halfCheckedKeys) {
-    checkedKeys?.unshift.apply(checkedKeys, halfCheckedKeys);
-  }
-  return checkedKeys;
 };
 /** 重置新增的表单以及其他数据  */
 const reset = () => {
@@ -253,39 +215,6 @@ const getRoleMenuTreeselect = (roleId: string | number) => {
     return res.data;
   });
 };
-/** 根据角色ID查询部门树结构 */
-const getRoleDeptTreeSelect = async (roleId: string | number) => {
-  const res = await deptTreeSelect(roleId);
-  deptOptions.value = res.data.depts;
-  return res.data;
-};
-/** 树权限（展开/折叠）*/
-const handleCheckedTreeExpand = (value: boolean, type: string) => {
-  if (type == 'menu') {
-    let treeList = menuOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (menuRef.value) {
-        menuRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  } else if (type == 'dept') {
-    let treeList = deptOptions.value;
-    for (let i = 0; i < treeList.length; i++) {
-      if (deptRef.value) {
-        deptRef.value.store.nodesMap[treeList[i].id].expanded = value;
-      }
-    }
-  }
-};
-/** 树权限（全选/全不选） */
-const handleCheckedTreeNodeAll = (value: any, type: string) => {
-  if (type == 'menu') {
-    menuRef.value?.setCheckedNodes(value ? (menuOptions.value as any) : []);
-  } else if (type == 'dept') {
-    deptRef.value?.setCheckedNodes(value ? (deptOptions.value as any) : []);
-  }
-};
-
 onMounted(() => {
   getList();
 });

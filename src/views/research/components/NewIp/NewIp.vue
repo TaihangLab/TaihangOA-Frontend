@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" title="新增知识产权" width="50%" @update:model-value="updateVisible">
+  <el-dialog :model-value="visible" title="新增知识产权" width="42%" @update:model-value="updateVisible">
     <el-form ref="form1" :rules="rules" :model="form" label-width="120px">
       <el-row>
         <el-col :span="12">
@@ -22,14 +22,14 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="知识产权类别" prop="ipType">
-            <el-select v-model="form.ipType" clearable placeholder="请选择类别">
+            <el-select v-model="form.ipType" clearable placeholder="请选择类别" style="width: 192px">
               <el-option v-for="(item, index) in ipTypes" :key="index" :label="item.ipTypeName" :value="item.ipTypeId"> </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="知识产权状态" prop="ipStatus">
-            <el-select v-model="form.ipStatus" clearable placeholder="请选择状态">
+            <el-select v-model="form.ipStatus" clearable placeholder="请选择状态" style="width: 221px">
               <el-option v-for="(item, index) in ipStatuses" :key="index" :label="item.ipStatusName" :value="item.ipStatusId"> </el-option>
             </el-select>
           </el-form-item>
@@ -103,31 +103,11 @@ let cascadeOptions: any[] = [];
 let projectTree: any[] = [];
 
 const ipTypes = ref([]);
-const ipTypeOptions = [
-  { ipTypeId: '0', ipTypeName: '国内发明专利' },
-  { ipTypeId: '1', ipTypeName: '软件著作权' },
-  { ipTypeId: '2', ipTypeName: '论文' },
-  { ipTypeId: '3', ipTypeName: '标准' }
-];
 
 const ipStatuses = ref([]);
-const ipStatusOptions = [
-  { ipStatusId: '0', ipStatusName: '专利受理' },
-  { ipStatusId: '1', ipStatusName: '专利授权' },
-  { ipStatusId: '2', ipStatusName: '软著已获取' },
-  { ipStatusId: '3', ipStatusName: '标准正在申报' },
-  { ipStatusId: '4', ipStatusName: '标准已通过' },
-  { ipStatusId: '5', ipStatusName: '论文已发表' }
-];
 
 const ossIds: number[] = [];
 const fileList: any[] = [];
-
-// Methods
-const handleIdData = (node: any) => {
-  projectId = node.projectId;
-  responseProject = findPathByValue(projectTree, projectId);
-};
 
 const findPathByValue = (data: any[], targetValue: number, path: number[] = []): number[] | null => {
   for (const item of data) {
@@ -212,12 +192,6 @@ const onSubmit = () => {
     .then((resp) => {
       console.log(resp);
       console.log('this.form.', form.value.ossIds);
-      // Use appropriate modal component based on your setup
-      // this.$modal.msgSuccess("新增成功");
-      // Use appropriate method to reset the file upload component
-      // this.$refs.fujian.reset();
-      // Trigger an event to notify parent component to close the dialog
-      // emit('close-dialog');
     })
     .catch((error) => {
       console.error('新增失败', error);
