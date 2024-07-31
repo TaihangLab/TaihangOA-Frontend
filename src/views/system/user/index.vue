@@ -97,13 +97,23 @@
             <el-table-column v-if="columns[2].visible" key="nickName" label="用户昵称" align="center" prop="nickName" :show-overflow-tooltip="true" />
             <el-table-column v-if="columns[3].visible" key="deptName" label="部门" align="center" prop="deptName" :show-overflow-tooltip="true" />
             <el-table-column v-if="columns[4].visible" key="phonenumber" label="手机号码" align="center" prop="phonenumber" width="120" />
-            <el-table-column v-if="columns[5].visible" key="status" label="状态" align="center">
+            <el-table-column v-if="columns[5].visible" key="jobTitle" label="职称" align="center" prop="jobTitle" :show-overflow-tooltip="true">
               <template #default="scope">
+                {{ sys_jobtitle_type[scope.row.jobTitle]?.label || '未知' }}
+              </template>
+            </el-table-column>
+            <el-table-column v-if="columns[6].visible" key="diploma" label="学历" align="center" prop="diploma" :show-overflow-tooltip="true">
+              <template #default="scope">
+                {{ sys_diploma_type[scope.row.diploma]?.label || '未知' }}
+              </template>
+            </el-table-column>
+            <el-table-column v-if="columns[7].visible" key="status" label="状态" align="center">          
+            <template #default="scope">
                 <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
               </template>
             </el-table-column>
 
-            <el-table-column v-if="columns[6].visible" label="创建时间" align="center" prop="createTime" width="160">
+            <el-table-column v-if="columns[8].visible" label="创建时间" align="center" prop="createTime" width="160">
               <template #default="scope">
                 <span>{{ scope.row.createTime }}</span>
               </template>
@@ -232,6 +242,32 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户职称">
+              <el-select v-model="form.jobTitle" placeholder="请选择">
+                <el-option
+                  v-for="dict in sys_jobtitle_type"
+                  :key="dict.value" 
+                  :label="dict.label" 
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户学历">
+              <el-select v-model="form.diploma" placeholder="请选择">
+                <el-option
+                  v-for="dict in sys_diploma_type"
+                  :key="dict.value" 
+                  :label="dict.label" 
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="24">
             <el-form-item label="备注">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
@@ -296,7 +332,7 @@ import { optionselect } from '@/api/system/post';
 
 const router = useRouter();
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { sys_normal_disable, sys_user_sex } = toRefs<any>(proxy?.useDict('sys_normal_disable', 'sys_user_sex'));
+const { sys_normal_disable, sys_user_sex,sys_jobtitle_type,sys_diploma_type} = toRefs<any>(proxy?.useDict('sys_normal_disable', 'sys_user_sex','sys_jobtitle_type','sys_diploma_type'));
 const userList = ref<UserVO[]>();
 const loading = ref(true);
 const showSearch = ref(true);
@@ -332,8 +368,11 @@ const columns = ref<FieldOption[]>([
   { key: 2, label: `用户昵称`, visible: true, children: [] },
   { key: 3, label: `部门`, visible: true, children: [] },
   { key: 4, label: `手机号码`, visible: true, children: [] },
-  { key: 5, label: `状态`, visible: true, children: [] },
-  { key: 6, label: `创建时间`, visible: true, children: [] }
+  { key: 5, label: `职称`, visible: true, children: [] },
+  { key: 6, label: `学历`, visible: true, children: [] },
+  { key: 7, label: `状态`, visible: true, children: [] },
+  { key: 8, label: `创建时间`, visible: true, children: [] }
+
 ]);
 
 const deptTreeRef = ref<ElTreeInstance>();
@@ -600,6 +639,7 @@ const handleUpdate = async (row?: UserForm) => {
   reset();
   const userId = row?.userId || ids.value[0];
   const { data } = await api.getUser(userId);
+  const { user, postIds, roleIds, jobTitles,diplomas } = data;
   dialog.visible = true;
   dialog.title = '修改用户';
   await initTreeData();
@@ -608,6 +648,8 @@ const handleUpdate = async (row?: UserForm) => {
   roleOptions.value = data.roles;
   form.value.postIds = data.postIds;
   form.value.roleIds = data.roleIds;
+  form.value.jobTitle = sys_jobtitle_type.value[data.user.jobTitle].label || '未知';
+  form.value.diploma = sys_diploma_type.value[data.user.diploma].label || '未知';
   form.value.password = '';
 };
 

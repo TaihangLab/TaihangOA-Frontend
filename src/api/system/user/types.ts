@@ -46,6 +46,8 @@ export interface UserVO extends BaseEntity {
   postIds: any;
   roleId: any;
   admin: boolean;
+  jobTitle: string;
+  diploma: string;
 }
 
 /**
@@ -65,6 +67,8 @@ export interface UserForm {
   remark?: string;
   postIds: string[];
   roleIds: string[];
+  jobTitle?: string;
+  diploma?: string;
 }
 
 export interface UserInfoVO {
@@ -75,6 +79,8 @@ export interface UserInfoVO {
   postIds: string[];
   roleGroup: string;
   postGroup: string;
+  jobTitles: string;
+  diplomas: string;
 }
 
 export interface ResetPwdForm {
