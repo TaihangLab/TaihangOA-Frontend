@@ -107,8 +107,8 @@
                 {{ sys_diploma_type[scope.row.diploma]?.label || '未知' }}
               </template>
             </el-table-column>
-            <el-table-column v-if="columns[7].visible" key="status" label="状态" align="center">          
-            <template #default="scope">
+            <el-table-column v-if="columns[7].visible" key="status" label="状态" align="center">
+              <template #default="scope">
                 <el-switch v-model="scope.row.status" active-value="0" inactive-value="1" @change="handleStatusChange(scope.row)"></el-switch>
               </template>
             </el-table-column>
@@ -245,24 +245,14 @@
           <el-col :span="12">
             <el-form-item label="用户职称">
               <el-select v-model="form.jobTitle" placeholder="请选择">
-                <el-option
-                  v-for="dict in sys_jobtitle_type"
-                  :key="dict.value" 
-                  :label="dict.label" 
-                  :value="dict.value"
-                ></el-option>
+                <el-option v-for="dict in sys_jobtitle_type" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户学历">
               <el-select v-model="form.diploma" placeholder="请选择">
-                <el-option
-                  v-for="dict in sys_diploma_type"
-                  :key="dict.value" 
-                  :label="dict.label" 
-                  :value="dict.value"
-                ></el-option>
+                <el-option v-for="dict in sys_diploma_type" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -332,7 +322,9 @@ import { optionselect } from '@/api/system/post';
 
 const router = useRouter();
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { sys_normal_disable, sys_user_sex,sys_jobtitle_type,sys_diploma_type} = toRefs<any>(proxy?.useDict('sys_normal_disable', 'sys_user_sex','sys_jobtitle_type','sys_diploma_type'));
+const { sys_normal_disable, sys_user_sex, sys_jobtitle_type, sys_diploma_type } = toRefs<any>(
+  proxy?.useDict('sys_normal_disable', 'sys_user_sex', 'sys_jobtitle_type', 'sys_diploma_type')
+);
 const userList = ref<UserVO[]>();
 const loading = ref(true);
 const showSearch = ref(true);
@@ -372,7 +364,6 @@ const columns = ref<FieldOption[]>([
   { key: 6, label: `学历`, visible: true, children: [] },
   { key: 7, label: `状态`, visible: true, children: [] },
   { key: 8, label: `创建时间`, visible: true, children: [] }
-
 ]);
 
 const deptTreeRef = ref<ElTreeInstance>();
@@ -639,7 +630,7 @@ const handleUpdate = async (row?: UserForm) => {
   reset();
   const userId = row?.userId || ids.value[0];
   const { data } = await api.getUser(userId);
-  const { user, postIds, roleIds, jobTitles,diplomas } = data;
+  const { user, postIds, roleIds, jobTitles, diplomas } = data;
   dialog.visible = true;
   dialog.title = '修改用户';
   await initTreeData();
