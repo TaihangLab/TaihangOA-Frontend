@@ -3,18 +3,13 @@
     <div style="max-height: 700px">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" size="small" @click="handleAdd">新增</el-button>
+          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" @click="handleAdd">新增</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" size="small" @click="handleImport">导入</el-button>
+          <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" @click="handleImport">导入</el-button>
         </el-col>
-        <el-col :span="20">
-          <div style="display: flex; justify-content: flex-end; margin-right: 5px">
-            <el-button type="primary" size="small" @click="addFunds">
-              提交
-              <el-icon class="el-icon--right"><upload-filled /></el-icon>
-            </el-button>
-          </div>
+        <el-col :span="1.5">
+          <el-button v-hasPermi="['system:user:import']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -74,7 +69,7 @@
       </el-table>
       <!--新增支出录入-->
       <ExpenditureAdd
-        :projectId="Number(projectId)"
+        :project-id="Number(projectId)"
         :visible="isExpenditureAddDialogVisible"
         @new-data="handleNewData"
         @close:visible="isExpenditureAddDialogVisible = $event"
