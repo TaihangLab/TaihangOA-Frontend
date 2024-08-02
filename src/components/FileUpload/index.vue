@@ -52,6 +52,8 @@ const props = defineProps({
     type: [String, Object, Array],
     default: () => []
   },
+  // 要返回给父组件列表
+  idList: [],
   // 数量限制
   limit: propTypes.number.def(5),
   // 大小限制(MB)
@@ -153,6 +155,11 @@ const handleUploadSuccess = (res: any, file: UploadFile) => {
       ossId: res.data.ossId
     });
     uploadedSuccessfully();
+    if (props.idList) {
+      // this.$props.idList.push({ossId: res.data.ossId, name: res.data.fileName});
+      props.idList.push(res.data.ossId);
+      // this.$emit('update:idList', this.idList);
+    } else console.log('没有传递列表');
   } else {
     number.value--;
     proxy?.$modal.closeLoading();
@@ -168,6 +175,13 @@ const handleDelete = (index: number) => {
   delOss(ossId);
   fileList.value.splice(index, 1);
   emit('update:modelValue', listToString(fileList.value));
+
+  if (props.idList) {
+    // let delId = this.$props.idList.findIndex(item => item.ossId === ossId);
+    let delId = props.idList.findIndex((item) => item === ossId);
+    props.idList.splice(delId, 1);
+    // this.$emit('update:idList', this.idList);
+  }
 };
 
 // 上传结束处理
@@ -202,6 +216,12 @@ const listToString = (list: any[], separator?: string) => {
   });
   return strs != '' ? strs.substring(0, strs.length - 1) : '';
 };
+
+// 重置
+function reset() {
+  uploadList.value = [];
+  fileList.value = [];
+}
 </script>
 
 <style scoped lang="scss">

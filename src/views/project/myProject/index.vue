@@ -19,9 +19,9 @@
           <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
         </el-row>
       </template>
-      <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" update-id="projectAdd" />
+      <ProjectAddDialog :visible="isAddDialogVisible" @update:visible="isAddDialogVisible = $event" update-id="" />
       <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
-      <MilestoneAddDialog :visible="isAddMilestoneDialogVisible" @update:visible="isAddMilestoneDialogVisible = $event" update-id="milestoneAdd" />
+      <MilestoneAddDialog :visible="isAddMilestoneDialogVisible" @update:visible="isAddMilestoneDialogVisible = $event" project-id="2" />
       <MilestoneDetailDialog
         :visible="isMilestoneDetailDialogVisible"
         @update:visible="isMilestoneDetailDialogVisible = $event"

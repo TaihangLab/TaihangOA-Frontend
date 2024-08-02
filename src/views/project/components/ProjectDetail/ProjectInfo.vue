@@ -1,7 +1,7 @@
 <template>
   <el-card header="项目信息" shadow="hover">
     <el-form ref="form" :model="form" label-position="left">
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="8">
           <el-form-item
             label-width="120px"
@@ -29,7 +29,7 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="8">
           <el-form-item label-width="120px" label="项目来源" prop="source" :rules="[{ required: true, message: '请输入 项目来源', trigger: 'blur' }]">
             <el-input v-model="form.source"></el-input>
@@ -57,7 +57,7 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="8">
           <el-form-item
             label-width="120px"
@@ -76,7 +76,7 @@
             :rules="[{ required: true, message: '请输 入项目级别', trigger: 'change' }]"
           >
             <el-select v-model="form.level" clearable placeholder="请选择">
-              <el-option v-for="(item, index) in projectLevels" :key="index" :label="item.name" :value="item.value"> </el-option>
+              <el-option v-for="(item, index) in data.projectLevels" :key="index" :label="item.name" :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -92,7 +92,7 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="8">
           <el-form-item
             label-width="120px"
@@ -128,7 +128,7 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="12">
           <el-form-item label-width="120px" label="合作单位" prop="coopUnit">
             <el-input v-model="form.coopUnit"></el-input>
@@ -141,7 +141,7 @@
         </el-col>
       </el-row>
 
-      <el-row :gutter="20" type="flex" justify="left">
+      <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="24">
           <el-form-item label-width="120px" label="项目简介" prop="description">
             <el-input v-model="form.description" type="textarea"></el-input>
@@ -154,9 +154,18 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, reactive } from 'vue';
+import { ElForm } from 'element-plus';
 
 const props = defineProps<{ form: any }>();
 const emits = defineEmits(['update:visible']);
+const formRef = ref<InstanceType<typeof ElForm>>();
+
+// 暴露方法供父组件调用
+defineExpose({
+  validateForm() {
+    return formRef.value?.validate();
+  }
+});
 
 const data = reactive({
   projectLevels: [

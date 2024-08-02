@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import FileUpload from '@/views/project/components/ProjectDetail/FileUpload.vue';
+import FileUpload from '@/components/FileUpload/index.vue';
 
 // eslint-disable-next-line vue/require-prop-types
 const props = defineProps(['form']);

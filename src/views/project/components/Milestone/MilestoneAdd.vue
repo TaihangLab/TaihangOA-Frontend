@@ -57,19 +57,22 @@
 import { defineEmits, defineProps, reactive, ref, watch } from 'vue';
 import FileUpload from '@/components/FileUpload/index.vue';
 import { getDicts } from '@/api/system/dict/data';
+import { milestoneAdd } from '@/api/project/myProject';
 
-const props = defineProps<{ visible: boolean; updateId: string }>();
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+
+const props = defineProps<{ visible: boolean; projectId: string }>();
 const emits = defineEmits(['update:visible', 'close-dialog']);
 
 const form = reactive({
-  projectId: props.updateId,
+  projectId: Number(props.projectId),
   milestoneTitle: '',
   milestoneRemark: '',
   milestoneDate: '',
   ossIds: [],
   projectMilestoneTypes: [] as string[]
 });
-const ossids = ref<string[]>([]);
+const ossids = ref([]);
 const tagOptions = ref<{ label: string; value: number }[]>([]);
 const selectedTag = ref<string>('');
 const projectMilestoneType = ref([]);
@@ -87,7 +90,7 @@ watch(
       milestoneCategorySelectList();
       // Reset the form fields
       Object.assign(form, {
-        projectId: props.updateId,
+        projectId: props.projectId,
         milestoneTitle: '',
         milestoneRemark: '',
         milestoneDate: '',
@@ -123,7 +126,7 @@ const getMilestoneTagOptions = () => {
   getDicts('pro_milestone_type').then((resp) => {
     resp.data.forEach((item) => {
       projectMilestoneType.value.push({
-        projectMilestoneTypeId: item.dictValue,
+        projectMilestoneTypeId: Number(item.dictValue),
         projectMilestoneTypeName: item.dictLabel
       });
     });
@@ -241,19 +244,42 @@ const addMilestone = async () => {
   if (!form.milestoneTitle || !form.milestoneDate || !form.milestoneRemark) {
     return;
   }
+
+  // 将动态标签列表 dynamicTags 中的文字转换为对应的数字并放入 projectMilestoneTypes
+  const categoryEnumList = form.projectMilestoneTypes
+    .map((tag) => {
+      const type = projectMilestoneType.value.find((type) => type.projectMilestoneTypeName === tag);
+      return type ? type.projectMilestoneTypeId : null;
+    })
+    .filter((tagId) => tagId !== null) as number[]; // 使用 number[] 类型
+
+  form.projectMilestoneTypes = categoryEnumList.map(String); // 将转换后的标签数字列表转换为字符串
+
+  form.ossIds = ossids.value; // 确保通过 .value 访问 ossids
+  console.log(ossids);
+
+  try {
+    await milestoneAdd(form);
+    proxy?.$modal.msgSuccess('新增成功');
+    FileUpload.reset();
+    emits('close-dialog'); // 触发一个事件通知父组件关闭弹窗
+    reset(); // 调用重置函数
+  } catch (error) {
+    console.log(form);
+    console.error('添加里程碑时出错:', error);
+  }
 };
 // 重置函数
 const reset = () => {
-  form.projectId = props.updateId;
+  form.projectId = Number(props.projectId);
   form.milestoneTitle = '';
   form.milestoneRemark = '';
   form.milestoneDate = '';
   form.ossIds = [];
 
   ossids.value = [];
-  fileList.value = [];
   selectedTag.value = ''; // 重置选择的标签
-  projectMilestoneTypes.value = []; // 重置动态标签列表
+  form.projectMilestoneTypes = []; // 重置动态标签列表
 };
 onMounted(() => {
   getMilestoneTagOptions();

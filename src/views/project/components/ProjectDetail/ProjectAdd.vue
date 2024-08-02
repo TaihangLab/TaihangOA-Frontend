@@ -11,11 +11,11 @@
 
       <el-main style="margin-top: 20px">
         <el-collapse-transition>
-          <ProjectInfo v-show="stepID === 0" ref="projectInfo" :form="projectInfoForm"></ProjectInfo>
+          <ProjectInfo v-show="stepID === 0" ref="projectInfoRef" :form="projectInfoForm"></ProjectInfo>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectMember v-show="stepID === 1" ref="projectMember" :form="projectMemberForm"></ProjectMember>
+          <ProjectMember v-show="stepID === 1" ref="projectMemberRef" :form="projectMemberForm"></ProjectMember>
         </el-collapse-transition>
 
         <el-collapse-transition>
@@ -51,15 +51,15 @@
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectIndicator v-show="stepID === 6" ref="projectIndicator" :form="projectIndicatorForm"></ProjectIndicator>
+          <ProjectIndicator v-show="stepID === 6" ref="projectIndicatorRef" :form="projectIndicatorForm"></ProjectIndicator>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <ProjectPlan v-show="stepID === 7" ref="projectPlanForm" :form="projectPlanForm"></ProjectPlan>
+          <ProjectPlan v-show="stepID === 7" ref="projectPlanRef" :form="projectPlanForm"></ProjectPlan>
         </el-collapse-transition>
 
         <el-collapse-transition>
-          <OtherAttachment v-show="stepID === 8" ref="otherAttachment" :form="otherAttachmentForm"></OtherAttachment>
+          <OtherAttachment v-show="stepID === 8" ref="otherAttachmentRef" :form="otherAttachmentForm"></OtherAttachment>
         </el-collapse-transition>
         <el-collapse-transition>
           <ProjectProgress v-show="stepID === 9" ref="projectProgress" :form="projectProgressForm"></ProjectProgress>
@@ -78,6 +78,13 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
 import { resetObject } from '@/api/project/funds/utils';
+import categoryOptions1, {
+  categoryOptions2,
+  categoryOptions4,
+  categoryOptions5,
+  reorganizeData,
+  reorganizeJJData
+} from '@/api/project/funds/fundkeys';
 import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
 import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
 import ProjectSelfFund from '@/views/project/components/ProjectDetail/ProjectSelfFund.vue';
@@ -88,6 +95,8 @@ import ProjectIndicator from '@/views/project/components/ProjectDetail/ProjectIn
 import ProjectPlan from '@/views/project/components/ProjectDetail/ProjectPlans.vue';
 import OtherAttachment from '@/views/project/components/ProjectDetail/OtherAttachment.vue';
 import ProjectProgress from '@/views/project/components/ProjectDetail/ProjectProgress.vue';
+import { ElMessage, ElLoading } from 'element-plus';
+import { addProject, getProject, updateProject } from '@/api/project/myProject/project';
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
@@ -107,7 +116,7 @@ const projectIndicatorForm = ref({});
 const projectPlanForm = ref({});
 const fundsSourceForm = ref({});
 const mainAttachmentForm = ref({});
-const otherAttachmentForm = ref({});
+const otherAttachmentForm = ref({ uploadList: [] });
 const projectProgressForm = ref({});
 const cards1Form = ref([]);
 const cards2Form = ref([]);
@@ -163,19 +172,24 @@ const previous = () => {
   }
 };
 
+const projectInfoRef = ref();
 const projectSpecialFundRef = ref();
 const projectSelfFundRef = ref();
+const projectMemberRef = ref();
+const projectPlanRef = ref();
+const projectIndicatorRef = ref();
+const otherAttachmentRef = ref();
 
 const reset = () => {
   resetObject(projectInfoForm.value);
-  // projectMemberRef.value?.reset();
+  projectMemberRef.value?.reset();
   resetObject(projectFundsForm.value);
   resetObject(zxFundsDetailForm.value); // 弃用
   resetObject(zcFundsDetailForm.value); // 弃用
   resetObject(fundsSourceForm.value);
-  // projectPlanRef.value?.reset();
-  // projectIndicatorRef.value?.reset();
-  // otherAttachmentRef.value?.$refs.fileUpload.reset();
+  projectPlanRef.value?.reset();
+  projectIndicatorRef.value?.reset();
+  // otherAttachmentRef.value?.fileUpload.reset();
   resetObject(projectProgressForm.value);
   projectSpecialFundRef.value?.reset();
   projectSelfFundRef.value?.reset();
@@ -184,17 +198,16 @@ const reset = () => {
 
 const submit = async () => {
   try {
-    // @ts-ignore
-    await ref.projectInfo.$refs.form.validate();
+    await projectInfoRef.value?.validateForm();
   } catch (e) {
-    Message({
+    ElMessage({
       showClose: true,
       message: '错误哦，必选信息需要被填写',
       type: 'error'
     });
     return;
   }
-  const loading = Loading.service({ fullscreen: true, lock: true, text: '努力加载中' });
+  const loading = ElLoading.service({ fullscreen: true, lock: true, text: '努力加载中' });
   if (props.updateId) {
     const projectUpdateFundForm: any = {};
     projectFundForm(cards1Form.value, cards2Form.value, tableDataForm.value, projectUpdateFundForm);
@@ -216,7 +229,7 @@ const submit = async () => {
       projectUpdateFundForm
     )
       .then((resp: any) => {
-        Message({
+        ElMessage({
           message: '恭喜你，项目修改成功',
           type: 'success'
         });
@@ -224,10 +237,12 @@ const submit = async () => {
       })
       .catch((error: any) => {
         Message.error('错了哦，服务器返回了一条错误信息\n' + error);
+        ElMessage.error('错了哦，服务器返回了一条错误信息\n' + error);
         loading.close();
       });
-    emit('update:visible', false);
-    setTimeout(() => location.reload(), 900);
+    emits('update:visible', false);
+    // 这行代码会导致修改后重新加载页面
+    // setTimeout(() => location.reload(), 900);
     return;
   }
 
@@ -251,7 +266,7 @@ const submit = async () => {
     projectAddFundForm
   )
     .then((resp: any) => {
-      Message({
+      ElMessage({
         message: '恭喜你，项目新增成功',
         type: 'success'
       });
@@ -261,9 +276,9 @@ const submit = async () => {
       Message.error('错了哦，服务器返回了一条错误信息\n' + error);
       loading.close();
     });
-  emit('update:visible', false);
+  emits('update:visible', false);
   // 这行代码会导致修改后重新加载页面
-  setTimeout(() => location.reload(), 900);
+  // setTimeout(() => location.reload(), 900);
 };
 
 const projectFundForm = (cards1Form: any[], cards2Form: any[], tableDataForm: any[], result: any) => {

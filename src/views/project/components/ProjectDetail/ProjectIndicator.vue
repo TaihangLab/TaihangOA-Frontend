@@ -70,6 +70,9 @@ const data = {
 const showdata = reactive({
   isButtonShowList: [] as boolean[]
 });
+defineExpose({
+  reset
+});
 
 onMounted(() => {
   // eslint-disable-next-line vue/no-mutating-props
@@ -101,7 +104,7 @@ function input() {
 // 重置表单
 function reset() {
   // eslint-disable-next-line vue/no-mutating-props
-  props.form.items = [{ title: undefined, midterm: '', finish: '' }];
+  props.form.items = [{ title: '', midterm: '', finish: '' }];
   instance.proxy.$forceUpdate();
 }
 
