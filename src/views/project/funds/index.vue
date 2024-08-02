@@ -66,7 +66,7 @@
               ></el-button>
             </el-tooltip>
             <el-tooltip v-if="scope.row.roleId !== 1" content="经费到账" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="handleUpdate(scope.row)"></el-button>
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="showFundsReceivedDialog(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -84,6 +84,12 @@
         :visible="isExpenditureEditDialogVisible"
         @close:visible="isExpenditureEditDialogVisible = $event"
         @update:visible="isExpenditureEditDialogVisible = $event"
+      />
+      <FundsReceived
+        :project-id="Number(projectId)"
+        :visible="isFundsReceivedVisible"
+        @close:visible="isFundsReceivedVisible = $event"
+        @update:visible="isFundsReceivedVisible = $event"
       />
       <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />
 
@@ -107,6 +113,7 @@ import { ref } from 'vue';
 import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
 import ExpenditureCheck from '../components/Funds/ExpenditureCheck.vue';
 import ExpenditureEntry from '../components/Funds/ExpenditureEntry.vue';
+import FundsReceived from '@/views/project/components/Funds/FundsReceived.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
@@ -128,7 +135,7 @@ const deptOptions = ref<DeptTreeOption[]>([]);
 const isDetailDialogVisible = ref(false);
 const isExpenditureCheckDialogVisible = ref(false);
 const isExpenditureEditDialogVisible = ref(false);
-
+const isFundsReceivedVisible = ref(false);
 const isFundsDetailVisible = ref(false);
 
 /** 数据范围选项*/
@@ -150,6 +157,10 @@ const showExpenditureCheckDialog = (row: RoleVO) => {
 
 const showExpenditureEditDialog = (row: RoleVO) => {
   isExpenditureEditDialogVisible.value = true;
+};
+
+const showFundsReceivedDialog = (row: RoleVO) => {
+  isFundsReceivedVisible.value = true;
 };
 
 const initForm: RoleForm = {
