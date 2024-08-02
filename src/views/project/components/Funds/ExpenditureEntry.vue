@@ -3,18 +3,13 @@
     <div style="max-height: 700px">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" size="small" @click="handleAdd">新增</el-button>
+          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" @click="handleAdd">新增</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" size="small" @click="handleImport">导入</el-button>
+          <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" @click="handleImport">导入</el-button>
         </el-col>
-        <el-col :span="20">
-          <div style="display: flex; justify-content: flex-end; margin-right: 5px">
-            <el-button type="primary" size="small" @click="addFunds">
-              提交
-              <el-icon class="el-icon--right"><upload-filled /></el-icon>
-            </el-button>
-          </div>
+        <el-col :span="1.5">
+          <el-button v-hasPermi="['system:user:import']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
         </el-col>
       </el-row>
       <el-table
@@ -36,14 +31,10 @@
         <el-table-column label="摘要" :resizable="false" align="center" prop="expenditureAbstract" min-width="200px"> </el-table-column>
         <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc" :formatter="zxzcFormatter" width="100px"> </el-table-column>
         <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj" :formatter="zjjjFormatter" width="100px"> </el-table-column>
-        <el-table-column
-          label="一级科目"
-          :resizable="false"
-          align="center"
-          prop="firstLevelSubject"
-          width="150px"
-          :formatter="firstLevelSubjectFormatter"
-        >
+        <el-table-column label="一级科目" :resizable="false" align="center" prop="firstLevelSubject" width="150px">
+          <template #default="scope">
+            {{ pro_first_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+          </template>
         </el-table-column>
         <el-table-column
           label="二级科目"
@@ -74,7 +65,7 @@
       </el-table>
       <!--新增支出录入-->
       <ExpenditureAdd
-        :projectId="Number(projectId)"
+        :project-id="Number(projectId)"
         :visible="isExpenditureAddDialogVisible"
         @new-data="handleNewData"
         @close:visible="isExpenditureAddDialogVisible = $event"
@@ -101,6 +92,10 @@ const emits = defineEmits(['update:visible', 'close:visible']);
 const closeExpenselEditDialog = () => {
   emits('close:visible', false);
 };
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { pro_first_subject, pro_second_subject, pro_third_subject, pro_zxzc_options, pro_zjjj_options } = toRefs<any>(
+  proxy?.useDict('pro_first_subject', 'pro_second_subject', 'pro_third_subject', 'pro_zxzc_options', 'pro_zjjj_options')
+);
 
 const contentStyle = ref({
   'text-align': 'center',
@@ -146,34 +141,34 @@ const formatDate = (date: string) => {
 };
 
 // 一级科目格式化方法
-const firstLevelSubjectFormatter = (row: { firstLevelSubject: number }) => {
-  const firstLevelSubject = [
-    '设备费',
-    '业务费',
-    '劳务费',
-    '材料费',
-    '科研活动费',
-    '科研服务费',
-    '人员和劳务补助费',
-    '绩效支出',
-    '管理费',
-    '房屋租赁费',
-    '日常水电暖费',
-    '资料费',
-    '数据样本采集费',
-    '测试化验加工费',
-    '燃料动力费',
-    '办公费',
-    '印刷/出版费',
-    '知识产权事务费',
-    '车辆使用费',
-    '差旅费',
-    '会议/会务费',
-    '专家咨询费',
-    '其他费用'
-  ];
-  return firstLevelSubject[row.firstLevelSubject];
-};
+// const firstLevelSubjectFormatter = (row: { firstLevelSubject: number }) => {
+//   const firstLevelSubject = [
+//     '设备费',
+//     '业务费',
+//     '劳务费',
+//     '材料费',
+//     '科研活动费',
+//     '科研服务费',
+//     '人员和劳务补助费',
+//     '绩效支出',
+//     '管理费',
+//     '房屋租赁费',
+//     '日常水电暖费',
+//     '资料费',
+//     '数据样本采集费',
+//     '测试化验加工费',
+//     '燃料动力费',
+//     '办公费',
+//     '印刷/出版费',
+//     '知识产权事务费',
+//     '车辆使用费',
+//     '差旅费',
+//     '会议/会务费',
+//     '专家咨询费',
+//     '其他费用'
+//   ];
+//   return firstLevelSubject[row.firstLevelSubject];
+// };
 
 // 二级科目格式化方法
 const secondLevelSubjectFormatter = (row: { secondLevelSubject: number }) => {
@@ -295,6 +290,10 @@ const updateVisible = (value: boolean) => {
 const closeDialog = () => {
   emits('update:visible', false);
 };
+
+onMounted(() => {
+  console.log('pro_first_subject', pro_first_subject.value);
+});
 </script>
 
 <style scoped>
