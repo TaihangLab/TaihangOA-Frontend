@@ -155,6 +155,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, reactive } from 'vue';
 import { ElForm } from 'element-plus';
+import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{ form: any }>();
 const emits = defineEmits(['update:visible']);
@@ -169,19 +170,24 @@ defineExpose({
 
 const data = reactive({
   projectLevels: [
-    { name: '国家', value: 0 },
-    { name: '省部', value: 1 },
-    { name: '企业', value: 2 }
-  ],
-  progressStatus: [
-    { name: '正在需求申报', value: 0 },
-    { name: '已完成需求申报', value: 1 },
-    { name: '正在项目申报', value: 2 },
-    { name: '已完成项目申报', value: 3 },
-    { name: '已签订任务书并推进中', value: 4 },
-    { name: '已完成中期评审', value: 5 },
-    { name: '已完成验收', value: 6 },
-    { name: '未通过评审', value: 7 }
+    // { name: '国家', value: 0 },
+    // { name: '省部', value: 1 },
+    // { name: '企业', value: 2 }
   ]
+});
+
+const getProjectLevelsOptions = () => {
+  getDicts('pro_level_type').then((resp) => {
+    resp.data.forEach((item) => {
+      data.projectLevels.push({
+        name: item.dictLabel,
+        value: Number(item.dictValue)
+      });
+    });
+  });
+};
+
+onMounted(() => {
+  getProjectLevelsOptions();
 });
 </script>

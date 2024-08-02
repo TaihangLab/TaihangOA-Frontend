@@ -15,6 +15,16 @@ const data = {
   return: {}
 };
 
+// 获取 FileUpload 组件的实例
+const fileUpload = ref();
+
+// 暴露 FileUpload 的 reset 方法
+defineExpose({
+  reset() {
+    fileUpload.value?.reset();
+  }
+});
+
 function created() {
   // eslint-disable-next-line vue/no-mutating-props
   props.form.uploadList = [];

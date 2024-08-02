@@ -6,7 +6,7 @@
           <el-col :span="8">
             <el-form-item label-width="125px" label="推进情况" prop="progressStatus">
               <el-select v-model="$props.form.projectProgressStatus" clearable placeholder="请选择">
-                <el-option v-for="(item, index) in data.return.progressStatus" :key="index" :label="item.name" :value="item.value"> </el-option>
+                <el-option v-for="(item, index) in data.progressStatus" :key="index" :label="item.name" :value="item.value"> </el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -115,19 +115,35 @@
 
 <script setup lang="ts">
 // eslint-disable-next-line vue/require-prop-types
+import { getDicts } from '@/api/system/dict/data';
+import { reactive } from 'vue';
+
 const props = defineProps(['form']);
-const data = {
-  return: {
-    progressStatus: [
-      { name: '正在需求申报', value: 0 },
-      { name: '已完成需求申报', value: 1 },
-      { name: '正在项目申报', value: 2 },
-      { name: '已完成项目申报', value: 3 },
-      { name: '已签订任务书并推进中', value: 4 },
-      { name: '已完成中期评审', value: 5 },
-      { name: '已完成验收', value: 6 },
-      { name: '未通过评审', value: 7 }
-    ]
-  }
+const data = reactive({
+  progressStatus: [
+    // { name: '正在需求申报', value: 0 },
+    // { name: '已完成需求申报', value: 1 },
+    // { name: '正在项目申报', value: 2 },
+    // { name: '已完成项目申报', value: 3 },
+    // { name: '已签订任务书并推进中', value: 4 },
+    // { name: '已完成中期评审', value: 5 },
+    // { name: '已完成验收', value: 6 },
+    // { name: '未通过评审', value: 7 }
+  ]
+});
+
+const getProgressStatusOptions = () => {
+  getDicts('pro_progress_status').then((resp) => {
+    resp.data.forEach((item) => {
+      data.progressStatus.push({
+        name: item.dictLabel,
+        value: Number(item.dictValue)
+      });
+    });
+  });
 };
+
+onMounted(() => {
+  getProgressStatusOptions();
+});
 </script>

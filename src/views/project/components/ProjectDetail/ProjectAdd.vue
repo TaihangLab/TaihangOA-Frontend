@@ -189,7 +189,7 @@ const reset = () => {
   resetObject(fundsSourceForm.value);
   projectPlanRef.value?.reset();
   projectIndicatorRef.value?.reset();
-  // otherAttachmentRef.value?.fileUpload.reset();
+  otherAttachmentRef.value?.reset();
   resetObject(projectProgressForm.value);
   projectSpecialFundRef.value?.reset();
   projectSelfFundRef.value?.reset();
@@ -273,7 +273,7 @@ const submit = async () => {
       loading.close();
     })
     .catch((error: any) => {
-      Message.error('错了哦，服务器返回了一条错误信息\n' + error);
+      ElMessage.error('错了哦，服务器返回了一条错误信息\n' + error);
       loading.close();
     });
   emits('update:visible', false);

@@ -221,7 +221,13 @@ const listToString = (list: any[], separator?: string) => {
 function reset() {
   uploadList.value = [];
   fileList.value = [];
+  console.log('kkk')
 }
+
+
+defineExpose({
+  reset
+});
 </script>
 
 <style scoped lang="scss">
