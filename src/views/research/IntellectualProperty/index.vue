@@ -68,7 +68,7 @@
         </el-table-column>
       </el-table>
 
-      <NewIp :visible="isNewIpVisible" @update:visible="isNewIpVisible = $event" />
+      <newIp :visible="isNewIpVisible" @update:visible="isNewIpVisible = $event"  ip-id="i"/>
       <ipDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
 
       <pagination
@@ -88,7 +88,7 @@ import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/m
 import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
 import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
 import { ref } from 'vue';
-import NewIp from '@/views/research/components/NewIp/NewIp.vue';
+import newIp from '@/views/research/components/NewIp/NewIp.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 

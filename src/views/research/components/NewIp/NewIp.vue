@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { defineEmits, defineProps, ref } from 'vue';
-import { listUser, deptTreeSelect } from '@/api/system/user';
 import { getDicts } from '@/api/system/dict/data';
 import request from '@/utils/request';
 
