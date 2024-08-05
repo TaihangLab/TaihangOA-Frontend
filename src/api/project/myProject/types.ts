@@ -6,3 +6,24 @@ export interface MilestoneFrom {
   ossIds: number[];
   projectMilestoneTypes: string[];
 }
+
+export const queryPara = ref({});
+
+export interface deleteParams {
+  milestoneId: number;
+}
+
+export interface combinedSearchDataList {
+  projectId: string | null;
+  keyword: string;
+  milestoneStaTime: string;
+  milestoneEndTime: string;
+  milestoneType: string;
+}
+
+export interface combinedSearchDataSetList {
+  projectId: string | null;
+  keyword: string;
+  milestoneStaTime: string;
+  milestoneEndTime: string;
+}
