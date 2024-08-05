@@ -1,15 +1,15 @@
 <template>
   <div class="home">
     <!-- 标题 -->
-    <div id="curtain">
-      <el-row justify="center" align="middle" style="height: 50px; background-color:cornflowerblue;">
+    <div id="curtain" style="width:100%;height:100px;margin-bottom: 20px">
+      <el-row justify="center" align="middle" style="height: 100px; background-color:cornflowerblue;">
         <el-col :span="24" >
           <h1 class="centered-title" align="center" style="color:aliceblue">云时代数据中心</h1>
         </el-col>
       </el-row>
     </div>
     <!-- 轮播器 -->
-    <el-carousel :interval="4000" type="card" height="300px" style="margin-top: 20px;">
+    <el-carousel :interval="4000" type="card" height="300px">
       <el-carousel-item>
         <a href="https://www.baidu.com" target="_blank">
           <img src="../assets/images/主页轮播器1.jpg" alt="Image 1" style="width: 100%;">
@@ -27,12 +27,12 @@
       </el-carousel-item>
     </el-carousel>
     <!-- 公告和成员信息 -->
-    <el-row style="margin-top: 20px;" >
+    <el-row style="margin-top: 20px" >
       <!-- 公告 -->
       <el-col :span="12">
-        <el-card shadow="hover" class="scrollbar-card" style="height: 290px;">
+        <el-card shadow="hover" class="scrollbar-card" style="height: 320px;margin-right: 20px">
           <p slot="header" align="center" style="color:#333;font-weight: bold">通知公告</p>
-          <el-table v-loading="loading" :data="noticeList">
+          <el-table v-loading="loading" :data="noticeList" style="height: 290px">
             <el-table-column v-if="false" label="序号" align="center" prop="noticeId" width="100" />
             <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true" />
             <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
@@ -48,36 +48,35 @@
           </el-table>
         </el-card>
       </el-col>
-      <el-col :span="12">
-        <el-card shadow="hover">
+      <el-col :span="12" >
+        <el-card shadow="hover" style="height: 320px">
           <p slot="header" align="center" style="font-size: 14; color:#333;font-weight: bold">成员信息</p>
           <el-row>
             <!-- 学历分布柱状图 -->
             <el-col :span="12" >
-              <div style="height: 200px; width: 100%;" ref="educationChart"></div>
+              <div style="height: 290px; width: 100%;" ref="educationChart"></div>
             </el-col>
             <!-- 职称分布柱状图 -->
             <el-col :span="12" style="margin-left: -5px;">
-              <div style="height: 200px; width: 100%;" ref="titleChart"></div>
+              <div style="height: 290px; width: 100%;" ref="titleChart"></div>
             </el-col>
           </el-row>
         </el-card>
       </el-col>
     </el-row>
     <!-- 项目统计和知识产权 -->
-    <el-row style="margin-top: 20px;">
+    <el-row style="margin-top: 20px">
       <el-col :span="12">
-        <el-card shadow="hover">
+        <el-card shadow="hover" style="margin-right: 20px">
           <div style="height: 300px;" ref="projectChart"></div>
         </el-card>
         </el-col>
-      <el-col :span="12">
+      <el-col :span="12" >
         <el-card shadow="hover">
           <div style="height: 300px;" ref="resultChart"></div>
         </el-card>
       </el-col>
-    </el-row>
-            
+    </el-row> 
   </div>
 </template>
 
@@ -133,7 +132,7 @@ const { queryParams } = toRefs(data);
 const getList = async () => {
   loading.value = true;
   const res = await listNotice(queryParams.value);
-  noticeList.value = res.rows.slice(0, 4); // 获取前五条通知
+  noticeList.value = res.rows.slice(0, 5); // 获取前五条通知
   total.value = res.total;
   loading.value = false;
 };
@@ -244,8 +243,8 @@ const initEducationChart = () => {
         show: true,
         position: 'outside',
         formatter: '{b}: \n{c} 人',
-        rotate: 45, // 设置文字旋转角度
-        fontSize: 9 // 设置字体大小
+        rotate: 0, // 设置文字旋转角度
+        fontSize: 13// 设置字体大小
       },
       emphasis: {
         label: {
@@ -305,8 +304,8 @@ const initTitleChart = () => {
         show: true,
         position: 'outside',
         formatter: '{b}:\n {c} 人',
-        rotate: 45, // 设置文字旋转角度
-        fontSize: 9 // 设置字体大小
+        rotate: 0, // 设置文字旋转角度
+        fontSize: 13// 设置字体大小
       },
       emphasis: {
         label: {
@@ -449,3 +448,54 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
 });
 </script>
+<style scoped lang="scss">
+
+.home {
+    padding: 20px;
+}
+
+.centered-title {
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+
+.centered-title::before,
+.centered-title::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+  height: 2px;
+  background-color: aliceblue;
+}
+
+.centered-title::before {
+  left: -10px;
+  animation: slideInLeft 1s ease-in-out infinite;
+}
+
+.centered-title::after {
+  right: -10px;
+  animation: slideInRight 1s ease-in-out infinite;
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+</style>
