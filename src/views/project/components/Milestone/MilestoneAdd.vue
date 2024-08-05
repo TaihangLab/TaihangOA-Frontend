@@ -44,7 +44,7 @@
         <el-input v-model="form.milestoneRemark" type="textarea"></el-input>
       </el-form-item>
       <el-form-item label="附件">
-        <FileUpload ref="fujian" :id-list="ossids" />
+        <FileUpload ref="fileUpload" :id-list="ossids" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="addMilestone"> 确定 </el-button>
@@ -76,6 +76,7 @@ const ossids = ref([]);
 const tagOptions = ref<{ label: string; value: number }[]>([]);
 const selectedTag = ref<string>('');
 const projectMilestoneType = ref([]);
+const fileUpload = ref();
 
 const rules = {
   milestoneTitle: [{ required: true, message: '请输入名称', trigger: 'blur' }],
@@ -261,7 +262,7 @@ const addMilestone = async () => {
   try {
     await milestoneAdd(form);
     proxy?.$modal.msgSuccess('新增成功');
-    FileUpload.reset();
+    fileUpload.value?.reset();
     emits('close-dialog'); // 触发一个事件通知父组件关闭弹窗
     reset(); // 调用重置函数
   } catch (error) {
@@ -280,6 +281,7 @@ const reset = () => {
   ossids.value = [];
   selectedTag.value = ''; // 重置选择的标签
   form.projectMilestoneTypes = []; // 重置动态标签列表
+  emits('update:visible', false);
 };
 onMounted(() => {
   getMilestoneTagOptions();

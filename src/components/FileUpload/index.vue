@@ -215,15 +215,13 @@ const listToString = (list: any[], separator?: string) => {
     }
   });
   return strs != '' ? strs.substring(0, strs.length - 1) : '';
-};
+}
 
 // 重置
 function reset() {
   uploadList.value = [];
   fileList.value = [];
-  console.log('kkk')
 }
-
 
 defineExpose({
   reset

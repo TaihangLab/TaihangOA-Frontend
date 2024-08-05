@@ -236,7 +236,6 @@ const submit = async () => {
         loading.close();
       })
       .catch((error: any) => {
-        Message.error('错了哦，服务器返回了一条错误信息\n' + error);
         ElMessage.error('错了哦，服务器返回了一条错误信息\n' + error);
         loading.close();
       });
