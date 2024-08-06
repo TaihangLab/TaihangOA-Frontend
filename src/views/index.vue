@@ -2,14 +2,14 @@
   <div class="home">
     <!-- 标题 -->
     <div id="curtain" style="width: 100%; height: 100px">
-      <el-row justify="center" align="middle" style="height: 80px; background-color: cornflowerblue">
+      <el-row justify="center" align="middle" style="height: 100px" class="background-title">
         <el-col :span="24">
-          <h1 class="centered-title" style="color: aliceblue">山西云时代技术有限公司</h1>
+          <h1 class="centered-title" style="margin-top: -8px" data-text="山西云时代技术有限公司">{{ titleText }}</h1>
         </el-col>
       </el-row>
     </div>
     <!-- 轮播器 -->
-    <el-carousel :interval="4000" type="card" height="300px">
+    <el-carousel :interval="4000" type="card" height="300px" style="margin-top: 10px">
       <el-carousel-item>
         <a href="https://www.baidu.com" target="_blank">
           <img src="../assets/images/主页轮播器1.jpg" alt="Image 1" style="width: 100%" />
@@ -109,6 +109,7 @@ const educationChart = ref(null);
 const titleChart = ref(null);
 const projectChart = ref(null);
 const resultChart = ref(null);
+const titleText = '山西云时代技术有限公司';
 
 const initFormData: NoticeForm = {
   noticeId: undefined,
@@ -442,31 +443,36 @@ onUnmounted(() => {
   padding: 20px;
 }
 
-.centered-title {
-  text-align: center;
+#curtain {
   position: relative;
-  display: inline-block;
 }
 
-.centered-title::before,
-.centered-title::after {
-  content: '';
+.background-title {
+  background-color: #4158d0;
+  background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
+}
+
+.centered-title {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  width: 50%;
-  height: 2px;
-  background-color: aliceblue;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  white-space: nowrap;
+  font-weight: bold;
+  font-family: 'Microsoft YaHei';
 }
 
 .centered-title::before {
-  left: -10px;
-  animation: slideInLeft 1s ease-in-out infinite;
-}
-
-.centered-title::after {
-  right: -10px;
-  animation: slideInRight 1s ease-in-out infinite;
+  content: attr(data-text);
+  position: absolute;
+  transform: rotateX(180deg);
+  transform-origin: bottom;
+  line-height: 52px;
+  background: linear-gradient(0deg, #000 0, transparent 80%);
+  -webkit-background-clip: text;
+  color: transparent;
+  opacity: 0.5;
 }
 
 @keyframes slideInLeft {
