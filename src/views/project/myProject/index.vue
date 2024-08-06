@@ -90,6 +90,7 @@
       <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
       <MilestoneAddDialog :visible="isAddMilestoneDialogVisible" project-id="2" @update:visible="isAddMilestoneDialogVisible = $event" />
       <MilestoneDetailDialog
+        v-if="isMilestoneDetailDialogVisible"
         :visible="isMilestoneDetailDialogVisible"
         project-id="2"
         update-id="2"

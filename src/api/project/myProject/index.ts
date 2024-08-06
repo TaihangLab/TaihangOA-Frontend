@@ -20,11 +20,10 @@ export function queryMilestoneList(data: combinedSearchDataList, params: typeof 
   });
 }
 
-export function queryMilestoneCategorySelectSetList(data: combinedSearchDataSetList, params: typeof queryPara.value) {
+export function queryMilestoneCategorySelectSetList(params: combinedSearchDataSetList) {
   return request({
     url: '/project/list/milestoneCategorySelectSet',
     method: 'get',
-    data: data,
     params: params
   });
 }

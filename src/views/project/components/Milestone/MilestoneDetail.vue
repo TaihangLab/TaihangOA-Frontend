@@ -20,7 +20,7 @@
         </el-form-item>
         <el-form-item label="标签">
           <el-select v-model="selectedTag" placeholder="选择标签" style="width: 150px" clearable @change="handleTagChange">
-            <el-option v-for="tag in tagOptions" :key="tag.value" :label="tag.label" :value="tag.value"></el-option>
+            <el-option v-for="tag in categorySelect" :key="tag.value" :label="tag.label" :value="tag.value"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -413,10 +413,9 @@ const milestoneCategorySelectSetList = async () => {
   // request({
   //   url: '/project/list/milestoneCategorySelectSet',
   //   method: 'get',
-  //   data: combinedSearchData,
-  //   params: queryPara.value
+  //   params: combinedSearchData
   // })
-  await queryMilestoneCategorySelectSetList(combinedSearchData, queryPara.value)
+  await queryMilestoneCategorySelectSetList(combinedSearchData)
     .then((resp) => {
       // 将数字值转换为 labelMappings 中的文字描述
       categorySelect.value = resp.data.map((item: any) => ({
