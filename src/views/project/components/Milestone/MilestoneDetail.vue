@@ -1,94 +1,154 @@
 <template>
-  <el-dialog :model-value="visible" width="50%" @close="handleClose">
-    <template #title>
-      <span style="font-weight: bold; font-size: large">大事记-详情</span>
-    </template>
-    <div class="search-bar">
-      <el-form :model="searchForm" inline>
-        <el-form-item label="关键字">
-          <el-input v-model="searchForm.searchKeyword" placeholder="请输入关键字" style="width: 150px"></el-input>
-        </el-form-item>
-        <el-form-item label="时间范围">
-          <el-date-picker
-            v-model="searchForm.dateRange"
-            type="daterange"
-            style="width: 300px"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="标签">
-          <el-select v-model="selectedTag" placeholder="选择标签" style="width: 150px" clearable @change="handleTagChange">
-            <el-option v-for="tag in categorySelect" :key="tag.value" :label="tag.label" :value="tag.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-          <el-button icon="Refresh" @click="handleReset">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-    <el-timeline v-show="showTimeline" class="timeline">
-      <el-timeline-item
-        v-for="item in timelineItems"
-        :key="item.milestoneId"
-        center
-        type="primary"
-        hollow
-        placement="top"
-        :timestamp="item.milestoneDate"
-        :icon="item.icon"
-        :style="{ '--icon-color': '#0bbd87' }"
-      >
-        <el-card>
-          <h4>名称：{{ item.milestoneTitle }}</h4>
-          <el-tag
-            v-for="(type, index) in item.categoryTypeSet"
-            :key="index"
-            :type="getLabelType(type)"
-            effect="light"
-            plain
-            size="small"
-            :style="{ color: getTextColor(type), marginRight: '8px' }"
-          >
-            {{ getLabel(type) }}
-          </el-tag>
-          <p>详情：{{ item.milestoneRemark }}</p>
-          <div class="attachments-container">
-            <el-button v-for="(oss, ossIndex) in item.sysOsses" :key="ossIndex" size="small" type="text" icon="Download" @click="handleDownload(oss)">
-              {{ oss.originalName }}</el-button
+  <div>
+    <el-dialog :model-value="visible" width="50%" @close="handleClose">
+      <template #title>
+        <span style="font-weight: bold; font-size: large">大事记-详情</span>
+      </template>
+      <div class="search-bar">
+        <el-form :model="searchForm" inline :rules="rules">
+          <el-form-item label="关键字">
+            <el-input v-model="searchForm.searchKeyword" placeholder="请输入关键字" style="width: 150px" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="时间范围">
+            <el-date-picker
+              v-model="searchForm.dateRange"
+              type="daterange"
+              style="width: 300px"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              clearable
+              :shortcuts="pickerOptions"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item label="标签">
+            <el-select v-model="selectedTag" placeholder="选择标签" style="width: 150px" clearable @change="handleTagChange">
+              <el-option v-for="tag in categorySelect" :key="tag.value" :label="tag.label" :value="tag.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-timeline v-show="showTimeline" class="timeline">
+        <el-timeline-item
+          v-for="item in timelineItems"
+          :key="item.milestoneId"
+          center
+          type="primary"
+          hollow
+          placement="top"
+          :timestamp="item.milestoneDate"
+          :icon="item.icon"
+          :style="{ '--icon-color': '#0bbd87' }"
+        >
+          <el-card>
+            <h4>名称：{{ item.milestoneTitle }}</h4>
+            <el-tag
+              v-for="(type, index) in item.categoryTypeSet"
+              :key="index"
+              :type="getLabelType(type)"
+              effect="light"
+              plain
+              size="small"
+              :style="{ color: getTextColor(type), marginRight: '8px' }"
             >
-          </div>
-          <div style="margin-top: 10px">
-            <el-button
-              v-hasPermi="['project:my:milestoneedit']"
-              type="success"
-              icon="EditPen"
-              size="small"
-              circle
-              @click="editMilestone(item)"
-            ></el-button>
-            <el-button
-              v-hasPermi="['project:my:milestonedelete']"
-              type="danger"
-              icon="DeleteFilled"
-              size="small"
-              circle
-              @click="confirmDeleteMilestone(item)"
-            ></el-button>
-          </div>
-        </el-card>
-      </el-timeline-item>
-    </el-timeline>
-    <div v-show="!showTimeline" class="no-data-message" style="color: #909399; font-size: 14px; text-align: center">暂无大事记数据</div>
-  </el-dialog>
+              {{ getLabel(type) }}
+            </el-tag>
+            <p>详情：{{ item.milestoneRemark }}</p>
+            <div class="attachments-container">
+              <el-button v-for="(oss, ossIndex) in item.sysOsses" :key="ossIndex" size="small" type="text" icon="Download" @click="handleDownload(oss)">
+                {{ oss.originalName }}</el-button
+              >
+            </div>
+            <div style="margin-top: 10px">
+              <el-button
+                v-hasPermi="['project:my:milestoneedit']"
+                type="success"
+                icon="EditPen"
+                size="small"
+                circle
+                @click="editMilestone(item)"
+              ></el-button>
+              <el-button
+                v-hasPermi="['project:my:milestonedelete']"
+                type="danger"
+                icon="DeleteFilled"
+                size="small"
+                circle
+                @click="confirmDeleteMilestone(item)"
+              ></el-button>
+            </div>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+      <div v-show="!showTimeline" class="no-data-message" style="color: #909399; font-size: 14px; text-align: center">暂无大事记数据</div>
+
+      <el-dialog ref="eventsDialogEdit" title="修改大事记" :model-value="eventsDialogVisibleEdit"
+                 :lock-scroll="false" :append-to-body="true" width="50%" @close="close">
+        <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
+          <el-form-item label="标题" prop="milestoneTitle">
+            <el-input v-model="form.milestoneTitle"></el-input>
+          </el-form-item>
+          <!-- 标签选择 -->
+          <el-form-item label="标签" prop="tags" >
+            <div class="tag-container">
+              <el-tag
+                v-for="(typeId, index) in projectMilestoneTypes"
+                :key="index"
+                closable
+                @close="handleCloseTag(typeId)"
+                :type="getLabelType(parseInt(typeId, 10))"
+                :style="{ color: getTextColor(parseInt(typeId, 10)), marginRight: '8px' }"
+              >
+                {{ getLabel(parseInt(typeId, 10)) }}
+              </el-tag>
+              <el-select v-model="selectedTag" placeholder="请选择标签" @change="addTag"
+                         style="flex: 1; width: 140px" clearable>
+                <el-option
+                  v-for="tag in tagOptions"
+                  :key="tag.value"
+                  :label="tag.label"
+                  :value="tag.label"
+                ></el-option>
+              </el-select>
+            </div>
+          </el-form-item>
+          <el-form-item label="时间" prop="milestoneDate">
+            <el-col :span="11">
+              <el-date-picker
+                type="date"
+                placeholder="选择日期"
+                v-model="form.milestoneDate"
+                style="width: 100%;"
+                value-format="YYYY-MM-DD"
+              ></el-date-picker>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="详请" prop="milestoneRemark">
+            <el-input type="textarea" v-model="form.milestoneRemark"></el-input>
+          </el-form-item>
+          <el-form-item label="附件">
+            <FileUpload :modelValue="form.sysOsses" :idList="ossids" @update:modelValue="handleUpdateModelValue" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary"  @click="editMilestoneBtn()">
+              确定
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { defineEmits, defineProps, watch } from 'vue';
 import request from '@/utils/request';
-import fujian from '@/components/FileUpload/index.vue';
+import FileUpload from '@/components/FileUpload/index.vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import {
   queryMilestoneList,
@@ -96,6 +156,7 @@ import {
   getMilestoneCategorySelectList,
   milestoneDelete
 } from '@/api/project/myProject/index';
+
 
 const props = defineProps<{
   visible: boolean;
@@ -204,60 +265,63 @@ const rules = {
   milestoneRemark: [{ required: true, message: '请填写详情', trigger: 'blur' }]
 };
 
-const pickerOptions = {
-  shortcuts: [
+const pickerOptions = [
     {
       text: '最近一周',
-      onClick(picker: any) {
+      value: () =>  {
         const end = new Date();
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit('pick', [start, end]);
+        return [start, end]
       }
     },
     {
       text: '最近一个月',
-      onClick(picker: any) {
+      value: () => {
         const end = new Date();
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit('pick', [start, end]);
+        return [start, end]
       }
     },
     {
       text: '最近三个月',
-      onClick(picker: any) {
+      value: () => {
         const end = new Date();
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-        picker.$emit('pick', [start, end]);
+        return [start, end]
       }
     },
     {
       text: '最近半年',
-      onClick(picker: any) {
+      value: () => {
         const end = new Date();
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 183);
-        picker.$emit('pick', [start, end]);
+        return [start, end]
       }
     },
     {
       text: '最近一年',
-      onClick(picker: any) {
+      value: () => {
         const end = new Date();
         const start = new Date();
         start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-        picker.$emit('pick', [start, end]);
+        return [start, end]
       }
     }
-  ]
-};
+  ];
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
 // 初始化 Form Project Milestone Types 为 Project Milestone Types 的副本
 form.projectMilestoneTypes = [...projectMilestoneTypes.value];
+
+// 处理更新事件
+const handleUpdateModelValue = (newValue: any) => {
+  form.sysOsses = newValue;
+};
 
 // 下载按钮操作
 function handleDownload(row: any) {
@@ -275,7 +339,7 @@ function handleTagChange(value: string | null) {
 
 function addTag() {
   const selectdId = getLabelId(selectedTag.value);
-  projectMilestoneTypes.value = [...projectMilestoneTypes.value, selectdId];
+  projectMilestoneTypes.value = [...projectMilestoneTypes.value, String(selectdId)];
 }
 
 // 辅助方法，根据标签获取对应的数字 ID
@@ -347,14 +411,6 @@ function editMilestoneBtn() {
     .catch(() => {
       ElMessage.error('修改失败');
     });
-}
-
-function handleSizeChange(val: number) {
-  console.log(`每页 ${val} 条`);
-}
-
-function handleCurrentChange(val: number) {
-  console.log(`当前页: ${val}`);
 }
 
 // 方法：获取里程碑列表
@@ -608,14 +664,16 @@ function updateTimelineDisplay() {
   showTimeline.value = hasMilestones;
 }
 
-function close() {
-  const eventsDialogEdit = ref(null);
-  if (eventsDialogEdit.value) {
-    eventsDialogEdit.value.close();
-  }
+function handleClose() {
+  emits('update:visible', false);
 }
 
-function handleClose(typeId: string | null) {
+function close() {
+  selectedTag.value = null; // 清空选中的标签
+  eventsDialogVisibleEdit.value = false;
+}
+
+function handleCloseTag(typeId: string | null) {
   // 从 projectMilestoneTypes 数组中移除被关闭的标签
   if (typeId !== null) {
     const index = projectMilestoneTypes.value.indexOf(typeId);
@@ -623,7 +681,6 @@ function handleClose(typeId: string | null) {
       projectMilestoneTypes.value.splice(index, 1); // 使用splice方法删除标签
     }
   }
-  emits('update:visible', false);
 }
 
 const handleReset = () => {

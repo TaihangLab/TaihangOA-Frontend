@@ -32,7 +32,7 @@
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li v-for="(file, index) in fileList" :key="file.uid" class="el-upload-list__item ele-upload-list__item-content">
         <el-link :href="`${file.url}`" :underline="false" target="_blank">
-          <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
+          <Document size="15px"/> {{ getFileName(file.name) }}
         </el-link>
         <div class="ele-upload-list__item-content-action">
           <el-button type="danger" link @click="handleDelete(index)">删除</el-button>
@@ -46,6 +46,7 @@
 import { propTypes } from '@/utils/propTypes';
 import { delOss, listByIds } from '@/api/system/oss';
 import { globalHeaders } from '@/utils/request';
+import { Document } from '@element-plus/icons-vue';
 
 const props = defineProps({
   modelValue: {
@@ -88,21 +89,27 @@ watch(
       if (Array.isArray(val)) {
         list = val;
       } else {
-        const res = await listByIds(val);
+        const res = await listByIds(String(val));
         list = res.data.map((oss) => {
           return {
-            name: oss.originalName,
+            originalName: oss.originalName,
             url: oss.url,
             ossId: oss.ossId
           };
         });
       }
+      console.log("This is a list", list);
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
-        item = { name: item.name, url: item.url, ossId: item.ossId };
+        console.log("This is a item", item);
+        console.log("item.name", item.name)
+        console.log("item.originalName", item.originalName)
+        item = { name: item.originalName, url: item.url, ossId: item.ossId };
         item.uid = item.uid || new Date().getTime() + temp++;
         return item;
       });
+      console.log("aa");
+      console.log(fileList);
     } else {
       fileList.value = [];
       return [];
@@ -197,6 +204,9 @@ const uploadedSuccessfully = () => {
 
 // 获取文件名称
 const getFileName = (name: string) => {
+  if(!name) {
+    return '';
+  }
   // 如果是url那么取最后的名字 如果不是直接返回
   if (name.lastIndexOf('/') > -1) {
     return name.slice(name.lastIndexOf('/') + 1);
