@@ -459,6 +459,8 @@ onUnmounted(() => {
   transform: translate(-50%, -50%);
   font-size: 60px;
   white-space: nowrap;
+  font-weight: bold;
+  font-family: 'Microsoft YaHei';
 }
 
 .centered-title::before {
