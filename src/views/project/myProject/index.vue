@@ -242,13 +242,7 @@ function handleQueryRequest(queryParams: { [key: string]: any }) {
   getProjectList();
 }
 
-function getProjectList() {
-  request({
-    url: '/project/my/getMyList',
-    method: 'post',
-    data: queryParams,
-    params: queryParam
-  })
+
 async function getProjectList() {
   await queryProjectList(queryParams, queryParam)
     .then((resp) => {
