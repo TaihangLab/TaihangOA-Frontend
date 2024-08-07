@@ -73,8 +73,15 @@
 
 <script setup lang="ts">
 // 数据
-import { deptTreeSelect } from '@/api/system/role';
+import { deptTreeSelect } from '@/api/system/user';
 import { listUser } from '@/api/system/user';
+import { ref } from 'vue';
+interface DeptOptionsType {
+  deptId: number | string;
+  deptName: string;
+  children: DeptOptionsType[];
+}
+
 
 // 定义 emit
 const emit = defineEmits(['query-request']);
@@ -84,11 +91,14 @@ const projectLevel = ref([]);
 const responsiblePerson = ref([]);
 const projectEstablishTime = ref<[DateModelType, DateModelType]>(['', '']);
 const projectScheduledCompletionTime = ref<[DateModelType, DateModelType]>(['', '']);
+const projectEstablishTime = ref([]);
+const projectScheduledCompletionTime = ref([]);
 const myProjectFrom = reactive({});
 const myProjectLook = reactive({});
 const projectListLook = reactive({});
 const queryFormRef = ref<ElFormInstance>();
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const deptOptions = ref<DeptOptionsType[]>([]);
 
 const queryParams = reactive({
   pageNum: 1,

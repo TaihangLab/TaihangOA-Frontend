@@ -1187,3 +1187,13 @@ export function updateProject(
     }
   });
 }
+
+export function deleteProject(projectId: string) {
+  return request({
+    url: '/project/my/delete',
+    method: 'get',
+    params: {
+      projectId: projectId
+    }
+  });
+}

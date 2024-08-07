@@ -1,5 +1,13 @@
 import request from '@/utils/request';
-import { MilestoneFrom, combinedSearchDataList, combinedSearchDataSetList, deleteParams, queryPara } from '@/api/project/myProject/types';
+import {
+  MilestoneFrom,
+  combinedSearchDataList,
+  combinedSearchDataSetList,
+  deleteParams,
+  queryPara,
+  queryProjectData,
+  queryParam
+} from '@/api/project/myProject/types';
 
 // 新增大事记
 export function milestoneAdd(data: MilestoneFrom) {
@@ -44,3 +52,15 @@ export function milestoneDelete(params: deleteParams) {
     params: params
   });
 }
+
+// 查询项目列表
+export function queryProjectList(data: queryProjectData, params: typeof queryParam) {
+  return request({
+    url: '/project/my/getMyList',
+    method: 'post',
+    data: data,
+    params: params
+  });
+}
+
+

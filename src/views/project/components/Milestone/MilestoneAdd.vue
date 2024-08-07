@@ -12,10 +12,10 @@
             v-for="(tag, index) in form.projectMilestoneTypes"
             :key="index"
             closable
-            @close="handleCloseTag(tag)"
             :type="getTagType(tag)"
             :style="{ color: getTextColor(tag) }"
             style="height: 30px; margin: 2px; /* 设置每个标签的外边距 */"
+            @close="handleCloseTag(tag)"
           >
             {{ tag }}
           </el-tag>

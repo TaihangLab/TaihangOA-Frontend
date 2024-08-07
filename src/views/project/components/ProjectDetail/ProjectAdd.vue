@@ -100,7 +100,7 @@ import { addProject, getProject, updateProject } from '@/api/project/myProject/p
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
-const emits = defineEmits(['update:visible']);
+const emits = defineEmits(['update:visible', 'reloadProjectList']);
 
 const stepID = ref(0);
 const isStepHover = ref(false);
@@ -229,6 +229,7 @@ const submit = async () => {
       projectUpdateFundForm
     )
       .then((resp: any) => {
+        emits('reloadProjectList');
         ElMessage({
           message: '恭喜你，项目修改成功',
           type: 'success'
@@ -265,6 +266,7 @@ const submit = async () => {
     projectAddFundForm
   )
     .then((resp: any) => {
+      emits('reloadProjectList');
       ElMessage({
         message: '恭喜你，项目新增成功',
         type: 'success'

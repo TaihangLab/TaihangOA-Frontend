@@ -45,7 +45,7 @@
           :style="{ '--icon-color': '#0bbd87' }"
         >
           <el-card>
-            <h4>名称：{{ item.milestoneTitle }}</h4>
+            <h4 style="font-weight: bold; font-size: 17px;" >{{ item.milestoneTitle }}</h4>
             <el-tag
               v-for="(type, index) in item.categoryTypeSet"
               :key="index"
@@ -53,13 +53,20 @@
               effect="light"
               plain
               size="small"
-              :style="{ color: getTextColor(type), marginRight: '8px' }"
+              :style="{ color: getTextColor(type), marginRight: '8px'}"
             >
               {{ getLabel(type) }}
             </el-tag>
-            <p>详情：{{ item.milestoneRemark }}</p>
+            <p style="font-family: 'SimSun', '宋体', serif;">{{ item.milestoneRemark }}</p>
             <div class="attachments-container">
-              <el-button v-for="(oss, ossIndex) in item.sysOsses" :key="ossIndex" size="small" type="text" icon="Download" @click="handleDownload(oss)">
+              <el-button
+                v-for="(oss, ossIndex) in item.sysOsses"
+                :key="ossIndex"
+                size="small"
+                type="text"
+                icon="Download"
+                @click="handleDownload(oss)"
+              >
                 {{ oss.originalName }}</el-button
               >
             </div>
@@ -68,7 +75,7 @@
                 v-hasPermi="['project:my:milestoneedit']"
                 type="success"
                 icon="EditPen"
-                size="small"
+                size="default"
                 circle
                 @click="editMilestone(item)"
               ></el-button>
@@ -76,7 +83,7 @@
                 v-hasPermi="['project:my:milestonedelete']"
                 type="danger"
                 icon="DeleteFilled"
-                size="small"
+                size="default"
                 circle
                 @click="confirmDeleteMilestone(item)"
               ></el-button>
@@ -86,61 +93,59 @@
       </el-timeline>
       <div v-show="!showTimeline" class="no-data-message" style="color: #909399; font-size: 14px; text-align: center">暂无大事记数据</div>
 
-      <el-dialog ref="eventsDialogEdit" title="修改大事记" :model-value="eventsDialogVisibleEdit"
-                 :lock-scroll="false" :append-to-body="true" width="50%" @close="close">
+      <el-dialog
+        ref="eventsDialogEdit"
+        title="修改大事记"
+        :model-value="eventsDialogVisibleEdit"
+        :lock-scroll="false"
+        :append-to-body="true"
+        width="50%"
+        @close="close"
+      >
         <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
           <el-form-item label="标题" prop="milestoneTitle">
             <el-input v-model="form.milestoneTitle"></el-input>
           </el-form-item>
           <!-- 标签选择 -->
-          <el-form-item label="标签" prop="tags" >
+          <el-form-item label="标签" prop="tags">
             <div class="tag-container">
               <el-tag
                 v-for="(typeId, index) in projectMilestoneTypes"
                 :key="index"
                 closable
-                @close="handleCloseTag(typeId)"
                 :type="getLabelType(parseInt(typeId, 10))"
                 :style="{ color: getTextColor(parseInt(typeId, 10)), marginRight: '8px' }"
+                @close="handleCloseTag(typeId)"
               >
                 {{ getLabel(parseInt(typeId, 10)) }}
               </el-tag>
-              <el-select v-model="selectedTag" placeholder="请选择标签" @change="addTag"
-                         style="flex: 1; width: 140px" clearable>
-                <el-option
-                  v-for="tag in tagOptions"
-                  :key="tag.value"
-                  :label="tag.label"
-                  :value="tag.label"
-                ></el-option>
+              <el-select v-model="selectedTag" placeholder="请选择标签" style="flex: 1; width: 140px" clearable @change="addTag">
+                <el-option v-for="tag in tagOptions" :key="tag.value" :label="tag.label" :value="tag.label"></el-option>
               </el-select>
             </div>
           </el-form-item>
           <el-form-item label="时间" prop="milestoneDate">
             <el-col :span="11">
               <el-date-picker
+                v-model="form.milestoneDate"
                 type="date"
                 placeholder="选择日期"
-                v-model="form.milestoneDate"
-                style="width: 100%;"
+                style="width: 100%"
                 value-format="YYYY-MM-DD"
               ></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item label="详请" prop="milestoneRemark">
-            <el-input type="textarea" v-model="form.milestoneRemark"></el-input>
+            <el-input v-model="form.milestoneRemark" type="textarea"></el-input>
           </el-form-item>
           <el-form-item label="附件">
-            <FileUpload :modelValue="form.sysOsses" :idList="ossids" @update:modelValue="handleUpdateModelValue" />
+            <FileUpload :model-value="form.sysOsses" :id-list="ossids" @update:model-value="handleUpdateModelValue" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"  @click="editMilestoneBtn()">
-              确定
-            </el-button>
+            <el-button type="primary" @click="editMilestoneBtn()"> 确定 </el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
-
     </el-dialog>
   </div>
 </template>
@@ -156,7 +161,6 @@ import {
   getMilestoneCategorySelectList,
   milestoneDelete
 } from '@/api/project/myProject/index';
-
 
 const props = defineProps<{
   visible: boolean;
@@ -266,52 +270,52 @@ const rules = {
 };
 
 const pickerOptions = [
-    {
-      text: '最近一周',
-      value: () =>  {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-        return [start, end]
-      }
-    },
-    {
-      text: '最近一个月',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        return [start, end]
-      }
-    },
-    {
-      text: '最近三个月',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-        return [start, end]
-      }
-    },
-    {
-      text: '最近半年',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 183);
-        return [start, end]
-      }
-    },
-    {
-      text: '最近一年',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-        return [start, end]
-      }
+  {
+    text: '最近一周',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+      return [start, end];
     }
-  ];
+  },
+  {
+    text: '最近一个月',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      return [start, end];
+    }
+  },
+  {
+    text: '最近三个月',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+      return [start, end];
+    }
+  },
+  {
+    text: '最近半年',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 183);
+      return [start, end];
+    }
+  },
+  {
+    text: '最近一年',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+      return [start, end];
+    }
+  }
+];
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
