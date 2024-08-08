@@ -3,12 +3,12 @@
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
       <div v-show="showSearch" class="mb-[10px]">
         <el-card shadow="hover">
-          <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-            <el-form-item label="项目成员" prop="roleName">
-              <el-input v-model="queryParams.roleName" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
+          <el-form ref="queryFormRef" :model="form" :inline="true">
+            <el-form-item label="项目成员" prop="userName">
+              <el-input v-model="form.userId" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="项目名称" prop="roleKey">
-              <el-input v-model="queryParams.roleKey" placeholder="请输入权限字符" clearable @keyup.enter="handleQuery" />
+              <el-input v-model="form.projectId" placeholder="请输入权限字符" clearable @keyup.enter="handleQuery" />
             </el-form-item>
 
             <el-form-item>
@@ -25,132 +25,98 @@
           <el-col :span="1.5">
             <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
-          <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
+          <right-toolbar v-model:showSearch="showSearch" @query-table="resetQuery"></right-toolbar>
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" border :data="roleList" @selection-change="handleSelectionChange">
+      <el-table ref="roleTableRef" v-loading="loading" border :data="memberList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="姓名" fixed="left" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="所属公司" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="所属部门" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="职称" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="学历" prop="roleName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="当前参与项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="当前参与国家级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="当前参与省部级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与国家级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与省部级项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-        <el-table-column label="参与自研项目数" prop="roleName" :show-overflow-tooltip="true" width="170" />
-
-        <el-table-column fixed="right" label="操作" width="50">
+        <el-table-column label="姓名" fixed="left" prop="nickName" :show-overflow-tooltip="true" width="200" />
+        <el-table-column label="所属公司" prop="deptName" :show-overflow-tooltip="true" width="200" />
+        <el-table-column label="所属部门" prop="deptName" :show-overflow-tooltip="true" width="180" />
+        <el-table-column label="职称" prop="jobTitle" :show-overflow-tooltip="true" width="160px">
           <template #default="scope">
-            <el-tooltip v-if="scope.row.roleId !== 1" content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
+            {{ sys_jobtitle_type[scope.row.jobTitle]?.label || '未知' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="学历" prop="diploma" :show-overflow-tooltip="true" width="160px">
+          <template #default="scope">
+            {{ sys_diploma_type[scope.row.diploma]?.label || '未知' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="当前参与项目数" prop="userProjectNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="当前参与国家级项目数" prop="userNationNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="当前参与省部级项目数" prop="userProvincialNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="当前参与自研项目数" prop="userEnterpriseNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="参与项目总数" prop="userProjectNum" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="参与国家级项目总数" prop="userNationNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="参与省部级项目总数" prop="userProvincialNumNow" :show-overflow-tooltip="true" width="160" />
+        <el-table-column label="参与自研项目总数" prop="userEnterpriseNumNow" :show-overflow-tooltip="true" width="160" />
+
+        <el-table-column fixed="right" label="操作" width="70px">
+          <template #default="scope">
+            <el-tooltip content="详情" placement="top">
+              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row.userId)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
 
-      <memberDetail :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event"></memberDetail>
+      <MemberDetail :visible="isDetailDialogVisible" :member-id="memberId" @update:visible="isDetailDialogVisible = $event"></MemberDetail>
 
       <pagination
         v-if="total > 0"
         v-model:total="total"
         v-model:page="queryParams.pageNum"
         v-model:limit="queryParams.pageSize"
-        @pagination="getList"
+        @pagination="getMemberList"
       />
     </el-card>
   </div>
 </template>
 
-<script setup name="Role" lang="ts">
-import { addRole, changeRoleStatus, dataScope, delRole, getRole, listRole, updateRole, deptTreeSelect } from '@/api/system/role';
-import { roleMenuTreeselect, treeselect as menuTreeselect } from '@/api/system/menu/index';
-import { RoleVO, RoleForm, RoleQuery, DeptTreeOption } from '@/api/system/role/types';
-import { MenuTreeOption, RoleMenuTree } from '@/api/system/menu/types';
+<script setup name="Members" lang="ts">
 import { ref } from 'vue';
-import memberDetail from '@/views/project/components/MemberDetails/MemberDetails.vue';
-
-const isDetailDialogVisible = ref(false);
-
-const showDetailDialog = (row: RoleVO) => {
-  // 在这里可以设置要显示的详情内容
-  isDetailDialogVisible.value = true;
-};
+import MemberDetail from '@/views/project/components/MemberDetails/MemberDetails.vue';
+import { getAllList } from '@/api/project/members';
+import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-
-const roleList = ref<RoleVO[]>();
-const loading = ref(true);
+const { sys_jobtitle_type, sys_diploma_type } = toRefs<any>(proxy?.useDict('sys_jobtitle_type', 'sys_diploma_type'));
 const showSearch = ref(true);
-const ids = ref<Array<string | number>>([]);
-const single = ref(true);
-const multiple = ref(true);
-const total = ref(0);
-const dateRange = ref<[DateModelType, DateModelType]>(['', '']);
-const menuOptions = ref<MenuTreeOption[]>([]);
-const menuExpand = ref(false);
-const menuNodeAll = ref(false);
-const deptExpand = ref(true);
-const deptNodeAll = ref(false);
-const deptOptions = ref<DeptTreeOption[]>([]);
-
-/** 数据范围选项*/
+const isDetailDialogVisible = ref(false);
+const memberId = ref<number>();
+const memberList = ref<ProjectUserVo[]>([]);
 const queryFormRef = ref<ElFormInstance>();
-const roleFormRef = ref<ElFormInstance>();
-const dataScopeRef = ref<ElFormInstance>();
-const menuRef = ref<ElTreeInstance>();
-const deptRef = ref<ElTreeInstance>();
 
-const initForm: RoleForm = {
-  roleId: undefined,
-  roleSort: 1,
-  status: '0',
-  roleName: '',
-  roleKey: '',
-  menuCheckStrictly: true,
-  deptCheckStrictly: true,
-  remark: '',
-  dataScope: '1',
-  menuIds: [],
-  deptIds: []
+const loading = ref(true);
+const total = ref(0);
+
+const showDetailDialog = (userId: number) => {
+  isDetailDialogVisible.value = true;
+  memberId.value = userId;
 };
 
-const data = reactive<PageData<RoleForm, RoleQuery>>({
-  form: { ...initForm },
+const initFormData: ProjectUserBo = {
+  projectId: undefined,
+  userId: undefined
+};
+
+const data = reactive({
+  form: { ...initFormData },
   queryParams: {
     pageNum: 1,
-    pageSize: 10,
-    roleName: '',
-    roleKey: '',
-    status: ''
-  },
-  rules: {
-    roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
-    roleKey: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
-    roleSort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }]
+    pageSize: 10
   }
 });
-const { form, queryParams, rules } = toRefs(data);
 
-const dialog = reactive<DialogOption>({
-  visible: false,
-  title: ''
-});
+const { queryParams, form } = toRefs(data);
 
-/**
- * 查询角色列表
- */
-const getList = () => {
-  loading.value = true;
-  listRole(proxy?.addDateRange(queryParams.value, dateRange.value)).then((res) => {
-    roleList.value = res.rows;
-    total.value = res.total;
-    loading.value = false;
-  });
+const getMemberList = async () => {
+  const response = await getAllList(data.queryParams, data.form);
+  memberList.value = response.rows;
+  total.value = response.total;
+  loading.value = false;
 };
 
 /**
@@ -158,86 +124,32 @@ const getList = () => {
  */
 const handleQuery = () => {
   queryParams.value.pageNum = 1;
-  getList();
+  getMemberList();
 };
 
 /** 重置 */
 const resetQuery = () => {
-  dateRange.value = ['', ''];
   queryFormRef.value?.resetFields();
+  form.value = { ...initFormData };
   handleQuery();
 };
 
 /** 导出按钮操作 */
 const handleExport = () => {
   proxy?.download(
-    'system/role/export',
+    'project/members/export',
     {
       ...queryParams.value
     },
-    `role_${new Date().getTime()}.xlsx`
+    `members_${new Date().getTime()}.xlsx`
   );
 };
-/** 多选框选中数据 */
-const handleSelectionChange = (selection: RoleVO[]) => {
-  ids.value = selection.map((item: RoleVO) => item.roleId);
-  single.value = selection.length != 1;
-  multiple.value = !selection.length;
-};
 
-/** 角色状态修改 */
-const handleStatusChange = async (row: RoleVO) => {
-  let text = row.status === '0' ? '启用' : '停用';
-  try {
-    await proxy?.$modal.confirm('确认要"' + text + '""' + row.roleName + '"角色吗?');
-    await changeRoleStatus(row.roleId, row.status);
-    proxy?.$modal.msgSuccess(text + '成功');
-  } catch {
-    row.status = row.status === '0' ? '1' : '0';
-  }
-};
-
-/** 查询菜单树结构 */
-const getMenuTreeselect = async () => {
-  const res = await menuTreeselect();
-  menuOptions.value = res.data;
-};
-/** 重置新增的表单以及其他数据  */
-const reset = () => {
-  menuRef.value?.setCheckedKeys([]);
-  menuExpand.value = false;
-  menuNodeAll.value = false;
-  deptExpand.value = true;
-  deptNodeAll.value = false;
-  form.value = { ...initForm };
-  roleFormRef.value?.resetFields();
-};
-
-/** 修改角色 */
-const handleUpdate = async (row?: RoleVO) => {
-  reset();
-  const roleId = row?.roleId || ids.value[0];
-  const { data } = await getRole(roleId);
-  Object.assign(form.value, data);
-  form.value.roleSort = Number(form.value.roleSort);
-  const res = await getRoleMenuTreeselect(roleId);
-  dialog.title = '修改角色';
-  dialog.visible = true;
-  res.checkedKeys.forEach((v) => {
-    nextTick(() => {
-      menuRef.value?.setChecked(v, true, false);
-    });
-  });
-};
-/** 根据角色ID查询菜单树结构 */
-const getRoleMenuTreeselect = (roleId: string | number) => {
-  return roleMenuTreeselect(roleId).then((res): RoleMenuTree => {
-    menuOptions.value = res.data.menus;
-    return res.data;
-  });
+const handleSelectionChange = () => {
+  console.log('handleSelectionChange');
 };
 
 onMounted(() => {
-  getList();
+  getMemberList();
 });
 </script>

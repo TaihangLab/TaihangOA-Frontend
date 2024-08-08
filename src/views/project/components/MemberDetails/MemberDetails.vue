@@ -1,10 +1,10 @@
 <template>
-  <el-dialog :model-value="visible" title="详情" width="50%" @update:model-value="updateVisible">
+  <el-dialog :model-value="visible" title="详情" width="50%" @update:model-value="updateVisible" @close="closeDialog">
     <div style="margin-top: 10px"></div>
     <el-collapse :model-value="activeNames">
       <el-collapse-item name="1" title="当前参与的国家级项目详情">
         <el-table
-          :data="projectListLook.nationProjectBaseInfos"
+          :data="projectList.nationProjectBaseInfos"
           border
           style="width: 100%"
           :row-style="{ height: '50px' }"
@@ -20,7 +20,7 @@
       </el-collapse-item>
       <el-collapse-item name="2" title="当前参与的省部级项目详情">
         <el-table
-          :data="projectListLook.provincialProjectBaseInfos"
+          :data="projectList.provincialProjectBaseInfos"
           border
           style="width: 100%"
           :row-style="{ height: '50px' }"
@@ -36,7 +36,7 @@
       </el-collapse-item>
       <el-collapse-item name="3" title="当前参与的自研项目详情">
         <el-table
-          :data="projectListLook.enterpriseProjectBaseInfos"
+          :data="projectList.enterpriseProjectBaseInfos"
           border
           style="width: 100%"
           :row-style="{ height: '50px' }"
@@ -56,82 +56,62 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from 'vue';
-
-import { defineComponent, Prop, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { getDetails } from '@/api/project/members';
+import { ProjectUserDetailVo } from '@/api/project/members/types';
 
 const props = defineProps<{
-  memberId: string | undefined;
+  memberId: string | number | undefined;
   visible: boolean;
 }>();
 
-const contentStyle = ref({
-  'text-align': 'center',
-  width: '60%'
+const projectList = ref<ProjectUserDetailVo>({
+  nationProjectBaseInfos: [],
+  provincialProjectBaseInfos: [],
+  enterpriseProjectBaseInfos: []
 });
 
 const activeNames = ref<string[]>(['1', '2', '3']);
 
-const labelStyle = ref({
-  color: '#000',
-  width: '30%'
-});
-
-const params = ref({
-  userId: undefined as string | undefined
-});
-
-const projectListLook = ref([]);
-
-const checkProject = () => {
-  params.value.userId = props.memberId;
-  getDetails(params.value)
-    .then((resp) => {
-      projectListLook.value = resp.data;
-    })
-    .catch((error) => {
-      console.error('Error fetching project details:', error);
+const projectDetail = () => {
+  if (props.memberId !== undefined) {
+    getDetails(props.memberId).then((resp) => {
+      projectList.value = resp.data;
     });
+  }
 };
 
 watch(
-  () => props.memberId,
-  (newVal) => {
-    params.value.userId = newVal;
-    checkProject();
+  () => [props.memberId, props.visible],
+  ([newMemberId, newVisible]) => {
+    if (newMemberId !== undefined) {
+      // console.log('memberId changed:', newMemberId);
+      projectDetail();
+    }
   },
   { immediate: true }
 );
-
-onMounted(() => {
-  checkProject();
-});
 
 const emits = defineEmits(['update:visible']);
 
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
   if (!value) {
-    // 关闭对话框时重置状态
     activeNames.value = ['1', '2', '3'];
   }
+};
+const resetProjectList = () => {
+  projectList.value = {
+    nationProjectBaseInfos: [],
+    provincialProjectBaseInfos: [],
+    enterpriseProjectBaseInfos: []
+  };
 };
 
 const closeDialog = () => {
   emits('update:visible', false);
+  resetProjectList();
 };
-
-const confirmDialog = () => {
-  // 处理确定逻辑
-  emits('update:visible', false);
-};
-// 使用 watch 监听 updateVisible 变化并打印到控制台
-watch(
-  () => props.visible,
-  (newValue, oldValue) => {
-    console.log('Visible changed:', newValue);
-  }
-);
 </script>
 
 <style scoped>

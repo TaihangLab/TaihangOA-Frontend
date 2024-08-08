@@ -1,21 +1,24 @@
 import request from '@/utils/request';
-import { Params, Data, UserDetails } from './types';
+import { AxiosPromise } from 'axios';
+import { ProjectUserBo, ProjectUserDetailVo, ProjectUserVo } from '@/api/project/members/types';
 
 // 获取用户详情
-export function getDetails(params: Params): Promise<UserDetails> {
+export function getDetails(memberId: number | string): AxiosPromise<ProjectUserDetailVo> {
   return request({
     url: '/project/user/getDetails',
     method: 'get',
-    params: params
+    params: {
+      userId: memberId
+    }
   });
 }
 
 // 查看用户列表
-export function getAllList(data: Data, params: Params): Promise<any> {
+export const getAllList = (PageQuery: PageQuery, data: ProjectUserBo): AxiosPromise<ProjectUserVo[]> => {
   return request({
     url: '/project/user/getAllList',
     method: 'post',
-    data: data,
-    params: params
+    params: PageQuery,
+    data: data
   });
-}
+};
