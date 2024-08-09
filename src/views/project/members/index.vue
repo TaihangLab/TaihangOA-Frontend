@@ -5,10 +5,24 @@
         <el-card shadow="hover">
           <el-form ref="queryFormRef" :model="form" :inline="true">
             <el-form-item label="项目成员" prop="userName">
-              <el-input v-model="form.userId" placeholder="请输入角色名称" clearable @keyup.enter="handleQuery" />
+              <el-cascader
+                v-model="responseDept"
+                :options="deptOptions"
+                clearable
+                :show-all-levels="false"
+                placeholder="请选择成员"
+                @keyup.enter="handleQuery"
+              ></el-cascader>
             </el-form-item>
-            <el-form-item label="项目名称" prop="roleKey">
-              <el-input v-model="form.projectId" placeholder="请输入权限字符" clearable @keyup.enter="handleQuery" />
+            <el-form-item label="项目名称" prop="projectName">
+              <el-cascader
+                v-model="responseProject"
+                :options="projectOptions"
+                clearable
+                :show-all-levels="false"
+                placeholder="请选择项目"
+                @keyup.enter="handleQuery"
+              ></el-cascader>
             </el-form-item>
 
             <el-form-item>
@@ -80,6 +94,9 @@ import { ref } from 'vue';
 import MemberDetail from '@/views/project/components/MemberDetails/MemberDetails.vue';
 import { getAllList } from '@/api/project/members';
 import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
+import { getProjectTree } from '@/api/research/IntellectualProperty';
+import { deptTreeSelect } from '@/api/system/user';
+import { Option } from 'element-plus/es/components/segmented/src/types';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { sys_jobtitle_type, sys_diploma_type } = toRefs<any>(proxy?.useDict('sys_jobtitle_type', 'sys_diploma_type'));
@@ -88,6 +105,8 @@ const isDetailDialogVisible = ref(false);
 const memberId = ref<number>();
 const memberList = ref<ProjectUserVo[]>([]);
 const queryFormRef = ref<ElFormInstance>();
+const responseProject = ref([]);
+const responseDept = ref([]);
 
 const loading = ref(true);
 const total = ref(0);
@@ -104,13 +123,16 @@ const initFormData: ProjectUserBo = {
 
 const data = reactive({
   form: { ...initFormData },
+  projectOptions: ref<Option[]>([]),
+  deptOptions: ref<any[]>([]),
+  memberOptions: ref<Option[]>([]),
   queryParams: {
     pageNum: 1,
     pageSize: 10
   }
 });
 
-const { queryParams, form } = toRefs(data);
+const { queryParams, form ,projectOptions, deptOptions, memberOptions} = toRefs(data);
 
 const getMemberList = async () => {
   const response = await getAllList(data.queryParams, data.form);
@@ -120,15 +142,38 @@ const getMemberList = async () => {
 };
 
 /**
+ * 获取项目树
+ */
+const getProjectTreeSelect = async () => {
+  const resp = await getProjectTree();
+  data.projectOptions = resp.data;
+}
+
+/** 查询部门下拉树结构 */
+const getTreeSelect = async () => {
+  const res = await deptTreeSelect();
+  data.deptOptions = res.data;
+  console.log( 'data.deptOptions',memberOptions.value);
+};
+
+/**
  * 搜索按钮操作
  */
 const handleQuery = () => {
+  if (Array.isArray(responseProject.value) && responseProject.value.length > 0) {
+    form.value.projectId = responseProject.value[responseProject.value.length - 1];
+  } else {
+    form.value.projectId = undefined;
+    form.value.userId = undefined;
+  }
   queryParams.value.pageNum = 1;
   getMemberList();
 };
 
 /** 重置 */
 const resetQuery = () => {
+  responseProject.value = [];
+  responseDept.value = [];
   queryFormRef.value?.resetFields();
   form.value = { ...initFormData };
   handleQuery();
@@ -151,5 +196,7 @@ const handleSelectionChange = () => {
 
 onMounted(() => {
   getMemberList();
+  getProjectTreeSelect();
+  getTreeSelect()
 });
 </script>
