@@ -68,7 +68,7 @@
         </el-table-column>
       </el-table>
 
-      <newIp :visible="isNewIpVisible" @update:visible="isNewIpVisible = $event"  ip-id="i"/>
+      <newIp :visible="isNewIpVisible" @update:visible="isNewIpVisible = $event" ip-id="i"/>
       <ipDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
 
       <pagination
