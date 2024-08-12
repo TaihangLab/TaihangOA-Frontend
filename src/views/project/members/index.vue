@@ -43,7 +43,7 @@
         </el-row>
       </template>
 
-      <el-table ref="roleTableRef" v-loading="loading" border :data="memberList" @selection-change="handleSelectionChange">
+      <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" fixed="left" prop="nickName" :show-overflow-tooltip="true" width="200" />
         <el-table-column label="所属公司" prop="deptName" :show-overflow-tooltip="true" width="200" />
@@ -105,6 +105,7 @@ const isDetailDialogVisible = ref(false);
 const memberId = ref<number>();
 const memberList = ref<ProjectUserVo[]>([]);
 const queryFormRef = ref<ElFormInstance>();
+const memberTableRef = ref<ElTableInstance>();
 const responseProject = ref([]);
 const responseDept = ref([]);
 
@@ -134,7 +135,9 @@ const data = reactive({
 
 const { queryParams, form ,projectOptions, deptOptions, memberOptions} = toRefs(data);
 
+/** 获取成员列表 */
 const getMemberList = async () => {
+  loading.value = true;
   const response = await getAllList(data.queryParams, data.form);
   memberList.value = response.rows;
   total.value = response.total;
@@ -168,6 +171,7 @@ const handleQuery = () => {
   }
   queryParams.value.pageNum = 1;
   getMemberList();
+
 };
 
 /** 重置 */
@@ -177,6 +181,7 @@ const resetQuery = () => {
   queryFormRef.value?.resetFields();
   form.value = { ...initFormData };
   handleQuery();
+  loading.value = false;
 };
 
 /** 导出按钮操作 */

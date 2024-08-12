@@ -3,7 +3,7 @@
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave"></transition>
     <div v-show="showSearch" class="mb-[10px]">
       <el-card shadow="hover">
-        <el-form ref="dataFormRef" :model="queryParams" :inline="true" class="demo-form-inline">
+        <el-form ref="ipDataRef" :model="queryParams" :inline="true" class="demo-form-inline">
           <el-form-item label="项目名称" prop="ProjectName">
             <el-cascader
               v-model="responsibleproject"
@@ -86,7 +86,7 @@ import request from '@/utils/request';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const responsibleproject = ref([]);
-const dataFormRef = ref<ElFormInstance>();
+const ipDataRef = ref<ElFormInstance>();
 const total = ref(0);
 
 const attachmentslist = ref([]);
