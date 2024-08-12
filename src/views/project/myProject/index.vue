@@ -1,104 +1,106 @@
 <template>
-  <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
-    <div v-show="showSearch" class="mb-[10px]">
+  <div>
+    <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave">
+      <div v-show="showSearch" class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form ref="queryFormRef" :inline="true" :model="queryParams">
+            <el-form-item label="项目名称">
+              <el-input v-model="queryParams.assignedSubjectName" clearable placeholder="请输入项目名称" @keyup.enter="handleQuery"></el-input>
+            </el-form-item>
+            <el-form-item label="负责课题">
+              <el-input v-model="queryParams.assignedSubjectSection" clearable placeholder="请输入负责课题名称" @keyup.enter="handleQuery"></el-input>
+            </el-form-item>
+            <el-form-item label="项目成员">
+              <el-cascader
+                v-model="responsiblePerson"
+                :options="cascaderOptions"
+                clearable
+                :show-all-levels="false"
+                placeholder="请选择项目成员"
+                @keyup.enter="handleQuery"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="合作单位">
+              <el-cascader
+                v-model="CoCompany"
+                :options="cocompanyOptions"
+                clearable
+                placeholder="请选择有无合作单位"
+                @keyup.enter="handleQuery"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item label="立项时间">
+              <el-date-picker
+                v-model="projectEstablishTime"
+                type="daterange"
+                unlink-panels
+                clearable
+                start-placeholder="请输入查询范围"
+                end-placeholder="如：2000-01-01"
+                value-format="YYYY-MM-DD"
+                range-separator="至"
+                :picker-options="pickerOptions"
+                @keyup.enter="handleQuery"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item label="项目计划验收时间" label-width="125px">
+              <el-date-picker
+                v-model="projectScheduledCompletionTime"
+                type="daterange"
+                unlink-panels
+                clearable
+                start-placeholder="请输入查询范围"
+                end-placeholder="如：2000-01-01"
+                value-format="YYYY-MM-DD"
+                range-separator="至"
+                :picker-options="pickerOptions"
+                @keyup.enter="handleQuery"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item label="项目级别">
+              <el-cascader
+                v-model="projectLevel"
+                :options="levelOptions"
+                clearable
+                placeholder="请选择项目级别"
+                @keyup.enter="handleQuery"
+              ></el-cascader>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+              <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+    <div>
       <el-card shadow="hover">
-        <el-form ref="queryFormRef" :inline="true" :model="queryParams">
-          <el-form-item label="项目名称">
-            <el-input v-model="queryParams.assignedSubjectName" clearable placeholder="请输入项目名称" @keyup.enter="handleQuery"></el-input>
-          </el-form-item>
-          <el-form-item label="负责课题">
-            <el-input v-model="queryParams.assignedSubjectSection" clearable placeholder="请输入负责课题名称" @keyup.enter="handleQuery"></el-input>
-          </el-form-item>
-          <el-form-item label="项目成员">
-            <el-cascader
-              v-model="responsiblePerson"
-              :options="cascaderOptions"
-              clearable
-              :show-all-levels="false"
-              placeholder="请选择项目成员"
-              @keyup.enter="handleQuery"
-            ></el-cascader>
-          </el-form-item>
-          <el-form-item label="合作单位">
-            <el-cascader
-              v-model="CoCompany"
-              :options="cocompanyOptions"
-              clearable
-              placeholder="请选择有无合作单位"
-              @keyup.enter="handleQuery"
-            ></el-cascader>
-          </el-form-item>
-          <el-form-item label="立项时间">
-            <el-date-picker
-              v-model="projectEstablishTime"
-              type="daterange"
-              unlink-panels
-              clearable
-              start-placeholder="请输入查询范围"
-              end-placeholder="如：2000-01-01"
-              value-format="YYYY-MM-DD"
-              range-separator="至"
-              :picker-options="pickerOptions"
-              @keyup.enter="handleQuery"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="项目计划验收时间" label-width="125px">
-            <el-date-picker
-              v-model="projectScheduledCompletionTime"
-              type="daterange"
-              unlink-panels
-              clearable
-              start-placeholder="请输入查询范围"
-              end-placeholder="如：2000-01-01"
-              value-format="YYYY-MM-DD"
-              range-separator="至"
-              :picker-options="pickerOptions"
-              @keyup.enter="handleQuery"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="项目级别">
-            <el-cascader
-              v-model="projectLevel"
-              :options="levelOptions"
-              clearable
-              placeholder="请选择项目级别"
-              @keyup.enter="handleQuery"
-            ></el-cascader>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
+        <template #header>
+          <el-row :gutter="10">
+            <el-col :span="1.5">
+              <el-button type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
+            </el-col>
+            <right-toolbar v-model:showSearch="showSearch" @query-table="getProjectList"></right-toolbar>
+          </el-row>
+        </template>
+        <ProjectAddDialog
+          :visible="isAddDialogVisible"
+          update-id=""
+          @update:visible="isAddDialogVisible = $event"
+          @reload-project-list="getProjectList"
+        />
       </el-card>
     </div>
-  </transition>
-  <div>
-    <el-card shadow="hover">
-      <template #header>
-        <el-row :gutter="10">
-          <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
-          </el-col>
-          <right-toolbar v-model:showSearch="showSearch" @query-table="getProjectList"></right-toolbar>
-        </el-row>
-      </template>
-      <ProjectAddDialog
-        :visible="isAddDialogVisible"
-        update-id=""
-        @update:visible="isAddDialogVisible = $event"
-        @reload-project-list="getProjectList"
-      />
-    </el-card>
+    <Project
+      :button-type="1"
+      :my-project-look="myProjectLook"
+      :project-list-look="projectListLook"
+      :total="total"
+      :query-param="queryParam"
+      @reload-project-list="getProjectList"
+    />
   </div>
-  <Project
-    :button-type="1"
-    :my-project-look="myProjectLook"
-    :project-list-look="projectListLook"
-    :total="total"
-    :query-param="queryParam"
-    @reload-project-list="getProjectList"
-  />
 </template>
 
 <script setup lang="ts">
@@ -241,7 +243,6 @@ function handleQueryRequest(queryParams: { [key: string]: any }) {
   queryParam.pageNum = 1;
   getProjectList();
 }
-
 
 async function getProjectList() {
   await queryProjectList(queryParams, queryParam)

@@ -98,18 +98,12 @@ watch(
           };
         });
       }
-      console.log("This is a list", list);
       // 然后将数组转为对象数组
       fileList.value = list.map((item) => {
-        console.log("This is a item", item);
-        console.log("item.name", item.name)
-        console.log("item.originalName", item.originalName)
         item = { name: item.originalName, url: item.url, ossId: item.ossId };
         item.uid = item.uid || new Date().getTime() + temp++;
         return item;
       });
-      console.log("aa");
-      console.log(fileList);
     } else {
       fileList.value = [];
       return [];

@@ -1,5 +1,5 @@
 // 专项直接经费
-const categoryOptions1 = [
+export const categoryOptions1 = [
   {
     label: '设备费',
     value: 'sbfZxZj',
@@ -223,7 +223,7 @@ const categoryOptions1 = [
     value: 'jxzcZxZj'
   }
 ];
-export default categoryOptions1;
+
 /*自筹直接经费*/
 export const categoryOptions2 = [
   {
@@ -598,6 +598,34 @@ export const categoryOptions5 = [
   }
 ];
 
+export function clearCategories(categories) {
+  return categories.reduce((acc, category) => {
+    if (category.children) {
+      const clearedChildren = clearCategories(category.children);
+      if (clearedChildren.length > 0 || category.content !== 0) {
+        acc.push({ ...category, children: clearedChildren });
+      }
+    } else if (category.content !== 0) {
+      acc.push(category);
+    }
+    return acc;
+  }, []);
+}
+
+export function clearContent(categories: any[]) {
+  categories.forEach((category) => {
+    // 如果当前对象有 `content` 属性，将其设置为 0
+    if (category.hasOwnProperty('content')) {
+      category.content = 0;
+    }
+
+    // 如果当前对象有 `children` 属性，递归调用 `clearContent`
+    if (category.children && category.children.length > 0) {
+      clearContent(category.children);
+    }
+  });
+}
+
 // 将金额字段加入到categories中
 export function dealData(categories, fundsData) {
   categories.forEach((category) => {
@@ -651,9 +679,12 @@ export function continueDealData(categories, cards1Form, cards2Form, tableDataFo
   });
 }
 
+export function reorganizeData(categories, fundsData, cards1Form, cards2Form, tableDataForm) {
+  dealData(categories, fundsData);
+  continueDealData(categories, cards1Form, cards2Form, tableDataForm);
+}
+
 export function dealJJData(categories, fundsData) {
-  console.log('categories', categories);
-  console.log('fundsData1', fundsData[0]);
   categories.forEach((category) => {
     // 查找与 category.value 匹配的项
     const item = fundsData.find((item) => item.key === category.value);
@@ -669,11 +700,6 @@ export function continueDealJJData(categories, cards1Form) {
       cards1Form.push({ value: item.value, content: item.content });
     }
   });
-}
-
-export function reorganizeData(categories, fundsData, cards1Form, cards2Form, tableDataForm) {
-  dealData(categories, fundsData);
-  continueDealData(categories, cards1Form, cards2Form, tableDataForm);
 }
 
 export function reorganizeJJData(categories, fundsData, cards1Form) {

@@ -293,11 +293,8 @@ export function getProject(
     })
       .then((resp) => {
         const { projectInfoVO, projectUserVoList, projectFundsVO, projectTargetVOList, projectAttachmentVOList, projectPlanVOList } = resp.data;
-
-        // console.log("项目", projectInfoVO);
-        // console.log("指标", projectTargetVOList);
-        // console.log("计划", projectFundsVO);
-        // console.log("附件", projectAttachmentVOList);
+        console.log('响应数据:', resp.data);
+        console.log('经费', projectFundsVO);
         /**
          *  项目成员
          */
@@ -306,7 +303,7 @@ export function getProject(
           return { id: value.userId, role: value.projectUserRoles };
         });
         // if (members.length > 0) Vue.set(projectMemberForm, 'items', members);
-        if (members.length > 0) projectMemberForm.item = members;
+        if (members.length > 0) projectMemberForm.items = members;
         /**
          *  项目指标
          */
@@ -951,7 +948,7 @@ export function getProject(
 }
 
 export function updateProject(
-  projectId,
+  projectId: string,
   projectInfoForm,
   projectMemberForm,
   projectFundsForm,
@@ -1191,6 +1188,16 @@ export function updateProject(
 export function deleteProject(projectId: string) {
   return request({
     url: '/project/my/delete',
+    method: 'get',
+    params: {
+      projectId: projectId
+    }
+  });
+}
+
+export function getProjectDetails(projectId: string) {
+  return request({
+    url: '/project/list/getDetails',
     method: 'get',
     params: {
       projectId: projectId

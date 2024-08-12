@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" fullscreen title="新增项目" @update:model-value="updateVisible" @close="reset()">
+  <el-dialog :model-value="visible" fullscreen title="修改项目" @update:model-value="updateVisible" @close="reset()">
     <el-container>
       <el-header>
         <el-card shadow="hover">
@@ -84,7 +84,8 @@ import {
   categoryOptions4,
   categoryOptions5,
   reorganizeData,
-  reorganizeJJData
+  reorganizeJJData,
+  clearCategories, clearContent
 } from '@/api/project/funds/fundkeys';
 import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
 import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
@@ -109,7 +110,7 @@ const nextButtonText = ref('下一步');
 const titles = ref(['项目信息', '项目成员', '项目经费', '专项经费', '自筹经费', '经费来源', '项目指标', '项目计划', '项目申报附件', '项目推进情况']);
 
 const projectInfoForm = ref({});
-const projectMemberForm = ref({ members: [], items: [] });
+const projectMemberForm = ref({ items: [] });
 const projectFundsForm = ref({});
 const zxFundsDetailForm = ref({}); // 弃用
 const zcFundsDetailForm = ref({}); // 弃用
@@ -128,38 +129,11 @@ const zcCards2Form = ref([]);
 const zcCards3Form = ref([]);
 const zcTableDataForm = ref([]);
 const projectAllFundsForm = ref([]);
-const categoryOption1 = ref([]);
+const projectSpecialFundForm = ref([]);
+const categoryOption1 = ref(categoryOptions1);
 const categoryOption2 = ref([]);
 const categoryOption4 = ref([]);
 const categoryOption5 = ref([]);
-
-onMounted(async () => {
-  if (props.updateId) {
-    await getProject(
-      props.updateId,
-      projectInfoForm.value,
-      projectMemberForm.value,
-      projectFundsForm.value,
-      zxFundsDetailForm.value,
-      zcFundsDetailForm.value,
-      fundsSourceForm.value,
-      projectIndicatorForm.value,
-      projectPlanForm.value,
-      otherAttachmentForm.value,
-      projectProgressForm.value,
-      projectAllFundsForm.value
-    ).then(() => {
-      categoryOption1.value = categoryOptions1;
-      categoryOption2.value = categoryOptions2;
-      categoryOption4.value = categoryOptions4;
-      categoryOption5.value = categoryOptions5;
-      reorganizeData(categoryOption1.value, projectAllFundsForm.value, cards1Form.value, cards2Form.value, tableDataForm.value);
-      reorganizeData(categoryOption2.value, projectAllFundsForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
-      reorganizeJJData(categoryOption4.value, projectAllFundsForm.value, cards3Form.value);
-      reorganizeJJData(categoryOption5.value, projectAllFundsForm.value, zcCards3Form.value);
-    });
-  }
-});
 
 const next = () => {
   if (stepID.value++ > TOTAL_STEPS - 1) {
@@ -324,4 +298,60 @@ const closeDialog = () => {
 const confirmDialog = () => {
   emits('update:visible', false);
 };
+
+// 定义获取项目详情的逻辑
+async function fetchProjectDetails(projectId: string) {
+  if (projectId) {
+    // 启动加载动画
+    const loading = ElLoading.service({ fullscreen: true, lock: true, text: '加载中...' });
+
+    try {
+      projectSpecialFundForm.value = [];
+      // 调用 getProject 方法
+      await getProject(
+        projectId,
+        projectInfoForm.value,
+        projectMemberForm.value,
+        projectFundsForm.value,
+        zxFundsDetailForm.value,
+        zcFundsDetailForm.value,
+        fundsSourceForm.value,
+        projectIndicatorForm.value,
+        projectPlanForm.value,
+        otherAttachmentForm.value,
+        projectProgressForm.value,
+        projectSpecialFundForm.value
+      );
+
+      // 数据处理
+      console.log('projectId', projectId);
+      categoryOption1.value = categoryOptions1;
+      categoryOption2.value = categoryOptions2;
+      categoryOption4.value = categoryOptions4;
+      categoryOption5.value = categoryOptions5;
+      reorganizeData(categoryOption1.value, projectSpecialFundForm.value, cards1Form.value, cards2Form.value, tableDataForm.value);
+      reorganizeData(categoryOption2.value, projectSpecialFundForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
+      reorganizeJJData(categoryOption4.value, projectSpecialFundForm.value, cards3Form.value);
+      reorganizeJJData(categoryOption5.value, projectSpecialFundForm.value, zcCards3Form.value);
+    } catch (error) {
+      // 捕获并显示错误信息
+      ElMessage.error('项目加载失败: ' + error);
+    } finally {
+      // 关闭加载动画
+      loading.close();
+    }
+  }
+}
+// 监听 updateId 的变化
+watch(
+  () => props.updateId,
+  (newUpdateId) => {
+    fetchProjectDetails(newUpdateId);
+  }
+);
+
+// 组件挂载时执行
+onMounted(() => {
+  fetchProjectDetails(props.updateId);
+});
 </script>

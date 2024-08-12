@@ -56,7 +56,7 @@
               <el-button link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip content="修改" placement="top">
-              <el-button link type="primary" icon="Edit" @click="handleDelete(scope.row)"></el-button>
+              <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
             </el-tooltip>
             <el-tooltip content="删除" placement="top">
               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
@@ -65,7 +65,12 @@
         </el-table-column>
       </el-table>
       <!-- 详情打开的界面 -->
-      <ProjectDetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
+      <ProjectDetailDialog
+        v-if="isDetailDialogVisible"
+        :visible="isDetailDialogVisible"
+        :project-id="projectId.toString()"
+        @update:visible="isDetailDialogVisible = $event"
+      />
       <!-- 大事记查看打开的界面 -->
       <MilestoneDetailDialog
         v-if="isMilestoneDetailDialogVisible"
@@ -93,16 +98,24 @@
       >
       </el-pagination>
       <!-- 修改项目弹出的对话框-->
+      <ProjectUpdateDialog
+        :visible="isUpdateDialogVisible"
+        :update-id="updateId"
+        @update:visible="isUpdateDialogVisible = $event"
+        @reload-project-list="getProjectList"
+      />
     </div>
   </el-card>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import { deleteProject } from '@/api/project/myProject/project';
 import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
 import MilestoneDetailDialog from '@/views/project/components/Milestone/MilestoneDetail.vue';
 import MilestoneAddDialog from '@/views/project/components/Milestone/MilestoneAdd.vue';
+import ProjectUpdateDialog from '@/views/project/components/ProjectDetail/ProjectUpdate.vue';
+import { queryProjectList } from '@/api/project/myProject';
 
 interface Project {
   projectId: string;
@@ -114,10 +127,16 @@ const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const isDetailDialogVisible = ref(false);
 const isMilestoneDetailDialogVisible = ref(false);
 const isAddMilestoneDialogVisible = ref(false);
+const isUpdateDialogVisible = ref(false);
+const emit = defineEmits(['reloadProjectList']);
+
+async function getProjectList() {
+  emit('reloadProjectList');
+}
 
 const showDetailDialog = (row: Project) => {
   isDetailDialogVisible.value = true;
-  formLook.value = row;
+  projectId.value = row.projectId;
 };
 
 const showMilestoneDetailDialog = (row: Project) => {
@@ -136,8 +155,6 @@ const props = defineProps<{
   buttonType?: number;
   total: number;
 }>();
-
-const emit = defineEmits(['reloadProjectList']);
 
 // 定义组件
 const router = useRouter();
@@ -166,9 +183,8 @@ const projectProgressStatus = ref({
   6: '已完成验收',
   7: '未通过评审'
 });
-const refreshUpdateDialog = ref(false);
+
 const updateId = ref('');
-const newProjectDialogVisible = ref(false);
 const queryParam = ref({
   pageNum: 1,
   pageSize: 10
@@ -247,9 +263,11 @@ function projectProgressStatuss(row: Project, column: any, cellValue: number) {
 }
 
 function handleUpdate(row: Project) {
-  updateId.value = row.projectId;
-  refreshUpdateDialog.value = !refreshUpdateDialog.value;
-  newProjectDialogVisible.value = true;
+  updateId.value = null; // 暂时清空 updateId
+  setTimeout(() => {
+    updateId.value = row.projectId;
+    isUpdateDialogVisible.value = true;
+  }, 0);
 }
 
 function handleDelete(row: Project) {

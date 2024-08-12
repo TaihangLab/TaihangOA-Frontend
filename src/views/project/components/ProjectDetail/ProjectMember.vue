@@ -61,7 +61,6 @@ import { getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import { listUser, deptTreeSelect } from '@/api/system/user';
 
 const { proxy } = getCurrentInstance();
-// eslint-disable-next-line vue/require-prop-types
 const props = defineProps(['form']);
 defineExpose({
   reset
@@ -75,9 +74,14 @@ const roleOptions = [
   { label: '普通成员', value: '4' }
 ];
 
+function initForm() {
+  if (!props.form.items.length) {
+    props.form.items = [{ id: '', role: '' }];
+  }
+}
+
 onMounted(() => {
-  // eslint-disable-next-line vue/no-mutating-props
-  props.form.items = [{ id: '', role: '' }];
+  initForm();
 });
 
 const data = reactive({
@@ -110,9 +114,34 @@ function reset() {
 
 // 用户级联下拉框
 const member = ref('');
-let cascaderOptions = ref([]);
-let deptData = ref({});
-let userList = ref([]);
+const cascaderOptions = ref([]);
+const deptData = ref({});
+const userList = ref([]);
+
+// 分页查询接口
+interface PageQuery {
+  pageNum: number;
+  pageSize: number;
+}
+
+// 用户查询参数接口
+export interface UserQuery extends PageQuery {
+  userName?: string;
+  phonenumber?: string;
+  status?: string;
+  deptId?: string | number;
+  roleId?: string | number;
+}
+
+const userQuery: UserQuery = {
+  pageNum: 1, // 页码
+  pageSize: 100, // 页面大小，调整以获取更多用户
+  userName: '', // 无用户名过滤
+  phonenumber: '', // 无电话号码过滤
+  status: '', // 无状态过滤
+  deptId: '', // 无部门过滤
+  roleId: '' // 无角色过滤
+};
 
 async function getDeptAndUserList() {
   // 等待部门数据加载完成
@@ -120,7 +149,7 @@ async function getDeptAndUserList() {
   let deptData = deptResp.data;
 
   //  等待用户数据加载完成
-  const userResp = await listUser();
+  const userResp = await listUser(userQuery);
   userList.value = userResp.rows;
 
   cascaderOptions.value = adaptData(deptData);

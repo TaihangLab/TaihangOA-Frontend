@@ -18,7 +18,6 @@ export function milestoneAdd(data: MilestoneFrom) {
   });
 }
 
-
 export function queryMilestoneList(data: combinedSearchDataList, params: typeof queryPara.value) {
   return request({
     url: '/project/list/milestonequery',

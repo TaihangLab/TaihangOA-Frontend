@@ -21,7 +21,7 @@
                   <el-button class="remove3-button" icon="FolderAdd" plain @click="addCard()"></el-button>
                 </el-tooltip>
                 <el-tooltip class="box-item" effect="dark" content="删除一级目录" placement="top">
-                  <el-button class="remove4-button" v-show="true" icon="FolderDelete" plain @click="removeCard(index1)"></el-button>
+                  <el-button v-show="true" class="remove4-button" icon="FolderDelete" plain @click="removeCard(index1)"></el-button>
                 </el-tooltip>
               </div>
 
@@ -36,18 +36,10 @@
               <!-- 右侧按钮 -->
               <div class="right-buttons">
                 <el-tooltip class="box-item" effect="dark" content="新增二级目录" placement="top">
-                  <el-button class="remove5-button" v-show="true" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
+                  <el-button v-show="true" class="remove5-button" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
                 </el-tooltip>
                 <el-tooltip class="box-item" effect="dark" content="删除二级目录" placement="top">
-                  <el-button
-                    v-show="true"
-                    class="remove-button"
-                    icon="Remove"
-                    circle
-                    type="danger"
-                    plain
-                    @click="removeCard2(index1)"
-                  ></el-button>
+                  <el-button v-show="true" class="remove-button" icon="Remove" circle type="danger" plain @click="removeCard2(index1)"></el-button>
                 </el-tooltip>
               </div>
             </div>
@@ -166,7 +158,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount, ref } from 'vue';
-import categoryOptions1, { categoryOptions4 } from '@/api/project/funds/fundkeys';
+import { categoryOptions1, categoryOptions4 } from '@/api/project/funds/fundkeys';
 import { ElMessage } from 'element-plus';
 
 const emits = defineEmits(['update:visible']);
@@ -187,16 +179,36 @@ const data = reactive({
   isButtonShowList3: [] as boolean[]
 });
 
+// 判断表格是否可见
+const test = (index1: number, index2: number): boolean => {
+  // 确保 data.isTableVisible[index1] 已初始化
+  if (!data.isTableVisible[index1]) {
+    return false;
+  }
+  // 确保 data.isTableVisible[index1][index2] 已初始化
+  if (typeof data.isTableVisible[index1][index2] === 'undefined') {
+    return false;
+  }
+  // 进行最终判断
+  return isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2];
+};
+
 function setButtonShowList1(index1: number, show: boolean) {
-  data.isButtonShowList1[index1] = show;
+  if (index1 >= 0 && index1 < data.isButtonShowList1.length) {
+    data.isButtonShowList1[index1] = show;
+  }
 }
 
 function setButtonShowList2(index1: number, index2: number, show: boolean) {
-  data.isButtonShowList2[index1][index2] = show;
+  if (index1 >= 0 && index1 < data.isButtonShowList2.length && index2 >= 0 && index2 < data.isButtonShowList2[index1].length) {
+    data.isButtonShowList2[index1][index2] = show;
+  }
 }
 
 function setButtonShowList3(index3: number, show: boolean) {
-  data.isButtonShowList3[index3] = show;
+  if (index3 >= 0 && index3 < data.isButtonShowList3.length) {
+    data.isButtonShowList3[index3] = show;
+  }
 }
 
 function filteredSecondOptions(index1: number) {
@@ -209,8 +221,10 @@ const filteredThirdOptions = computed(() => (index1: number, index2: number) => 
   const selectedFirstValue = props.cards1[index1].value;
   const firstOption = data.categoryOptions1.find((option) => option.value === selectedFirstValue);
   if (firstOption) {
+    const children = firstOption.children as Array<{ value: string; label: string; children?: Array<{ value: string; label: string }> }>;
+
     const selectedSecondValue = props.cards2[index1][index2].value;
-    const secondOption = firstOption.children?.find((option) => option.value === selectedSecondValue);
+    const secondOption = children?.find((option) => option.value === selectedSecondValue);
     return secondOption ? secondOption.children || [] : [];
   }
   return [];
@@ -218,6 +232,14 @@ const filteredThirdOptions = computed(() => (index1: number, index2: number) => 
 
 onMounted(() => {
   initializeStates();
+});
+
+onBeforeMount(() => {
+  if (props.cards1.length === 0) {
+    addCard();
+    addIndirectCost();
+  }
+  console.log(props.cards1.length);
 });
 
 const initializeStates = () => {
@@ -323,13 +345,6 @@ const reset = () => {
   addIndirectCost();
 };
 defineExpose({ reset });
-
-onBeforeMount(() => {
-  if (props.cards1.length === 0) {
-    addCard();
-    addIndirectCost();
-  }
-});
 
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
