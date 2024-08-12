@@ -349,7 +349,7 @@ const initProjectChart = () => {
         type: 'bar',
         data: barData,
         itemStyle: {
-          color: 'cornflowerblue' // 可以使用 getRandomColor 方法为每个柱设置不同的颜色
+          color: getRandomColor()
         }
       }
     ]
@@ -399,7 +399,7 @@ const initResultChart = () => {
         type: 'bar',
         data: barData,
         itemStyle: {
-          color: 'cornflowerblue'
+          color: getRandomColor()
         }
       }
     ]
@@ -411,6 +411,15 @@ const initResultChart = () => {
     resultChartInstance.resize();
   });
 };
+
+function getRandomColor(): string {
+  const letters: string = '0123456789ABCDEF';
+  let color: string = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
 // 监听窗口的 resize 事件
 const handleResize = () => {

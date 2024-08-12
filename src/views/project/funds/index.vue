@@ -38,7 +38,7 @@
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="项目名称" fixed="left" prop="assignedSubjectName" :show-overflow-tooltip="true" min-width="10%" />
         <el-table-column label="课题名称" prop="assignedSubjectSection" :show-overflow-tooltip="true" min-width="10%" />
-        <el-table-column label="项目级别" prop="projectLevel" :show-overflow-tooltip="true" min-width="10%" >
+        <el-table-column label="项目级别" prop="projectLevel" :show-overflow-tooltip="true" min-width="10%">
           <template #default="scope">
             {{ pro_level_type[scope.row.projectLevel]?.label || '未知' }}
           </template>
@@ -76,25 +76,25 @@
       </el-table>
 
       <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
-<!--      <ExpenditureCheck-->
-<!--        :projectId="Number(projectId)"-->
-<!--        :visible="isExpenditureCheckDialogVisible"-->
-<!--        @close:visible="isExpenditureCheckDialogVisible = $event"-->
-<!--        @update:visible="isExpenditureCheckDialogVisible = $event"-->
-<!--      />-->
-<!--      <ExpenditureEntry-->
-<!--        :projectId="Number(projectId)"-->
-<!--        :visible="isExpenditureEditDialogVisible"-->
-<!--        @close:visible="isExpenditureEditDialogVisible = $event"-->
-<!--        @update:visible="isExpenditureEditDialogVisible = $event"-->
-<!--      />-->
-<!--      <FundsReceived-->
-<!--        :project-id="Number(projectId)"-->
-<!--        :visible="isFundsReceivedVisible"-->
-<!--        @close:visible="isFundsReceivedVisible = $event"-->
-<!--        @update:visible="isFundsReceivedVisible = $event"-->
-<!--      />-->
-<!--      <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />-->
+      <!--      <ExpenditureCheck-->
+      <!--        :projectId="Number(projectId)"-->
+      <!--        :visible="isExpenditureCheckDialogVisible"-->
+      <!--        @close:visible="isExpenditureCheckDialogVisible = $event"-->
+      <!--        @update:visible="isExpenditureCheckDialogVisible = $event"-->
+      <!--      />-->
+      <!--      <ExpenditureEntry-->
+      <!--        :projectId="Number(projectId)"-->
+      <!--        :visible="isExpenditureEditDialogVisible"-->
+      <!--        @close:visible="isExpenditureEditDialogVisible = $event"-->
+      <!--        @update:visible="isExpenditureEditDialogVisible = $event"-->
+      <!--      />-->
+      <!--      <FundsReceived-->
+      <!--        :project-id="Number(projectId)"-->
+      <!--        :visible="isFundsReceivedVisible"-->
+      <!--        @close:visible="isFundsReceivedVisible = $event"-->
+      <!--        @update:visible="isFundsReceivedVisible = $event"-->
+      <!--      />-->
+      <!--      <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />-->
 
       <pagination
         v-if="total > 0"
@@ -117,10 +117,8 @@ import { ProjectBaseInfoBO, ProjectFundsManagementVO } from '@/api/project/funds
 import { getProjectList } from '@/api/project/funds';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { pro_level_type } = toRefs<any>(
-  proxy?.useDict('pro_level_type')
-);
-const projectList = ref<ProjectFundsManagementVO[]>([])
+const { pro_level_type } = toRefs<any>(proxy?.useDict('pro_level_type'));
+const projectList = ref<ProjectFundsManagementVO[]>([]);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref<Array<string | number>>([]);
@@ -138,7 +136,6 @@ const isFundsDetailVisible = ref(false);
 
 /** 数据范围选项*/
 const queryFormRef = ref<ElFormInstance>();
-
 
 const showFundsDetailDialog = (projectId: number) => {
   // 在这里可以设置要显示的详情内容
@@ -193,19 +190,19 @@ const data = reactive({
   form: { ...initForm },
   queryParams: {
     pageNum: 1,
-    pageSize: 10,
+    pageSize: 10
   }
 });
-const { form, queryParams} = toRefs(data);
+const { form, queryParams } = toRefs(data);
 
 /** 获取项目列表 */
 const getAllProjectList = async () => {
   loading.value = true;
-  const res = await getProjectList(data.queryParams,data.form);
+  const res = await getProjectList(data.queryParams, data.form);
   projectList.value = res.rows;
   total.value = res.total;
   loading.value = false;
-}
+};
 
 /**
  * 搜索按钮操作
