@@ -61,5 +61,3 @@ export function queryProjectList(data: queryProjectData, params: typeof queryPar
     params: params
   });
 }
-
-

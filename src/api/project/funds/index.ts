@@ -1,9 +1,11 @@
 import request from '@/utils/request';
 import {
   ProjectBaseInfoBO,
-  ProjectExpenditureBO, ProjectExpenditureVO,
-  ProjectFundsManagementVO, ProjectFundsReceived,
-  ProjectFundsReceivedVo,
+  ProjectExpenditureBO,
+  ProjectExpenditureVO,
+  ProjectFundsManagementVO,
+  ProjectFundsReceived,
+  ProjectFundsReceivedVo
 } from './types';
 import { AxiosPromise } from 'axios';
 
@@ -13,7 +15,7 @@ export function getProjectList(pageQuery: PageQuery, bodyData: ProjectBaseInfoBO
     method: 'post',
     params: pageQuery,
     data: bodyData
-  })
+  });
 }
 
 export function addProjectExpenditure(bodyData: ProjectExpenditureBO): AxiosPromise<any> {
