@@ -133,7 +133,7 @@ const data = reactive({
   }
 });
 
-const { queryParams, form ,projectOptions, deptOptions, memberOptions} = toRefs(data);
+const { queryParams, form, projectOptions, deptOptions } = toRefs(data);
 
 /** 获取成员列表 */
 const getMemberList = async () => {
@@ -150,13 +150,12 @@ const getMemberList = async () => {
 const getProjectTreeSelect = async () => {
   const resp = await getProjectTree();
   data.projectOptions = resp.data;
-}
+};
 
 /** 查询部门下拉树结构 */
 const getTreeSelect = async () => {
   const res = await deptTreeSelect();
   data.deptOptions = res.data;
-  console.log( 'data.deptOptions',memberOptions.value);
 };
 
 /**
@@ -171,7 +170,6 @@ const handleQuery = () => {
   }
   queryParams.value.pageNum = 1;
   getMemberList();
-
 };
 
 /** 重置 */
@@ -202,6 +200,6 @@ const handleSelectionChange = () => {
 onMounted(() => {
   getMemberList();
   getProjectTreeSelect();
-  getTreeSelect()
+  getTreeSelect();
 });
 </script>

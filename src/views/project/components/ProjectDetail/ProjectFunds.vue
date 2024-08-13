@@ -639,8 +639,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
 const props = defineProps<{
   projectFundForm: Array<{ ProjectFundsV0List }>;
 }>();
