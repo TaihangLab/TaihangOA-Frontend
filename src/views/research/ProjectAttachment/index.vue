@@ -3,10 +3,11 @@
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave"></transition>
     <div v-show="showSearch" class="mb-[10px]">
       <el-card shadow="hover">
-        <el-form ref="ipDataRef" :model="queryParams" :inline="true" class="demo-form-inline">
+        <el-form ref="dataFormRef" :model="projectParams" :inline="true" class="demo-form-inline">
           <el-form-item label="项目名称" prop="ProjectName">
             <el-cascader
               v-model="responsibleproject"
+              :data="projecttree"
               :options="projecttree"
               clearable
               :show-all-levels="false"
@@ -60,120 +61,78 @@
           <el-table-column label="文件上传时间" :resizable="false" align="center" prop="createTime" width="170"> </el-table-column>
           <el-table-column label="操作" :resizable="false" align="center" min-width="100px" fixed="right">
             <template #default="scope">
-              <el-button v-hasPermi="['project:oss:download']" type="text" icon="el-icon-download" @click="handleDownload(scope.row)">下载</el-button>
+              <el-button v-hasPermi="['project:oss:download']" type="text" icon="download" @click="handleDownload(scope.row)"></el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
-      <el-pagination
-        :current-page="queryParam.pageNum"
-        :page-size="queryParam.pageSize"
+      <pagination
+        v-if="total > 0"
+        v-model:total="total"
         :page-sizes="[5, 10, 20, 50, 100]"
-        :total="total"
-        layout="total ,sizes,prev,pager,next,jumper"
-        style="margin-top: 30px"
-        @size-change="sizeChangeHandle"
-        @current-change="CurrentChangeHandle"
-      >
-      </el-pagination>
+        v-model:page="pageParams.pageNum"
+        v-model:limit="pageParams.pageSize"
+        @pagination="getAttachments()"
+      />
+
     </el-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-import request from '@/utils/request';
-
+import api from '@/api/research/ProjectAttachment';
+import { projectParams , pageParams } from '@/api/research/ProjectAttachment/types'
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const responsibleproject = ref([]);
-const ipDataRef = ref<ElFormInstance>();
+const dataFormRef = ref<ElFormInstance>();
 const total = ref(0);
 
 const attachmentslist = ref([]);
 const showSearch = ref(true);
-const queryParams = reactive({
+
+const projectParams = reactive({
   projectId: undefined
 });
-const queryParam = reactive({
+const pageParams = reactive({
   pageNum: 1,
   pageSize: 10
 });
-const header = reactive({});
+
 const projecttree = ref(undefined);
 
 /** 获取附件名称 */
 const truncatedName = (originalName: string) => {
   const lastDotIndex = originalName.lastIndexOf('.');
-  return lastDotIndex !== -1 ? originalName.substring(0, lastDotIndex) : originalName;
+  return lastDotIndex? originalName.substring(0, lastDotIndex) : originalName;
 };
 
 /** 查询附件列表 */
-const getAttachmentsList = async () => {
-  await checkAttachments();
-  await getProjectTree();
+const getAttachments = async () => {
+  const projectTreereRes = await api.getProjectTree();
+  projecttree.value = projectTreereRes.data;
+  const allListresRes =await api.getAllList(projectParams,pageParams);
+  attachmentslist.value = allListresRes.rows;
+  total.value = allListresRes.total;
+  console.log(total.value);
 };
 
-/** 获取数据*/
-const fetchData = () => {
-  getAttachmentsList();
-};
 
-//获取全部附件列表
-const checkAttachments = async () => {
-  try {
-    const resp = await request({
-      url: '/milestone/oss/getAllList',
-      method: 'post',
-      data: queryParams,
-      params: queryParam
-    });
-    attachmentslist.value = resp.rows;
-    total.value = resp.total;
-  } catch (error) {
-    console.error('获取附件列表时出错：', error);
-  }
-};
-//获取项目树
-const getProjectTree = async () => {
-  try {
-    const resp = await request({
-      url: '/ip/getProjectTree',
-      method: 'get',
-      params: header
-    });
-    projecttree.value = resp.data;
-    console.log(attachmentslist);
-    console.log(proxy);
-  } catch (error) {
-    console.error('获取项目树时出错：', error);
-  }
-};
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
-  queryParams.projectId = responsibleproject.value[responsibleproject.value.length - 1];
-  getAttachmentsList();
+  projectParams.projectId = responsibleproject.value[responsibleproject.value.length - 1];
+  getAttachments();
 };
 
 /** 重置按钮操作 */
 const resetQuery = () => {
   responsibleproject.value = [];
-  queryParams.projectId = undefined;
-  queryParam.pageNum = 1;
-  queryParam.pageSize = 10;
-  checkAttachments();
-};
-
-/** 每页显示多少条 */
-const sizeChangeHandle = (val: number) => {
-  queryParam.pageSize = val;
-  fetchData();
-};
-
-/** 改变页数 */
-const CurrentChangeHandle = (val: number) => {
-  queryParam.pageNum = val;
-  fetchData();
+  projectParams.projectId = undefined;
+  pageParams.pageNum = 1;
+  pageParams.pageSize = 10;
+  getAttachments();
+  
 };
 
 // 下载按钮操作
@@ -182,6 +141,6 @@ const handleDownload = function (row: any) {
 };
 
 onMounted(() => {
-  getAttachmentsList();
+  getAttachments();
 });
 </script>
