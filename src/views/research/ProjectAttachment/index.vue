@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import api from '@/api/research/ProjectAttachment';
-import { projectParams , pageParams } from '@/api/research/ProjectAttachment/types'
+import { projectParams  } from '@/api/research/ProjectAttachment/types'
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const responsibleproject = ref([]);
 const dataFormRef = ref<ElFormInstance>();
@@ -91,13 +91,19 @@ const total = ref(0);
 const attachmentslist = ref([]);
 const showSearch = ref(true);
 
-const projectParams = reactive({
-  projectId: undefined
+
+
+
+const data = reactive({
+  projectParams : {projectId: undefined},
+  pageParams : {
+    pageNum: 1,
+    pageSize: 10
+  }
 });
-const pageParams = reactive({
-  pageNum: 1,
-  pageSize: 10
-});
+
+const { projectParams, pageParams } = toRefs(data);
+
 
 const projecttree = ref(undefined);
 
@@ -111,26 +117,25 @@ const truncatedName = (originalName: string) => {
 const getAttachments = async () => {
   const projectTreereRes = await api.getProjectTree();
   projecttree.value = projectTreereRes.data;
-  const allListresRes =await api.getAllList(projectParams,pageParams);
+  const allListresRes =await api.getAllList(data.projectParams,data.pageParams);
   attachmentslist.value = allListresRes.rows;
   total.value = allListresRes.total;
-  console.log(total.value);
 };
 
 
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
-  projectParams.projectId = responsibleproject.value[responsibleproject.value.length - 1];
+  data.projectParams.projectId = responsibleproject.value[responsibleproject.value.length - 1];
   getAttachments();
 };
 
 /** 重置按钮操作 */
 const resetQuery = () => {
   responsibleproject.value = [];
-  projectParams.projectId = undefined;
-  pageParams.pageNum = 1;
-  pageParams.pageSize = 10;
+  data.projectParams.projectId = undefined;
+  data.pageParams.pageNum = 1;
+  data.pageParams.pageSize = 10;
   getAttachments();
   
 };
