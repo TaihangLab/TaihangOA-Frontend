@@ -61,7 +61,9 @@
           <el-table-column label="文件上传时间" :resizable="false" align="center" prop="createTime" width="170"> </el-table-column>
           <el-table-column label="操作" :resizable="false" align="center" min-width="100px" fixed="right">
             <template #default="scope">
-              <el-button v-hasPermi="['project:oss:download']" type="text" icon="download" @click="handleDownload(scope.row)"></el-button>
+              <el-tooltip content="下载" placement="top">
+                <el-button v-hasPermi="['project:oss:download']" type="text" icon="download" @click="handleDownload(scope.row)"></el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
