@@ -1,14 +1,14 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave"></transition>
-    <div v-show="showSearch" class="mb-[10px]">
+    <div v-show="showSearchRef " class="mb-[10px]">
       <el-card shadow="hover">
         <el-form ref="dataFormRef" :model="projectParams" :inline="true" class="demo-form-inline">
           <el-form-item label="项目名称" prop="ProjectName">
             <el-cascader
-              v-model="responsibleproject"
-              :data="projecttree"
-              :options="projecttree"
+              v-model="ProjectIdRef"
+              :data="projectTreeRef"
+              :options="projectTreeRef"
               clearable
               :show-all-levels="false"
               placeholder="请选择项目"
@@ -29,12 +29,12 @@
           <el-col :span="1.5">
             <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
-          <right-toolbar v-model:showSearch="showSearch" @query-table="getList"></right-toolbar>
+          <right-toolbar v-model:showSearch="showSearchRef" @query-table="resetQuery"></right-toolbar>
         </el-row>
       </template>
 
       <div>
-        <el-table ref="multipleTable" :data="attachmentslist" border style="width: 100%">
+        <el-table ref="multipleTable" :data="attachmentsListRef" border style="width: 100%">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="300">
             <template #default="scope">
@@ -67,9 +67,8 @@
         </el-table>
       </div>
       <pagination
-        v-if="total > 0"
-        v-model:total="total"
-        :page-sizes="[5, 10, 20, 50, 100]"
+        v-if="totalRef > 0"
+        v-model:total="totalRef"
         v-model:page="pageParams.pageNum"
         v-model:limit="pageParams.pageSize"
         @pagination="getAttachments()"
@@ -84,15 +83,13 @@ import { ref, reactive, onMounted } from 'vue';
 import api from '@/api/research/ProjectAttachment';
 import { projectParams  } from '@/api/research/ProjectAttachment/types'
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const responsibleproject = ref([]);
+
+const ProjectIdRef = ref([]);
 const dataFormRef = ref<ElFormInstance>();
-const total = ref(0);
-
-const attachmentslist = ref([]);
-const showSearch = ref(true);
-
-
-
+const totalRef = ref(0);
+const attachmentsListRef = ref([]);
+const showSearchRef = ref(true);
+const projectTreeRef = ref(undefined);
 
 const data = reactive({
   projectParams : {projectId: undefined},
@@ -105,34 +102,36 @@ const data = reactive({
 const { projectParams, pageParams } = toRefs(data);
 
 
-const projecttree = ref(undefined);
-
 /** 获取附件名称 */
 const truncatedName = (originalName: string) => {
   const lastDotIndex = originalName.lastIndexOf('.');
   return lastDotIndex? originalName.substring(0, lastDotIndex) : originalName;
 };
 
-/** 查询附件列表 */
+/** 查询附件树 */
+const getTree = async () => {
+  const projectTreeRes = await api.getProjectTree();
+  projectTreeRef.value = projectTreeRes.data;
+};
+
+/** 查询附件信息 */
 const getAttachments = async () => {
-  const projectTreereRes = await api.getProjectTree();
-  projecttree.value = projectTreereRes.data;
-  const allListresRes =await api.getAllList(data.projectParams,data.pageParams);
-  attachmentslist.value = allListresRes.rows;
-  total.value = allListresRes.total;
+  const allListRes =await api.getAllList(data.projectParams,data.pageParams);
+  attachmentsListRef.value = allListRes.rows;
+  totalRef.value = allListRes.total;
 };
 
 
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
-  data.projectParams.projectId = responsibleproject.value[responsibleproject.value.length - 1];
+  data.projectParams.projectId = ProjectIdRef.value[ProjectIdRef.value.length - 1];
   getAttachments();
 };
 
 /** 重置按钮操作 */
 const resetQuery = () => {
-  responsibleproject.value = [];
+  ProjectIdRef.value = [];
   data.projectParams.projectId = undefined;
   data.pageParams.pageNum = 1;
   data.pageParams.pageSize = 10;
@@ -146,6 +145,7 @@ const handleDownload = function (row: any) {
 };
 
 onMounted(() => {
+  getTree();
   getAttachments();
 });
 </script>
