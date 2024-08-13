@@ -1,7 +1,7 @@
 <template>
   <el-dialog :model-value="visible" title="详情" width="50%" @update:model-value="updateVisible" @close="closeDialog">
     <div style="margin-top: 10px"></div>
-    <el-collapse :model-value="activeNames">
+    <el-collapse :model-value="activeNames" v-loading="loading">
       <el-collapse-item name="1" title="当前参与的国家级项目详情">
         <el-table
           :data="projectList.nationProjectBaseInfos"
@@ -60,6 +60,7 @@ import { ref, watch } from 'vue';
 import { getDetails } from '@/api/project/members';
 import { ProjectUserDetailVo } from '@/api/project/members/types';
 
+const loading = ref(true);
 const props = defineProps<{
   memberId: string | number | undefined;
   visible: boolean;
@@ -74,11 +75,13 @@ const projectList = ref<ProjectUserDetailVo>({
 const activeNames = ref<string[]>(['1', '2', '3']);
 
 const projectDetail = () => {
+  loading.value = true;
   if (props.memberId !== undefined) {
     getDetails(props.memberId).then((resp) => {
       projectList.value = resp.data;
     });
   }
+  loading.value = false;
 };
 
 watch(
