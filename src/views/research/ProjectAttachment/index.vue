@@ -1,7 +1,7 @@
 <template>
   <div class="p-2">
     <transition :enter-active-class="proxy?.animate.searchAnimate.enter" :leave-active-class="proxy?.animate.searchAnimate.leave"></transition>
-    <div v-show="showSearchRef " class="mb-[10px]">
+    <div v-show="showSearchRef" class="mb-[10px]">
       <el-card shadow="hover">
         <el-form ref="dataFormRef" :model="projectParams" :inline="true" class="demo-form-inline">
           <el-form-item label="项目名称" prop="ProjectName">
@@ -73,7 +73,6 @@
         v-model:limit="pageParams.pageSize"
         @pagination="getAttachments()"
       />
-
     </el-card>
   </div>
 </template>
@@ -81,7 +80,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import api from '@/api/research/ProjectAttachment';
-import { projectParams  } from '@/api/research/ProjectAttachment/types'
+import { projectParams } from '@/api/research/ProjectAttachment/types';
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
 const ProjectIdRef = ref([]);
@@ -92,8 +91,8 @@ const showSearchRef = ref(true);
 const projectTreeRef = ref(undefined);
 
 const data = reactive({
-  projectParams : {projectId: undefined},
-  pageParams : {
+  projectParams: { projectId: undefined },
+  pageParams: {
     pageNum: 1,
     pageSize: 10
   }
@@ -101,11 +100,10 @@ const data = reactive({
 
 const { projectParams, pageParams } = toRefs(data);
 
-
 /** 获取附件名称 */
 const truncatedName = (originalName: string) => {
   const lastDotIndex = originalName.lastIndexOf('.');
-  return lastDotIndex? originalName.substring(0, lastDotIndex) : originalName;
+  return lastDotIndex ? originalName.substring(0, lastDotIndex) : originalName;
 };
 
 /** 查询附件树 */
@@ -116,12 +114,10 @@ const getTree = async () => {
 
 /** 查询附件信息 */
 const getAttachments = async () => {
-  const allListRes =await api.getAllList(data.projectParams,data.pageParams);
+  const allListRes = await api.getAllList(data.projectParams, data.pageParams);
   attachmentsListRef.value = allListRes.rows;
   totalRef.value = allListRes.total;
 };
-
-
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
@@ -136,7 +132,10 @@ const resetQuery = () => {
   data.pageParams.pageNum = 1;
   data.pageParams.pageSize = 10;
   getAttachments();
-  
+};
+
+const handleExport = () => {
+  console.log('导出');
 };
 
 // 下载按钮操作
