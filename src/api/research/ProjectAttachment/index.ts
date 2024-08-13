@@ -12,14 +12,12 @@ export function getProjectTree(): AxiosPromise<any> {
 
 
 //获取全部附件列表
-export function getAllList(data: projectParams,params: pageParams): AxiosPromise<any> {
+export function getAllList(data: projectParams,PageQuery: pageParams): AxiosPromise<any> {
   return request({
       url: '/milestone/oss/getAllList',
       method: 'post',
-      data: {
-        ...data,
-        ...params
-      }
+      params: PageQuery,
+      data: data
     });
 }
 
