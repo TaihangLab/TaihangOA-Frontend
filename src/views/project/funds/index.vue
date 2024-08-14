@@ -4,13 +4,13 @@
       <div v-show="showSearch" class="mb-[10px]">
         <el-card shadow="hover">
           <el-form ref="queryFormRef" :model="form" :inline="true">
-            <el-form-item label="项目名称" prop="roleName">
+            <el-form-item label="项目名称" prop="assignedSubjectName">
               <el-input v-model="form.assignedSubjectName" placeholder="请输入项目名称" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="课题名称" prop="roleKey">
+            <el-form-item label="课题名称" prop="assignedSubjectSection">
               <el-input v-model="form.assignedSubjectSection" placeholder="请输入课题名称" clearable @keyup.enter="handleQuery" />
             </el-form-item>
-            <el-form-item label="项目级别" prop="roleKey">
+            <el-form-item label="项目级别" prop="projectLevel">
               <el-select v-model="form.projectLevel" placeholder="请选择项目级别" clearable>
                 <el-option v-for="dict in pro_level_type" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
@@ -69,7 +69,13 @@
               ></el-button>
             </el-tooltip>
             <el-tooltip content="经费到账" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Money" @click="showFundsReceivedDialog(scope.row)"></el-button>
+              <el-button
+                v-hasPermi="['system:role:edit']"
+                link
+                type="primary"
+                icon="Money"
+                @click="showFundsReceivedDialog(scope.row.projectId)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -88,12 +94,12 @@
       <!--        @close:visible="isExpenditureEditDialogVisible = $event"-->
       <!--        @update:visible="isExpenditureEditDialogVisible = $event"-->
       <!--      />-->
-      <!--      <FundsReceived-->
-      <!--        :project-id="Number(projectId)"-->
-      <!--        :visible="isFundsReceivedVisible"-->
-      <!--        @close:visible="isFundsReceivedVisible = $event"-->
-      <!--        @update:visible="isFundsReceivedVisible = $event"-->
-      <!--      />-->
+      <FundsReceived
+        :project-id="projectId"
+        :visible="isFundsReceivedVisible"
+        @close:visible="isFundsReceivedVisible = $event"
+        @update:visible="isFundsReceivedVisible = $event"
+      />
       <!--      <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />-->
 
       <pagination
@@ -127,7 +133,7 @@ const multiple = ref(true);
 const total = ref(0);
 const fundsTableRef = ref<ElTableInstance>();
 const dateRange = ref<[DateModelType, DateModelType]>(['', '']);
-const projectId = ref<number | string>();
+const projectId = ref<number>();
 const isDetailDialogVisible = ref(false);
 const isExpenditureCheckDialogVisible = ref(false);
 const isExpenditureEditDialogVisible = ref(false);
@@ -137,21 +143,22 @@ const isFundsDetailVisible = ref(false);
 /** 数据范围选项*/
 const queryFormRef = ref<ElFormInstance>();
 
-const showFundsDetailDialog = (projectId: number) => {
+const showFundsDetailDialog = (id: number) => {
   // 在这里可以设置要显示的详情内容
   isFundsDetailVisible.value = true;
   console.log(isFundsDetailVisible.value);
 };
 
-const showExpenditureCheckDialog = (projectId: number) => {
+const showExpenditureCheckDialog = (id: number) => {
   isExpenditureCheckDialogVisible.value = true;
 };
 
-const showExpenditureEditDialog = (projectId: number) => {
+const showExpenditureEditDialog = (id: number) => {
   isExpenditureEditDialogVisible.value = true;
 };
 
-const showFundsReceivedDialog = (projectId: number) => {
+const showFundsReceivedDialog = (id: number) => {
+  projectId.value = id;
   isFundsReceivedVisible.value = true;
 };
 
