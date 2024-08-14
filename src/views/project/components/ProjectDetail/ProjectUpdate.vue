@@ -99,6 +99,7 @@ import OtherAttachment from '@/views/project/components/ProjectDetail/OtherAttac
 import ProjectProgress from '@/views/project/components/ProjectDetail/ProjectProgress.vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import { addProject, getProject, updateProject } from '@/api/project/myProject/project';
+import { nextTick } from 'vue';
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
@@ -333,6 +334,8 @@ async function fetchProjectDetails(projectId: string) {
       reorganizeData(categoryOption2.value, projectSpecialFundForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
       reorganizeJJData(categoryOption4.value, projectSpecialFundForm.value, cards3Form.value);
       reorganizeJJData(categoryOption5.value, projectSpecialFundForm.value, zcCards3Form.value);
+
+      await nextTick(); // 确保 DOM 更新完成
     } catch (error) {
       // 捕获并显示错误信息
       ElMessage.error('项目加载失败: ' + error);
@@ -344,14 +347,14 @@ async function fetchProjectDetails(projectId: string) {
 }
 // 监听 updateId 的变化
 watch(
-  () => props.updateId,
+  async () => props.updateId,
   (newUpdateId) => {
-    fetchProjectDetails(newUpdateId);
+    fetchProjectDetails(props.updateId);
   }
 );
 
 // 组件挂载时执行
-onMounted(() => {
-  fetchProjectDetails(props.updateId);
+onMounted(async () => {
+  await fetchProjectDetails(props.updateId);
 });
 </script>

@@ -75,7 +75,7 @@
                 </div>
               </template>
               <el-table
-                v-if="isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2]"
+                v-if="isTableDataNotEmpty(index1, index2)"
                 :data="tableData[index1] && tableData[index1][index2]"
                 style="width: 100%"
               >
@@ -243,6 +243,7 @@ const addCard = () => {
   props.cards1.push(newCard1);
   // eslint-disable-next-line vue/no-mutating-props
   props.cards2.push(newCard2);
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData.push([]);
   data.isTableVisible.push([]);
 };
@@ -253,7 +254,9 @@ const addCard2 = (index1: number) => {
     ElMessage.warning('请选择一级目录');
     return;
   }
-  data.isTableVisible[index1].push(false);
+  if (typeof data.isTableVisible[index1] !== 'undefined') {
+    data.isTableVisible[index1].push(false);
+  }
   props.cards2[index1].push({ value: '', content: '' });
   props.tableData[index1].push([]);
   let size = props.tableData[index1].length;

@@ -67,7 +67,7 @@
                 </div>
               </template>
               <el-table
-                v-if="isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2]"
+                v-if="isTableDataNotEmpty(index1, index2)"
                 :data="tableData[index1] && tableData[index1][index2]"
                 style="width: 100%"
               >
@@ -200,15 +200,13 @@ function setButtonShowList1(index1: number, show: boolean) {
 }
 
 function setButtonShowList2(index1: number, index2: number, show: boolean) {
-  if (index1 >= 0 && index1 < data.isButtonShowList2.length && index2 >= 0 && index2 < data.isButtonShowList2[index1].length) {
-    data.isButtonShowList2[index1][index2] = show;
-  }
+  index2 = props.tableData[index1].length - 1;
+  data.isButtonShowList2[index1][index2] = show;
+
 }
 
 function setButtonShowList3(index3: number, show: boolean) {
-  if (index3 >= 0 && index3 < data.isButtonShowList3.length) {
-    data.isButtonShowList3[index3] = show;
-  }
+  data.isButtonShowList3[index3] = show;
 }
 
 function filteredSecondOptions(index1: number) {
@@ -261,8 +259,11 @@ const isTableDataNotEmpty = (index1: number, index2: number) => {
 const addCard = () => {
   const newCard1 = { value: '', content: '' };
   const newCard2: { value: string; content: string }[] = [];
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards1.push(newCard1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2.push(newCard2);
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData.push([]);
   data.isTableVisible.push([]);
 };
@@ -273,7 +274,9 @@ const addCard2 = (index1: number) => {
     ElMessage.warning('请选择一级目录');
     return;
   }
-  data.isTableVisible[index1].push(false);
+  if (typeof data.isTableVisible[index1] !== 'undefined') {
+    data.isTableVisible[index1].push(false);
+  }
   props.cards2[index1].push({ value: '', content: '' });
   props.tableData[index1].push([]);
   let size = props.tableData[index1].length;
