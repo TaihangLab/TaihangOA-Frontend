@@ -98,7 +98,6 @@ import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
 import { userTreeSelect } from '@/api/system/user';
 import { Option } from 'element-plus/es/components/segmented/src/types';
-import { getDept } from '@/api/system/dept';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { sys_jobtitle_type, sys_diploma_type } = toRefs<any>(proxy?.useDict('sys_jobtitle_type', 'sys_diploma_type'));
@@ -151,14 +150,12 @@ const getMemberList = async () => {
 const getProjectTreeSelect = async () => {
   const resp = await getProjectTree();
   data.projectOptions = resp.data;
-  console.log('projectOptions', data.projectOptions);
 };
 
 /** 查询用户下拉树结构 */
 const getUserTreeSelect = async () => {
   const resp = await userTreeSelect();
   data.userOptions = resp.data;
-  console.log('userOptions', data.userOptions);
 };
 
 /**

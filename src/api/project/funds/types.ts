@@ -33,7 +33,7 @@ export interface ProjectBaseInfoBO {
   projectScheduledCompletionTimeEnd: string; // 项目计划验收时间结束时间
 }
 
-export interface ProjectFundsManagementVO extends BaseEntity{
+export interface ProjectFundsManagementVO extends BaseEntity {
   projectId: number; // 项目id
   assignedSubjectName: string; // 承担课题名称
   assignedSubjectSection: string; // 负责课题
@@ -67,7 +67,7 @@ export interface ProjectExpenditureBO {
   expenditureDateEnd: string;
 }
 
-export interface ProjectExpenditureVO extends BaseEntity{
+export interface ProjectExpenditureVO extends BaseEntity {
   expenditureId: number | string;
   projectId: number | string;
   expenditureDate: string;
@@ -84,7 +84,7 @@ export interface ProjectExpenditureVO extends BaseEntity{
   createTime: string;
 }
 
-export interface ProjectFundsReceivedVo extends BaseEntity{
+export interface ProjectFundsReceivedVo extends BaseEntity {
   receivedId: number | string;
   projectId: number | string;
   milestoneId: number | string;
@@ -96,17 +96,12 @@ export interface ProjectFundsReceivedVo extends BaseEntity{
 }
 
 export interface ProjectFundsReceived {
-  receivedId: number;
+  receivedId?: number;
   projectId: number;
-  milestoneId: number;
-  ossIds?: number[];  // ossIds 是一个可选的数组，类型为数字数组
-  amountReceived: number;
+  milestoneId?: number;
+  ossIds?: number[]; // ossIds 是一个可选的数组，类型为数字数组
+  amountReceived: number | string;
   receivedType: number;
   receivedFrom: string;
   receivedDate: string;
 }
-
-
-
-
-

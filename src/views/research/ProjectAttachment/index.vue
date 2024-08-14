@@ -35,13 +35,13 @@
 
       <div>
         <el-table ref="multipleTable" :data="attachmentsListRef" border style="width: 100%">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="300">
+          <el-table-column type="selection" width="50" />
+          <el-table-column label="文件名称" :resizable="false" :show-overflow-tooltip="true" width="300">
             <template #default="scope">
               {{ truncatedName(scope.row.originalName) }}
             </template>
           </el-table-column>
-          <el-table-column :label="'文件格式'" align="center" prop="fileSuffix" :show-overflow-tooltip="true" width="120">
+          <el-table-column :label="'文件格式'" prop="fileSuffix" :show-overflow-tooltip="true" width="120">
             <template #default="scope">
               <div width="120">
                 <el-tag v-if="scope.row.fileSuffix === '.pdf'" type="success">{{ scope.row.fileSuffix }}</el-tag>
@@ -55,11 +55,11 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="上传人" :resizable="false" align="center" prop="createByName" width="120"> </el-table-column>
-          <el-table-column label="所属大事记" :resizable="false" align="center" prop="milestoneTitle" width="300"> </el-table-column>
-          <el-table-column label="所属项目" :resizable="false" align="center" prop="projectName" width="300"> </el-table-column>
-          <el-table-column label="文件上传时间" :resizable="false" align="center" prop="createTime" width="170"> </el-table-column>
-          <el-table-column label="操作" :resizable="false" align="center" min-width="100px" fixed="right">
+          <el-table-column label="上传人" :resizable="false" prop="createByName" width="120"> </el-table-column>
+          <el-table-column label="所属大事记" :resizable="false" prop="milestoneTitle" width="300"> </el-table-column>
+          <el-table-column label="所属项目" :resizable="false" prop="projectName" width="300"> </el-table-column>
+          <el-table-column label="文件上传时间" :resizable="false" prop="createTime" width="170"> </el-table-column>
+          <el-table-column label="操作" :resizable="false" min-width="100px" fixed="right">
             <template #default="scope">
               <el-tooltip content="下载" placement="top">
                 <el-button v-hasPermi="['project:oss:download']" type="text" icon="download" @click="handleDownload(scope.row)"></el-button>

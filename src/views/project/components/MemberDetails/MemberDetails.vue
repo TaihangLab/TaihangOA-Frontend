@@ -88,7 +88,6 @@ watch(
   () => [props.memberId, props.visible],
   ([newMemberId, newVisible]) => {
     if (newMemberId !== undefined) {
-      // console.log('memberId changed:', newMemberId);
       projectDetail();
     }
   },
