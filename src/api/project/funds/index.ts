@@ -90,7 +90,7 @@ export function deleteFundsReceived(receivedId: number | string): AxiosPromise<a
 // 查询某个项目的专项经费到账记录
 export function getFundsReceivedList(projectId: number | string): AxiosPromise<ProjectFundsReceivedVo[]> {
   return request({
-    url: '/project/funds/getFundsReceivedList',
+    url: '/project/funds/getFundsReceived',
     method: 'get',
     params: {
       projectId

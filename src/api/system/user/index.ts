@@ -209,6 +209,13 @@ export const deptTreeSelect = (): AxiosPromise<DeptVO[]> => {
   });
 };
 
+export const userTreeSelect = (): AxiosPromise<any> => {
+  return request({
+    url: '/system/user/userTree',
+    method: 'get'
+  });
+};
+
 export default {
   listUser,
   getUser,

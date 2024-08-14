@@ -6,8 +6,9 @@
           <el-form ref="queryFormRef" :model="form" :inline="true">
             <el-form-item label="项目成员" prop="userName">
               <el-cascader
-                v-model="responseDept"
-                :options="deptOptions"
+                v-model="responseUser"
+                :options="userOptions"
+                :props="{ value: 'id', label: 'label', children: 'children' }"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择成员"
@@ -95,8 +96,9 @@ import MemberDetail from '@/views/project/components/MemberDetails/MemberDetails
 import { getAllList } from '@/api/project/members';
 import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
-import { deptTreeSelect } from '@/api/system/user';
+import { userTreeSelect } from '@/api/system/user';
 import { Option } from 'element-plus/es/components/segmented/src/types';
+import { getDept } from '@/api/system/dept';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { sys_jobtitle_type, sys_diploma_type } = toRefs<any>(proxy?.useDict('sys_jobtitle_type', 'sys_diploma_type'));
@@ -107,7 +109,7 @@ const memberList = ref<ProjectUserVo[]>([]);
 const queryFormRef = ref<ElFormInstance>();
 const memberTableRef = ref<ElTableInstance>();
 const responseProject = ref([]);
-const responseDept = ref([]);
+const responseUser = ref([]);
 
 const loading = ref(true);
 const total = ref(0);
@@ -125,15 +127,14 @@ const initFormData: ProjectUserBo = {
 const data = reactive({
   form: { ...initFormData },
   projectOptions: ref<Option[]>([]),
-  deptOptions: ref<any[]>([]),
-  memberOptions: ref<Option[]>([]),
+  userOptions: ref<any>([]),
   queryParams: {
     pageNum: 1,
     pageSize: 10
   }
 });
 
-const { queryParams, form, projectOptions, deptOptions } = toRefs(data);
+const { queryParams, form, projectOptions, userOptions } = toRefs(data);
 
 /** 获取成员列表 */
 const getMemberList = async () => {
@@ -150,12 +151,14 @@ const getMemberList = async () => {
 const getProjectTreeSelect = async () => {
   const resp = await getProjectTree();
   data.projectOptions = resp.data;
+  console.log('projectOptions', data.projectOptions);
 };
 
-/** 查询部门下拉树结构 */
-const getTreeSelect = async () => {
-  const res = await deptTreeSelect();
-  data.deptOptions = res.data;
+/** 查询用户下拉树结构 */
+const getUserTreeSelect = async () => {
+  const resp = await userTreeSelect();
+  data.userOptions = resp.data;
+  console.log('userOptions', data.userOptions);
 };
 
 /**
@@ -166,6 +169,11 @@ const handleQuery = () => {
     form.value.projectId = responseProject.value[responseProject.value.length - 1];
   } else {
     form.value.projectId = undefined;
+  }
+  // 处理 userId
+  if (Array.isArray(responseUser.value) && responseUser.value.length > 0) {
+    form.value.userId = responseUser.value[responseUser.value.length - 1];
+  } else {
     form.value.userId = undefined;
   }
   queryParams.value.pageNum = 1;
@@ -175,7 +183,7 @@ const handleQuery = () => {
 /** 重置 */
 const resetQuery = () => {
   responseProject.value = [];
-  responseDept.value = [];
+  responseUser.value = [];
   queryFormRef.value?.resetFields();
   form.value = { ...initFormData };
   handleQuery();
@@ -200,6 +208,6 @@ const handleSelectionChange = () => {
 onMounted(() => {
   getMemberList();
   getProjectTreeSelect();
-  getTreeSelect();
+  getUserTreeSelect();
 });
 </script>
