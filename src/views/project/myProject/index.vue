@@ -81,9 +81,24 @@
             <el-col :span="1.5">
               <el-button type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
             </el-col>
-            <right-toolbar v-model:showSearch="showSearch" @query-table="getProjectList"></right-toolbar>
+            <right-toolbar v-model:showSearch="showSearch" @query-table="resetQuery"></right-toolbar>
           </el-row>
         </template>
+        <Project
+          :button-type="1"
+          :my-project-look="myProjectLook"
+          :project-list-look="projectListLook"
+          :total="total"
+          :query-param="queryParam"
+          @reload-project-list="getProjectList"
+        />
+        <pagination
+          v-if="total > 0"
+          v-model:total="total"
+          v-model:page="queryParam.pageNum"
+          v-model:limit="queryParam.pageSize"
+          @pagination="getProjectList"
+        />
         <ProjectAddDialog
           :visible="isAddDialogVisible"
           update-id=""
@@ -92,14 +107,6 @@
         />
       </el-card>
     </div>
-    <Project
-      :button-type="1"
-      :my-project-look="myProjectLook"
-      :project-list-look="projectListLook"
-      :total="total"
-      :query-param="queryParam"
-      @reload-project-list="getProjectList"
-    />
   </div>
 </template>
 
@@ -110,11 +117,6 @@ import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
 import Project from '@/views/project/components/ProjectDetail/Project.vue';
 import { queryProjectList } from '@/api/project/myProject';
 import { listUser, deptTreeSelect } from '@/api/system/user';
-
-// 定义 props
-const props = defineProps<{
-  buttonType?: number;
-}>();
 
 interface Option {
   value: number;
@@ -151,9 +153,7 @@ const cocompanyOptions = ref<Option[]>([
   { value: 0, label: '无' },
   { value: 1, label: '有' }
 ]);
-
 const cascaderOptions = ref<Option[]>([]);
-
 const pickerOptions = ref({
   shortcuts: [
     {
@@ -203,29 +203,20 @@ const pickerOptions = ref({
     }
   ]
 });
-
-const showResponsiblePersonData = ref(false);
 const CoCompany = ref<number[]>([]);
 const projectLevel = ref<number[]>([]);
 const responsiblePerson = ref<number[]>([]);
 const projectEstablishTime = ref<(Date | undefined)[]>([]);
 const projectScheduledCompletionTime = ref<(Date | undefined)[]>([]);
-
 const projectListLook = ref<any[]>([]);
 const myProjectLook = ref<any[]>([]);
-
 const deptOptions = ref<any[]>([]);
 const userList = ref<any[]>([]);
 const total = ref(0);
-
 const showSearch = ref(true);
-const loading = ref(false);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-// const loading = ref(true);
 const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
-const isAddMilestoneDialogVisible = ref(false);
-const isMilestoneDetailDialogVisible = ref(false);
 
 const showDetailDialog = () => {
   isDetailDialogVisible.value = true;

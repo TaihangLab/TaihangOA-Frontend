@@ -7,12 +7,12 @@ export interface MilestoneFrom {
   projectMilestoneTypes: string[];
 }
 
-export const queryPara = ref({});
-
-export const queryParam = reactive({
-  pageNum: 1,
-  pageSize: 10
-});
+// export const queryPara = ref({});
+//
+// export const queryParam = reactive({
+//   pageNum: 1,
+//   pageSize: 10
+// });
 
 export interface deleteParams {
   milestoneId: number;

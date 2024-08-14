@@ -4,9 +4,7 @@ import {
   combinedSearchDataList,
   combinedSearchDataSetList,
   deleteParams,
-  queryPara,
   queryProjectData,
-  queryParam
 } from '@/api/project/myProject/types';
 
 // 新增大事记
@@ -18,12 +16,12 @@ export function milestoneAdd(data: MilestoneFrom) {
   });
 }
 
-export function queryMilestoneList(data: combinedSearchDataList, params: typeof queryPara.value) {
+export function queryMilestoneList(data: combinedSearchDataList, PageQuery: PageQuery) {
   return request({
     url: '/project/list/milestonequery',
     method: 'post',
     data: data,
-    params: params
+    params: PageQuery
   });
 }
 
@@ -35,11 +33,11 @@ export function queryMilestoneCategorySelectSetList(params: combinedSearchDataSe
   });
 }
 
-export function getMilestoneCategorySelectList(data: typeof queryPara.value) {
+export function getMilestoneCategorySelectList(PageQuery: PageQuery) {
   return request({
     url: '/project/list/milestoneCategorySelect',
     method: 'get',
-    data: data // 假设 this.data 是从 queryPara 获取的
+    data: PageQuery
   });
 }
 
@@ -53,11 +51,11 @@ export function milestoneDelete(params: deleteParams) {
 }
 
 // 查询项目列表
-export function queryProjectList(data: queryProjectData, params: typeof queryParam) {
+export function queryProjectList(data: queryProjectData, PageQuery: PageQuery) {
   return request({
     url: '/project/my/getMyList',
     method: 'post',
     data: data,
-    params: params
+    params: PageQuery
   });
 }
