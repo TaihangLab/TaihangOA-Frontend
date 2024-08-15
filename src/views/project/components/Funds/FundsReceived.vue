@@ -44,7 +44,7 @@
 
   <el-dialog
     :model-value="isExpenditureAddDialogVisible"
-    title="新增经费到账"
+    :title="dialogTitle"
     width="750px"
     @update:model-value="updateAddDialogVisible"
     @close="closeAddReceivedDialog"
@@ -96,7 +96,7 @@
         </el-col>
       </el-row>
       <el-form-item label="附件">
-        <FileUpload :id-list="form.ossIds" :model-value="form.sysOsses"/>
+        <FileUpload :id-list="form.ossIds" :model-value="form.sysOsses" />
       </el-form-item>
       <el-form-item style="display: flex; justify-content: center">
         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -114,6 +114,7 @@ import { ProjectFundsReceived, ProjectFundsReceivedVo } from '@/api/project/fund
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const isEditing = ref(false); // 用于区分新增和编辑
 const { pro_received_type } = toRefs<any>(proxy?.useDict('pro_received_type'));
+const dialogTitle = ref('新增经费到账');
 
 const props = defineProps<{
   projectId: number | null;
@@ -155,6 +156,7 @@ function handleDownload(row: any) {
 
 const closeAddReceivedDialog = () => {
   isExpenditureAddDialogVisible.value = false;
+  resetForm();
 };
 /** 获取经费到账列表 */
 const fetchFundsReceivedList = () => {
@@ -180,24 +182,14 @@ watch(
   { immediate: true }
 );
 
-// 格式化日期方法
-const formatDate = (date: string) => {
-  const parts = date.split('-');
-  if (parts.length === 3) {
-    const [year, month, day] = parts;
-    return `${year}-${month}-${day}`;
-  }
-  return date;
-};
-
 const handleEdit = (row: any) => {
   form.value = {
     ...row, // 将行数据复制到表单中
     ossIds: row.sysOsses.map((item: any) => item.ossId)
   };
-  // console.log('row.sysOsses',form.value.ossIds);
   isEditing.value = true;
   isExpenditureAddDialogVisible.value = true;
+  dialogTitle.value = '修改经费到账';
 };
 
 /** 删除经费到账记录 */
@@ -210,7 +202,6 @@ const handleDelete = (id: number) => {
     type: 'warning'
   })
     .then(() => {
-      // 用户点击“确定”按钮
       loading.value = true;
       deleteFundsReceived(id)
         .then(() => {
@@ -235,6 +226,7 @@ const handleDelete = (id: number) => {
 // 新增按钮操作
 const handleAdd = () => {
   isExpenditureAddDialogVisible.value = true;
+  dialogTitle.value = '新增经费到账';
 };
 
 const updateVisible = (value: boolean) => {
