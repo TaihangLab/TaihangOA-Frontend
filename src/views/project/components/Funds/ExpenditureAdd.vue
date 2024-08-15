@@ -1,7 +1,7 @@
 <template>
   <el-dialog :model-value="visible" title="信息录入" width="750px" @close="closeExpenselAddDialog">
     <div>
-      <el-form :rules="rules" :model="form" label-width="100px">
+      <el-form :rules="rules" :model="form" label-width="100px" ref="expenditureForm">
         <el-row>
           <el-col :span="12">
             <el-form-item label="项目名称" prop="projectName" style="width: 300px">
@@ -12,14 +12,14 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="专项/自筹" prop="zxzc" style="width: 300px">
-              <el-select v-model="form.zxzc" placeholder="请选择项目类别" clearable>
+              <el-select v-model="form.zxzc" placeholder="请选择支出类别" clearable>
                 <el-option v-for="item in zxzcOptions" :key="item.zxzcId" :label="item.zxzcName" :value="item.zxzcId"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="直接/间接" prop="zjjj" style="width: 300px">
-              <el-select v-model="form.zjjj" placeholder="请选择项目类别">
+              <el-select v-model="form.zjjj" placeholder="请选择支出类别">
                 <el-option v-for="item in zjjjOptions" :key="item.zjjjId" :label="item.zjjjName" :value="item.zjjjId"></el-option>
               </el-select>
             </el-form-item>
@@ -130,7 +130,7 @@ const form = ref({
   secondLevelSubject: '',
   thirdLevelSubject: ''
 });
-
+const expenditureForm = ref(); // 为表单添加 ref
 const zxzcOptions = ref([]);
 
 const getZxzcOptions = () => {
@@ -197,27 +197,44 @@ const getThirdLevelSubjectOptions = () => {
 };
 
 const rules = ref({
-  projectName: [{ required: true, message: '请输入项目名称', trigger: 'blur' }]
+  projectName: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
+  zjjj: [{ required: true, message: '请输入资金类型', trigger: 'blur' }],
+  zxzc: [{ required: true, message: '请输入资金类型', trigger: 'blur' }],
+  firstLevelSubject: [{ required: true, message: '请输入一级科目', trigger: 'blur' }],
+  secondLevelSubject: [{ required: true, message: '请输入二级科目，若不存在，请选“无”', trigger: 'blur' }],
+  thirdLevelSubject: [{ required: true, message: '请输入三级科目，若不存在，请选“无”', trigger: 'blur' }],
+  expenditureDate: [{ required: true, message: '请输入日期', trigger: 'blur' }],
+  voucherNo: [{ required: true, message: '请输入凭证号', trigger: 'blur' }],
+  amount: [{ required: true, message: '请输入金额', trigger: 'blur' }]
 });
 
 const onSubmit = () => {
-  const formDataArray = [
-    {
-      amount: form.value.amount,
-      zxzc: form.value.zxzc,
-      zjjj: form.value.zjjj,
-      projectName: form.value.projectName,
-      voucherNo: form.value.voucherNo,
-      expenditureAbstract: form.value.expenditureAbstract,
-      expenditureDate: form.value.expenditureDate,
-      firstLevelSubject: form.value.firstLevelSubject,
-      secondLevelSubject: form.value.secondLevelSubject,
-      thirdLevelSubject: form.value.thirdLevelSubject
-    }
-  ];
-  closeExpenselAddDialog();
-  emits('new-data', formDataArray);
-  reset();
+  if (expenditureForm.value) {
+    expenditureForm.value.validate((valid) => {
+      if (valid) {
+        const formDataArray = [
+          {
+            amount: form.value.amount,
+            zxzc: form.value.zxzc,
+            zjjj: form.value.zjjj,
+            projectName: form.value.projectName,
+            voucherNo: form.value.voucherNo,
+            expenditureAbstract: form.value.expenditureAbstract,
+            expenditureDate: form.value.expenditureDate,
+            firstLevelSubject: form.value.firstLevelSubject,
+            secondLevelSubject: form.value.secondLevelSubject,
+            thirdLevelSubject: form.value.thirdLevelSubject
+          }
+        ];
+        closeExpenselAddDialog();
+        console.log(formDataArray);
+        emits('new-data', formDataArray);
+        reset();
+      } else {
+        return false;
+      }
+    });
+  }
 };
 
 const reset = () => {
