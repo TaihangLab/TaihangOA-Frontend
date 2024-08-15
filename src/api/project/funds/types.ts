@@ -104,4 +104,5 @@ export interface ProjectFundsReceived {
   receivedType: number;
   receivedFrom: string;
   receivedDate: string;
+  sysOsses?: OssVO[];
 }

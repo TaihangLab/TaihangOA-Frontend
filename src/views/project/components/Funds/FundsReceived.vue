@@ -32,7 +32,7 @@
         </el-table-column>
         <el-table-column :label="'操作'" :resizable="false" align="center" min-width="80px" fixed="right">
           <template #default="{ row }">
-            <el-button v-hasPermi="['project:expense:receivedEdit']" type="text" icon="edit" @click="handleEdit(row.receivedId)">修改</el-button>
+            <el-button v-hasPermi="['project:expense:receivedEdit']" type="text" icon="edit" @click="handleEdit(row)">修改</el-button>
             <el-button v-hasPermi="['project:expense:receivedDelete']" type="text" icon="delete" @click="handleDelete(row.receivedId)"
               >删除
             </el-button>
@@ -96,7 +96,7 @@
         </el-col>
       </el-row>
       <el-form-item label="附件">
-        <FileUpload :id-list="form.ossIds" />
+        <FileUpload :id-list="form.ossIds" :model-value="form.sysOsses"/>
       </el-form-item>
       <el-form-item style="display: flex; justify-content: center">
         <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -108,10 +108,11 @@
 <script setup name="Received" lang="ts">
 import { defineProps, ref, watch, defineEmits, onMounted } from 'vue';
 import { ElForm } from 'element-plus';
-import { addFundsReceived, deleteFundsReceived, getFundsReceivedList } from '@/api/project/funds';
+import { addFundsReceived, deleteFundsReceived, getFundsReceivedList, updateFundsReceived } from '@/api/project/funds';
 import { getDicts } from '@/api/system/dict/data';
 import { ProjectFundsReceived, ProjectFundsReceivedVo } from '@/api/project/funds/types';
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const isEditing = ref(false); // 用于区分新增和编辑
 const { pro_received_type } = toRefs<any>(proxy?.useDict('pro_received_type'));
 
 const props = defineProps<{
@@ -134,7 +135,8 @@ const initFormData: ProjectFundsReceived = {
   receivedFrom: '',
   receivedType: undefined,
   ossIds: [],
-  projectId: props.projectId
+  projectId: props.projectId,
+  sysOsses: []
 };
 
 const data = reactive({
@@ -189,7 +191,13 @@ const formatDate = (date: string) => {
 };
 
 const handleEdit = (row: any) => {
-  console.log(row);
+  form.value = {
+    ...row, // 将行数据复制到表单中
+    ossIds: row.sysOsses.map((item: any) => item.ossId)
+  };
+  // console.log('row.sysOsses',form.value.ossIds);
+  isEditing.value = true;
+  isExpenditureAddDialogVisible.value = true;
 };
 
 /** 删除经费到账记录 */
@@ -249,7 +257,7 @@ const getReceivedTypes = () => {
 };
 /** 添加经费到账记录 */
 const submitNewReceived = (formData: ProjectFundsReceived) => {
-  formData.projectId = props.projectId; // Ensure projectId is set
+  formData.projectId = props.projectId;
   const formRef = receivedFormRef.value;
   if (formRef) {
     formRef.validate((valid) => {
@@ -272,9 +280,28 @@ const submitNewReceived = (formData: ProjectFundsReceived) => {
     isExpenditureAddDialogVisible.value = false;
   }
 };
+/** 修改经费到账记录 */
+const updateReceived = (formData: ProjectFundsReceived) => {
+  updateFundsReceived(formData)
+    .then(() => {
+      ElMessage.success('修改经费到账成功');
+      fetchFundsReceivedList();
+    })
+    .catch(() => {
+      ElMessage.error('修改经费到账失败');
+    })
+    .finally(() => {
+      isExpenditureAddDialogVisible.value = false;
+      resetForm();
+    });
+};
 /** 点击确定添加按钮 */
 const onSubmit = () => {
-  submitNewReceived({ ...form.value }); // Pass a copy of the form data
+  if (isEditing.value) {
+    updateReceived({ ...form.value });
+  } else {
+    submitNewReceived({ ...form.value });
+  }
 };
 
 onMounted(() => {
