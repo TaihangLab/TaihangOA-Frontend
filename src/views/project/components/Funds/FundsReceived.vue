@@ -160,10 +160,17 @@ const closeAddReceivedDialog = () => {
 };
 /** 获取经费到账列表 */
 const fetchFundsReceivedList = () => {
-  if (props.projectId !== undefined) {
-    getFundsReceivedList(props.projectId).then((resp) => {
-      fundsReceivedList.value = resp.data;
-    });
+  loading.value = true;
+  try {
+    if (props.projectId !== undefined) {
+      getFundsReceivedList(props.projectId).then((resp) => {
+        fundsReceivedList.value = resp.data;
+      });
+    }
+  } catch {
+    ElMessage.error('获取经费到账列表失败');
+  } finally {
+    loading.value = false;
   }
 };
 
