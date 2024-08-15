@@ -99,7 +99,7 @@ export interface ProjectFundsReceived {
   receivedId?: number;
   projectId: number;
   milestoneId?: number;
-  ossIds?: number[]; // ossIds 是一个可选的数组，类型为数字数组
+  ossIds?: number[];
   amountReceived: number | string;
   receivedType: number;
   receivedFrom: string;

@@ -29,30 +29,30 @@
         <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>
         <el-table-column label="凭证号" :resizable="false" align="center" prop="voucherNo" width="100px"> </el-table-column>
         <el-table-column label="摘要" :resizable="false" align="center" prop="expenditureAbstract" min-width="200px"> </el-table-column>
-        <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc" :formatter="zxzcFormatter" width="100px"> </el-table-column>
-        <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj" :formatter="zjjjFormatter" width="100px"> </el-table-column>
+        <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc" :formatter="zxzcFormatter" width="100px">
+          <template #default="scope">
+            {{ pro_zxzc_options[scope.row.thirdLevelSubject]?.label || '无' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj" :formatter="zjjjFormatter" width="100px">
+          <template #default="scope">
+            {{ pro_zjjj_options[scope.row.thirdLevelSubject]?.label || '无' }}
+          </template>
+        </el-table-column>
         <el-table-column label="一级科目" :resizable="false" align="center" prop="firstLevelSubject" width="150px">
           <template #default="scope">
             {{ pro_first_subject[scope.row.thirdLevelSubject]?.label || '无' }}
           </template>
         </el-table-column>
-        <el-table-column
-          label="二级科目"
-          :resizable="false"
-          align="center"
-          prop="secondLevelSubject"
-          width="150px"
-          :formatter="secondLevelSubjectFormatter"
-        >
+        <el-table-column label="二级科目" :resizable="false" align="center" prop="secondLevelSubject" width="150px">
+          <template #default="scope">
+            {{ pro_second_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+          </template>
         </el-table-column>
-        <el-table-column
-          label="三级科目"
-          :resizable="false"
-          align="center"
-          prop="thirdLevelSubject"
-          width="150px"
-          :formatter="thirdLevelSubjectFormatter"
-        >
+        <el-table-column label="三级科目" :resizable="false" align="center" prop="thirdLevelSubject" width="150px">
+          <template #default="scope">
+            {{ pro_third_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+          </template>
         </el-table-column>
         <el-table-column :resizable="false" align="center" prop="amount" width="150px">
           <template #header>
@@ -65,7 +65,7 @@
       </el-table>
       <!--新增支出录入-->
       <ExpenditureAdd
-        :project-id="Number(projectId)"
+        :project-id="props.projectId"
         :visible="isExpenditureAddDialogVisible"
         @new-data="handleNewData"
         @close:visible="isExpenditureAddDialogVisible = $event"
@@ -77,11 +77,10 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts">
+<script setup Name="ExpenditureEntry" lang="ts">
 import { defineProps, ref, watch, defineEmits } from 'vue';
 import request from '@/utils/request';
 import ExpenditureAdd from './ExpenditureAdd.vue';
-import { fundsAndBalance } from '@/api/project/funds';
 import ExpenditureImport from './ExpenditureImport.vue';
 
 const props = defineProps<{
@@ -96,12 +95,6 @@ const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { pro_first_subject, pro_second_subject, pro_third_subject, pro_zxzc_options, pro_zjjj_options } = toRefs<any>(
   proxy?.useDict('pro_first_subject', 'pro_second_subject', 'pro_third_subject', 'pro_zxzc_options', 'pro_zjjj_options')
 );
-
-const contentStyle = ref({
-  'text-align': 'center',
-  'width': '60%'
-});
-
 const params = ref({
   projectId: null as null | number
 });
@@ -265,11 +258,11 @@ const addFunds = () => {
 };
 
 // 查看预算及支出汇总
-const checkOther = () => {
-  fundsAndBalance(props.projectId).then((resp) => {
-    // 处理获取到的数据
-  });
-};
+// const checkOther = () => {
+//   fundsAndBalance(props.projectId).then((resp) => {
+//     // 处理获取到的数据
+//   });
+// };
 
 // 处理新增数据
 const handleNewData = (newData: any[]) => {

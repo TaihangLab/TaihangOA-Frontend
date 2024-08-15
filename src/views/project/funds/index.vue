@@ -65,7 +65,7 @@
                 link
                 type="primary"
                 icon="document-add"
-                @click="showExpenditureEditDialog(scope.row)"
+                @click="showExpenditureEditDialog(scope.row.projectId)"
               ></el-button>
             </el-tooltip>
             <el-tooltip content="经费到账" placement="top">
@@ -88,20 +88,24 @@
       <!--        @close:visible="isExpenditureCheckDialogVisible = $event"-->
       <!--        @update:visible="isExpenditureCheckDialogVisible = $event"-->
       <!--      />-->
-      <!--      <ExpenditureEntry-->
-      <!--        :projectId="Number(projectId)"-->
-      <!--        :visible="isExpenditureEditDialogVisible"-->
-      <!--        @close:visible="isExpenditureEditDialogVisible = $event"-->
-      <!--        @update:visible="isExpenditureEditDialogVisible = $event"-->
-      <!--      />-->
+      <ExpenditureEntry
+        :project-id="projectId"
+        :visible="isExpenditureEntryDialogVisible"
+        @close:visible="isExpenditureEntryDialogVisible = $event"
+        @update:visible="isExpenditureEntryDialogVisible = $event"
+      />
       <FundsReceived
         :project-id="projectId"
         :visible="isFundsReceivedVisible"
         @close:visible="isFundsReceivedVisible = $event"
         @update:visible="isFundsReceivedVisible = $event"
       />
-      <!--      <FundsDetail :visible="isFundsDetailVisible" @update:visible="isFundsDetailVisible = $event" />-->
-
+      <!--      <FundsDetail-->
+      <!--        :project-id="projectId"-->
+      <!--        :visible="isFundsDetailVisible"-->
+      <!--        @update:visible="isFundsDetailVisible = $event"-->
+      <!--        @close:visible="isFundsReceivedVisible = $event"-->
+      <!--      />-->
       <pagination
         v-if="total > 0"
         v-model:total="total"
@@ -115,8 +119,6 @@
 
 <script setup name="Funds" lang="ts">
 import { ref } from 'vue';
-import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
-import ExpenditureCheck from '../components/Funds/ExpenditureCheck.vue';
 import ExpenditureEntry from '../components/Funds/ExpenditureEntry.vue';
 import FundsReceived from '@/views/project/components/Funds/FundsReceived.vue';
 import { ProjectBaseInfoBO, ProjectFundsManagementVO } from '@/api/project/funds/types';
@@ -136,7 +138,7 @@ const dateRange = ref<[DateModelType, DateModelType]>(['', '']);
 const projectId = ref<number>();
 const isDetailDialogVisible = ref(false);
 const isExpenditureCheckDialogVisible = ref(false);
-const isExpenditureEditDialogVisible = ref(false);
+const isExpenditureEntryDialogVisible = ref(false);
 const isFundsReceivedVisible = ref(false);
 const isFundsDetailVisible = ref(false);
 
@@ -144,17 +146,17 @@ const isFundsDetailVisible = ref(false);
 const queryFormRef = ref<ElFormInstance>();
 
 const showFundsDetailDialog = (id: number) => {
-  // 在这里可以设置要显示的详情内容
   isFundsDetailVisible.value = true;
   console.log(isFundsDetailVisible.value);
 };
 
 const showExpenditureCheckDialog = (id: number) => {
+  projectId.value = id;
   isExpenditureCheckDialogVisible.value = true;
 };
 
 const showExpenditureEditDialog = (id: number) => {
-  isExpenditureEditDialogVisible.value = true;
+  isExpenditureEntryDialogVisible.value = true;
 };
 
 const showFundsReceivedDialog = (id: number) => {
@@ -238,7 +240,6 @@ const handleExport = () => {
 };
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: number[]) => {
-  // ids.value = selection.map((item: number) => item.projectId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 };

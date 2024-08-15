@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" title="经费到账" width="60%" @update:model-value="updateVisible" @close="closeFundsReceivedDialog">
+  <el-dialog :model-value="visible" title="经费到账" width="1100px" @update:model-value="updateVisible" @close="closeFundsReceivedDialog">
     <div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -8,7 +8,7 @@
       </el-row>
       <div style="margin-top: 10px"></div>
       <el-table :data="fundsReceivedList" style="width: 100%; overflow-y: auto" border>
-        <el-table-column align="center" prop="amountReceived" :show-overflow-tooltip="true" width="150px">
+        <el-table-column align="center" prop="amountReceived" :show-overflow-tooltip="true" width="130px">
           <template #header>
             <div style="text-align: center">
               <span>拨款金额</span>
@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column label="来款单位" align="center" prop="receivedFrom" :show-overflow-tooltip="true" width="180px" />
         <el-table-column label="到账时间" align="center" prop="receivedDate" :show-overflow-tooltip="true" width="150px" />
-        <el-table-column label="附件" align="center" :show-overflow-tooltip="true" width="280">
+        <el-table-column label="附件" align="center" :show-overflow-tooltip="true" width="200px">
           <template #default="{ row }">
             <div v-for="file in row.sysOsses" :key="file.ossId">
               <el-button type="text" @click="handleDownload(file)">{{ file.originalName }}</el-button>
