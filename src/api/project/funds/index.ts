@@ -37,6 +37,20 @@ export function rollBackProjectExpenditure(expenditureId: number | string): Axio
   });
 }
 
+// 导入支出信息
+export function importExpenditureData(file: File): AxiosPromise<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request({
+    url: '/project/funds/importData',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
+
 // 导出支出信息
 export function exportExpenditure(projectExpenditureBO: ProjectExpenditureBO): AxiosPromise<Blob> {
   return request({

@@ -11,6 +11,9 @@
         <el-col :span="1.5">
           <el-button v-hasPermi="['system:user:import']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
         </el-col>
+        <el-col :span="1.5">
+          <el-button v-hasPermi="['system:user:import']" type="warning" icon="Refresh" plain @click="refreshFunds">重置</el-button>
+        </el-col>
       </el-row>
       <el-table
         ref="multipleTable"
@@ -29,12 +32,12 @@
         <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>
         <el-table-column label="凭证号" :resizable="false" align="center" prop="voucherNo" width="100px"> </el-table-column>
         <el-table-column label="摘要" :resizable="false" align="center" prop="expenditureAbstract" min-width="200px"> </el-table-column>
-        <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc" :formatter="zxzcFormatter" width="100px">
+        <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc" width="100px">
           <template #default="scope">
             {{ pro_zxzc_options[scope.row.thirdLevelSubject]?.label || '无' }}
           </template>
         </el-table-column>
-        <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj" :formatter="zjjjFormatter" width="100px">
+        <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj" width="100px">
           <template #default="scope">
             {{ pro_zjjj_options[scope.row.thirdLevelSubject]?.label || '无' }}
           </template>
@@ -131,83 +134,6 @@ const formatDate = (date: string) => {
     return `${year}-${month}-${day}`;
   }
   return date;
-};
-
-// 一级科目格式化方法
-// const firstLevelSubjectFormatter = (row: { firstLevelSubject: number }) => {
-//   const firstLevelSubject = [
-//     '设备费',
-//     '业务费',
-//     '劳务费',
-//     '材料费',
-//     '科研活动费',
-//     '科研服务费',
-//     '人员和劳务补助费',
-//     '绩效支出',
-//     '管理费',
-//     '房屋租赁费',
-//     '日常水电暖费',
-//     '资料费',
-//     '数据样本采集费',
-//     '测试化验加工费',
-//     '燃料动力费',
-//     '办公费',
-//     '印刷/出版费',
-//     '知识产权事务费',
-//     '车辆使用费',
-//     '差旅费',
-//     '会议/会务费',
-//     '专家咨询费',
-//     '其他费用'
-//   ];
-//   return firstLevelSubject[row.firstLevelSubject];
-// };
-
-// 二级科目格式化方法
-const secondLevelSubjectFormatter = (row: { secondLevelSubject: number }) => {
-  const secondLevelSubject = [
-    '购置设备费',
-    '试制设备费',
-    '设备升级改造费',
-    '设备租赁费',
-    '材料费',
-    '资料费',
-    '数据样本采集费',
-    '测试化验加工费',
-    '燃料动力费',
-    '办公费',
-    '印刷/出版费',
-    '知识产权事务费',
-    '车辆使用费',
-    '出版/文献/信息传播/知识产权事务费',
-    '差旅费',
-    '会议/会务费',
-    '国内协作费',
-    '国际合作交流费',
-    '专家咨询费',
-    '人员劳务费',
-    '会议/差旅/国际合作与交流费',
-    '无'
-  ];
-  return secondLevelSubject[row.secondLevelSubject];
-};
-
-// 三级科目格式化方法
-const thirdLevelSubjectFormatter = (row: { thirdLevelSubject: number }) => {
-  const thirdLevelSubject = ['无', '知识产权事务费', '印刷打印制作费', '文献数据库费', '信息传播费', '会议费', '差旅费', '国际合作费'];
-  return thirdLevelSubject[row.thirdLevelSubject];
-};
-
-// 专项自筹格式化方法
-const zxzcFormatter = (row: { zxzc: number }) => {
-  const zxzc = ['专项', '自筹'];
-  return zxzc[row.zxzc];
-};
-
-// 直接间接经费格式化方法
-const zjjjFormatter = (row: { zjjj: number }) => {
-  const zjjj = ['直接', '间接'];
-  return zjjj[row.zjjj];
 };
 
 // 新增按钮操作

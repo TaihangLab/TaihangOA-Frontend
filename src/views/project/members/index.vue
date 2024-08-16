@@ -47,7 +47,7 @@
       <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" fixed="left" prop="nickName" :show-overflow-tooltip="true" width="200" />
-        <el-table-column label="所属公司" prop="deptName" :show-overflow-tooltip="true" width="200" />
+        <el-table-column label="所属公司" prop="companyName" :show-overflow-tooltip="true" width="200" />
         <el-table-column label="所属部门" prop="deptName" :show-overflow-tooltip="true" width="180" />
         <el-table-column label="职称" prop="jobTitle" :show-overflow-tooltip="true" width="160px">
           <template #default="scope">

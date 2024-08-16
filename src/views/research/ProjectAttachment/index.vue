@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column label="上传人" :resizable="false" prop="createByName" width="120"> </el-table-column>
           <el-table-column label="所属大事记" :resizable="false" prop="milestoneTitle" width="300"> </el-table-column>
-          <el-table-column label="所属项目" :resizable="false" prop="projectName" width="300"> </el-table-column>
+          <el-table-column label="所属项目" :resizable="false" prop="assignedSubjectName" width="300"> </el-table-column>
           <el-table-column label="文件上传时间" :resizable="false" prop="createTime" width="170"> </el-table-column>
           <el-table-column label="操作" :resizable="false" min-width="100px" fixed="right">
             <template #default="scope">
