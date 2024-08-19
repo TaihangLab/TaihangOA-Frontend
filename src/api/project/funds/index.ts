@@ -18,7 +18,7 @@ export function getProjectList(pageQuery: PageQuery, bodyData: ProjectBaseInfoBO
   });
 }
 
-export function addProjectExpenditure(bodyData: ProjectExpenditureBO): AxiosPromise<any> {
+export function addProjectExpenditure(bodyData: ProjectExpenditureBO[]): AxiosPromise<any> {
   return request({
     url: '/project/funds/add',
     method: 'post',

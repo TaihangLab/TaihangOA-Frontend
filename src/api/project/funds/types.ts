@@ -50,8 +50,8 @@ export interface ProjectFundsManagementVO extends BaseEntity {
 }
 
 export interface ProjectExpenditureBO {
-  expenditureId: number | string;
-  expenditureIds: number[];
+  expenditureId?: number | string;
+  expenditureIds?: number[];
   projectId: number | string;
   expenditureDate: string;
   projectName: string;
@@ -63,8 +63,8 @@ export interface ProjectExpenditureBO {
   secondLevelSubject: number | string;
   thirdLevelSubject: number | string;
   amount: number | string;
-  expenditureDateSta: string;
-  expenditureDateEnd: string;
+  expenditureDateSta?: string;
+  expenditureDateEnd?: string;
 }
 
 export interface ProjectExpenditureVO extends BaseEntity {

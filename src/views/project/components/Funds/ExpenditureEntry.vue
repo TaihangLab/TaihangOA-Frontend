@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" title="支出录入" width="90%" @update:model-value="updateVisible" @close="closeExpenselEditDialog">
+  <el-dialog :model-value="visible" title="支出录入" width="90%" @update:model-value="updateVisible" :before-close = "clearDataOnPageClose">
     <div style="max-height: 700px">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -12,16 +12,14 @@
           <el-button v-hasPermi="['system:user:import']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="warning" icon="Refresh" plain @click="refreshFunds">重置</el-button>
+          <el-button v-hasPermi="['system:user:import']" type="warning" icon="Refresh" plain @click="refreshData">重置</el-button>
         </el-col>
       </el-row>
       <el-table
         ref="multipleTable"
-        :data="da"
+        :data="expenditureData"
         border
         style="width: 100%; max-height: 500px; overflow-y: auto"
-        :row-style="{ height: '50px' }"
-        :cell-style="{ padding: '0px' }"
       >
         <el-table-column label="日期" :resizable="false" align="center" width="100px">
           <!-- 使用 slot-scope 定制显示日期 -->
@@ -75,7 +73,13 @@
         @update:visible="isExpenditureAddDialogVisible = $event"
       ></ExpenditureAdd>
       <!--导入支出录入表-->
-      <ExpenditureImport :visible="isExpenditureImportDialogVisible" @close:visible="isExpenditureImportDialogVisible = $event" />
+      <ExpenditureImport
+        :project-id="props.projectId"
+        :visible="isExpenditureImportDialogVisible"
+        @new-data="handleNewData"
+        @close:visible="isExpenditureImportDialogVisible = $event"
+        @update:visible="isExpenditureImportDialogVisible = $event">
+      </ExpenditureImport>
     </div>
   </el-dialog>
 </template>
@@ -85,6 +89,7 @@ import { defineProps, ref, watch, defineEmits } from 'vue';
 import request from '@/utils/request';
 import ExpenditureAdd from './ExpenditureAdd.vue';
 import ExpenditureImport from './ExpenditureImport.vue';
+import { addProjectExpenditure } from '@/api/project/funds';
 
 const props = defineProps<{
   projectId: number | null;
@@ -102,29 +107,19 @@ const params = ref({
   projectId: null as null | number
 });
 
-// 数据变量
 const loading = ref(true);
 const isExpenditureAddDialogVisible = ref(false);
 const isExpenditureImportDialogVisible = ref(false);
-const expenditureLook = ref([]);
-const importedData = ref([]);
-const da = ref<any[]>([]); // 存储上传的数据
+const expenditureData = ref<any[]>([]);
 
 // 监听 projectId 变化
 watch(
   () => props.projectId,
   (newVal) => {
     params.value.projectId = newVal;
-    // 如果需要，可以执行 checkExpenditure();
   },
   { immediate: true }
 );
-
-// 截取文件名以供显示
-const truncatedName = (originalName: string) => {
-  const lastDotIndex = originalName.lastIndexOf('.');
-  return lastDotIndex !== -1 ? originalName.substring(0, lastDotIndex) : originalName;
-};
 
 // 格式化日期方法
 const formatDate = (date: string) => {
@@ -135,7 +130,20 @@ const formatDate = (date: string) => {
   }
   return date;
 };
-
+// 初始化表单数据
+const initFormData = (item: any) => ({
+  projectId: params.value.projectId,
+  expenditureDate: item.expenditureDate,
+  projectName: item.projectName,
+  voucherNo: item.voucherNo,
+  expenditureAbstract: item.expenditureAbstract,
+  zxzc: item.zxzc,
+  zjjj: item.zjjj,
+  firstLevelSubject: item.firstLevelSubject,
+  secondLevelSubject: item.secondLevelSubject,
+  thirdLevelSubject: item.thirdLevelSubject,
+  amount: item.amount
+});
 // 新增按钮操作
 const handleAdd = () => {
   isExpenditureAddDialogVisible.value = true;
@@ -148,102 +156,59 @@ const handleImport = () => {
 
 // 提交按钮操作
 const addFunds = () => {
-  if (da.value.length === 0) {
-    // 提示没有要上传的数据
+  if (expenditureData.value.length === 0) {
+    ElMessage.warning('请先填写或导入数据');
     return;
   }
-  // 构建请求数据
-  const requestData = da.value.map((item) => ({
-    projectId: params.value.projectId,
-    expenditureDate: item.expenditureDate,
-    projectName: item.projectName,
-    voucherNo: item.voucherNo,
-    expenditureAbstract: item.expenditureAbstract,
-    zxzc: item.zxzc,
-    zjjj: item.zjjj,
-    firstLevelSubject: item.firstLevelSubject,
-    secondLevelSubject: item.secondLevelSubject,
-    thirdLevelSubject: item.thirdLevelSubject,
-    amount: item.amount
-  }));
-
-  // 发送请求
-  request({
-    url: '/project/funds/add',
-    method: 'post',
-    data: requestData
+  const requestData = expenditureData.value.map(initFormData);
+  addProjectExpenditure(requestData).then((res) => {
+    if (res.code === 200) {
+      ElMessage.success('新增支出录入成功');
+      // clearDataOnPageClose();
+      updateVisible(false);
+    } else {
+      ElMessage.error(res.msg);
+    }
   })
-    .then((resp) => {
-      console.log(resp);
-      // 上传成功提示
-    })
-    .catch((error) => {
-      console.error('上传失败', error);
-      // 上传失败提示
-    });
 };
-
-// 查看预算及支出汇总
-// const checkOther = () => {
-//   fundsAndBalance(props.projectId).then((resp) => {
-//     // 处理获取到的数据
-//   });
-// };
-
+const refreshData = () => {
+  loading.value = true;
+  expenditureData.value = [];
+  loading.value = false;
+}
 // 处理新增数据
 const handleNewData = (newData: any[]) => {
-  da.value = da.value.concat(newData);
-  // 关闭新增窗口
+  expenditureData.value = expenditureData.value.concat(newData);
   ExpenditureAdd.value = false;
 };
 
 // 页面关闭时清空数据列表
 const clearDataOnPageClose = () => {
-  da.value = [];
+  if (expenditureData.value.length > 0) {
+    ElMessageBox.confirm(
+      '对话框关闭后，本次添加的数据将自动清空，确认关闭？',
+      '关闭确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    ).then(() => {
+      // 用户确认关闭，清空数据并关闭弹窗
+      expenditureData.value = [];
+      updateVisible(false);
+    }).catch(() => {
+      // 用户取消关闭，不执行任何操作
+    });
+  } else {
+    // 如果支出数据为空，直接关闭弹窗
+    updateVisible(false);
+  }
 };
 
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
-
-const closeDialog = () => {
-  emits('update:visible', false);
-};
-
-onMounted(() => {
-  console.log('pro_first_subject', pro_first_subject.value);
-});
 </script>
 
-<style scoped>
-/* 你的样式 */
-.custom-upload-btn {
-  /* 添加虚线框 */
-  border: 2px dashed #dddfe0;
-  border-radius: 10px;
-  padding: 40px;
-  /* 增加内边距 */
-  cursor: pointer;
-  /* 鼠标样式改为手型 */
-  display: flex;
-  /* 设置为flex布局 */
-  justify-content: center;
-  /* 水平居中 */
-  align-items: center;
-  /* 垂直居中 */
-  width: 300px;
-  /* 设置框的宽度 */
-  height: 200px;
-  /* 设置框的高度 */
-}
-
-.custom-upload-btn:hover {
-  /* 鼠标悬停时改变颜色 */
-  border-color: #409eff;
-}
-
-.upload-text {
-  font-size: 16px;
-  color: #409eff;
-}
-</style>
+<style scoped></style>

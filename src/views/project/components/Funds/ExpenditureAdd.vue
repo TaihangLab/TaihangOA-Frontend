@@ -13,14 +13,14 @@
           <el-col :span="12">
             <el-form-item label="专项/自筹" prop="zxzc" style="width: 300px">
               <el-select v-model="form.zxzc" placeholder="请选择支出类别" clearable>
-                <el-option v-for="item in zxzcOptions" :key="item.zxzcId" :label="item.zxzcName" :value="item.zxzcId"></el-option>
+                <el-option v-for="item in zxzcOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="直接/间接" prop="zjjj" style="width: 300px">
               <el-select v-model="form.zjjj" placeholder="请选择支出类别">
-                <el-option v-for="item in zjjjOptions" :key="item.zjjjId" :label="item.zjjjName" :value="item.zjjjId"></el-option>
+                <el-option v-for="item in zjjjOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -31,9 +31,9 @@
               <el-select v-model="form.firstLevelSubject" placeholder="请选择一级科目">
                 <el-option
                   v-for="item in firstLevelSubjectOptions"
-                  :key="item.firstLevelSubjectId"
-                  :label="item.firstLevelSubjectName"
-                  :value="item.firstLevelSubjectId"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -50,9 +50,9 @@
               <el-select v-model="form.secondLevelSubject" placeholder="请选择二级科目">
                 <el-option
                   v-for="item in secondLevelSubjectOptions"
-                  :key="item.secondLevelSubjectId"
-                  :label="item.secondLevelSubjectName"
-                  :value="item.secondLevelSubjectId"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -77,9 +77,9 @@
               <el-select v-model="form.thirdLevelSubject" placeholder="请选择三级科目">
                 <el-option
                   v-for="item in thirdLevelSubjectOptions"
-                  :key="item.thirdLevelSubjectId"
-                  :label="item.thirdLevelSubjectName"
-                  :value="item.thirdLevelSubjectId"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -132,65 +132,44 @@ const form = ref({
 });
 const expenditureForm = ref(); // 为表单添加 ref
 const zxzcOptions = ref([]);
-
-const getZxzcOptions = () => {
-  getDicts('pro_zxzc_options').then((resp) => {
-    resp.data.forEach((item) => {
-      zxzcOptions.value.push({
-        zxzcId: item.dictValue,
-        zxzcName: item.dictLabel
-      });
-    });
-  });
-};
-
 const zjjjOptions = ref([]);
-
-const getZjjjOptions = () => {
-  getDicts('pro_zjjj_options').then((resp) => {
-    resp.data.forEach((item) => {
-      zjjjOptions.value.push({
-        zjjjId: item.dictValue,
-        zjjjName: item.dictLabel
-      });
-    });
-  });
-};
-
 const firstLevelSubjectOptions = ref([]);
-
-const getFirstLevelSubjectOptions = () => {
-  getDicts('pro_first_subject').then((resp) => {
-    resp.data.forEach((item) => {
-      firstLevelSubjectOptions.value.push({
-        firstLevelSubjectId: item.dictValue,
-        firstLevelSubjectName: item.dictLabel
-      });
-    });
-  });
-};
-
 const secondLevelSubjectOptions = ref([]);
-
-const getSecondLevelSubjectOptions = () => {
-  getDicts('pro_second_subject').then((resp) => {
-    resp.data.forEach((item) => {
-      secondLevelSubjectOptions.value.push({
-        secondLevelSubjectId: item.dictValue,
-        secondLevelSubjectName: item.dictLabel
-      });
-    });
-  });
-};
-
 const thirdLevelSubjectOptions = ref([]);
 
-const getThirdLevelSubjectOptions = () => {
-  getDicts('pro_third_subject').then((resp) => {
-    resp.data.forEach((item) => {
-      thirdLevelSubjectOptions.value.push({
-        thirdLevelSubjectId: item.dictValue,
-        thirdLevelSubjectName: item.dictLabel
+const initFormData = () => ({
+  amount: '',
+  zxzc: '',
+  zjjj: '',
+  projectName: '',
+  voucherNo: '',
+  expenditureAbstract: '',
+  expenditureDate: '',
+  firstLevelSubject: '',
+  secondLevelSubject: '',
+  thirdLevelSubject: ''
+});
+
+const reset = () => {
+  form.value = initFormData();
+};
+
+const initOptions = () => {
+  const dicts = [
+    { key: 'pro_zxzc_options', ref: zxzcOptions },
+    { key: 'pro_zjjj_options', ref: zjjjOptions },
+    { key: 'pro_first_subject', ref: firstLevelSubjectOptions },
+    { key: 'pro_second_subject', ref: secondLevelSubjectOptions },
+    { key: 'pro_third_subject', ref: thirdLevelSubjectOptions }
+  ];
+
+  dicts.forEach(({ key, ref }) => {
+    getDicts(key).then((resp) => {
+      resp.data.forEach((item: any) => {
+        ref.value.push({
+          id: item.dictValue,
+          name: item.dictLabel
+        });
       });
     });
   });
@@ -212,51 +191,16 @@ const onSubmit = () => {
   if (expenditureForm.value) {
     expenditureForm.value.validate((valid) => {
       if (valid) {
-        const formDataArray = [
-          {
-            amount: form.value.amount,
-            zxzc: form.value.zxzc,
-            zjjj: form.value.zjjj,
-            projectName: form.value.projectName,
-            voucherNo: form.value.voucherNo,
-            expenditureAbstract: form.value.expenditureAbstract,
-            expenditureDate: form.value.expenditureDate,
-            firstLevelSubject: form.value.firstLevelSubject,
-            secondLevelSubject: form.value.secondLevelSubject,
-            thirdLevelSubject: form.value.thirdLevelSubject
-          }
-        ];
+        const formDataArray = [{ ...form.value }];
         closeExpenselAddDialog();
-        console.log(formDataArray);
         emits('new-data', formDataArray);
         reset();
-      } else {
-        return false;
       }
     });
   }
 };
 
-const reset = () => {
-  form.value = {
-    amount: '',
-    zxzc: '',
-    zjjj: '',
-    projectName: '',
-    voucherNo: '',
-    expenditureAbstract: '',
-    expenditureDate: '',
-    firstLevelSubject: '',
-    secondLevelSubject: '',
-    thirdLevelSubject: ''
-  };
-};
-
 onMounted(() => {
-  getZxzcOptions();
-  getZjjjOptions();
-  getFirstLevelSubjectOptions();
-  getSecondLevelSubjectOptions();
-  getThirdLevelSubjectOptions();
+  initOptions();
 });
 </script>
