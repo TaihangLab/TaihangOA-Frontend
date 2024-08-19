@@ -14,11 +14,11 @@ export function getDetails(memberId: number | string): AxiosPromise<ProjectUserD
 }
 
 // 查看用户列表
-export const getAllList = (PageQuery: PageQuery, data: ProjectUserBo): AxiosPromise<ProjectUserVo[]> => {
+export function getAllList(PageQuery: PageQuery, data: ProjectUserBo): AxiosPromise<ProjectUserVo[]> {
   return request({
     url: '/project/user/getAllList',
     method: 'post',
     params: PageQuery,
     data: data
   });
-};
+}
