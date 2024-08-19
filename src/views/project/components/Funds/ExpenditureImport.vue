@@ -75,7 +75,7 @@ const confirmUpload = () => {
   importExpenditureData(fileTemp.value)
     .then((response) => {
       emits('close:visible', false);
-      emits('new-data', response.data)
+      emits('new-data', response.data);
     })
     .catch(error => {
       fileTemp.value = null;
