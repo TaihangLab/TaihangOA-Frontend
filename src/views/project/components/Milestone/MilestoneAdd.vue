@@ -1,7 +1,7 @@
 <template>
   <el-dialog :model-value="visible" width="50%" @close="handleClose">
     <!--ref="form" 更改为了 ref="form1"，否则前端显示会出BUG-->
-    <el-form ref="form1" :rules="rules" :model="form" label-width="80px">
+    <el-form ref="form1" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="标题" prop="milestoneTitle">
         <el-input v-model="form.milestoneTitle"></el-input>
       </el-form-item>

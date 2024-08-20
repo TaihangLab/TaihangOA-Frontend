@@ -45,7 +45,7 @@
           :style="{ '--icon-color': '#0bbd87' }"
         >
           <el-card>
-            <h4 style="font-weight: bold; font-size: 17px;" >{{ item.milestoneTitle }}</h4>
+            <h4 style="font-weight: bold; font-size: 17px">{{ item.milestoneTitle }}</h4>
             <el-tag
               v-for="(type, index) in item.categoryTypeSet"
               :key="index"
@@ -53,11 +53,11 @@
               effect="light"
               plain
               size="small"
-              :style="{ color: getTextColor(type), marginRight: '8px'}"
+              :style="{ color: getTextColor(type), marginRight: '8px' }"
             >
               {{ getLabel(type) }}
             </el-tag>
-            <p style="font-family: 'SimSun', '宋体', serif;">{{ item.milestoneRemark }}</p>
+            <p style="font-family: 'SimSun', '宋体', serif">{{ item.milestoneRemark }}</p>
             <div class="attachments-container">
               <el-button
                 v-for="(oss, ossIndex) in item.sysOsses"
