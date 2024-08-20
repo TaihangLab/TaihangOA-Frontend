@@ -1,7 +1,7 @@
 <template>
   <el-dialog :model-value="visible" title="信息录入" width="750px" @close="closeExpenselAddDialog">
     <div>
-      <el-form :rules="rules" :model="form" label-width="100px" ref="expenditureForm">
+      <el-form ref="expenditureForm" :rules="rules" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="项目名称" prop="projectName" style="width: 300px">
@@ -29,12 +29,7 @@
           <el-col :span="12">
             <el-form-item label="一级科目" prop="firstLevelSubject" style="width: 300px">
               <el-select v-model="form.firstLevelSubject" placeholder="请选择一级科目">
-                <el-option
-                  v-for="item in firstLevelSubjectOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="item in firstLevelSubjectOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -48,12 +43,7 @@
           <el-col :span="12">
             <el-form-item label="二级科目" prop="secondLevelSubject" style="width: 300px">
               <el-select v-model="form.secondLevelSubject" placeholder="请选择二级科目">
-                <el-option
-                  v-for="item in secondLevelSubjectOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="item in secondLevelSubjectOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -75,12 +65,7 @@
           <el-col :span="12">
             <el-form-item label="三级科目" prop="thirdLevelSubject" style="width: 300px">
               <el-select v-model="form.thirdLevelSubject" placeholder="请选择三级科目">
-                <el-option
-                  v-for="item in thirdLevelSubjectOptions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
-                ></el-option>
+                <el-option v-for="item in thirdLevelSubjectOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>

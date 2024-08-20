@@ -101,7 +101,7 @@ export interface ProjectFundsReceived {
   milestoneId?: number;
   ossIds?: number[];
   amountReceived: number | string;
-  receivedType: number;
+  receivedType: number | string;
   receivedFrom: string;
   receivedDate: string;
   sysOsses?: OssVO[];

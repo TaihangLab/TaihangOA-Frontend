@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" title="经费到账" width="1100px" @update:model-value="updateVisible" @close="closeFundsReceivedDialog">
+  <el-dialog :model-value="visible" title="经费到账" width="1000px" @update:model-value="updateVisible" @close="closeFundsReceivedDialog">
     <div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
@@ -30,10 +30,10 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="'操作'" :resizable="false" align="center" min-width="80px" fixed="right">
+        <el-table-column :label="'操作'" :resizable="false" align="center" width="175px" fixed="right">
           <template #default="{ row }">
-            <el-button v-hasPermi="['project:expense:receivedEdit']" type="text" icon="edit" @click="handleEdit(row)">修改</el-button>
-            <el-button v-hasPermi="['project:expense:receivedDelete']" type="text" icon="delete" @click="handleDelete(row.receivedId)"
+            <el-button v-hasPermi="['project:expense:receivedEdit']" type="text" icon="edit" size="small" @click="handleEdit(row)">修改</el-button>
+            <el-button v-hasPermi="['project:expense:receivedDelete']" type="text" icon="delete" size="small" @click="handleDelete(row.receivedId)"
               >删除
             </el-button>
           </template>
@@ -68,7 +68,6 @@
                 :key="item.receivedTypeId"
                 :label="item.receivedTypeName"
                 :value="item.receivedTypeId"
-                :disabled="item.status === 1"
                 style="width: 192px"
               ></el-option>
             </el-select>
@@ -192,7 +191,8 @@ watch(
 const handleEdit = (row: any) => {
   form.value = {
     ...row, // 将行数据复制到表单中
-    ossIds: row.sysOsses.map((item: any) => item.ossId)
+    receivedType: String(row.receivedType),
+    ossIds: Array.isArray(row.sysOsses) ? row.sysOsses.map((item: any) => item.ossId) : [] // 如果 row.sysOsses 为空或不是数组，则返回一个空数组
   };
   isEditing.value = true;
   isExpenditureAddDialogVisible.value = true;
@@ -253,6 +253,7 @@ const getReceivedTypes = () => {
       });
     });
   });
+  console.log('receivedTypes', receivedTypes);
 };
 /** 添加经费到账记录 */
 const submitNewReceived = (formData: ProjectFundsReceived) => {
