@@ -53,16 +53,16 @@ export interface ProjectExpenditureBO {
   expenditureId?: number | string;
   expenditureIds?: number[];
   projectId: number | string;
-  expenditureDate: string;
-  projectName: string;
-  voucherNo: string;
-  expenditureAbstract: string;
-  zxzc: number | string;
-  zjjj: number | string;
+  expenditureDate?: string;
+  projectName?: string;
+  voucherNo?: string;
+  expenditureAbstract?: string;
+  zxzc?: number | string;
+  zjjj?: number | string;
   firstLevelSubject: number | string;
   secondLevelSubject: number | string;
   thirdLevelSubject: number | string;
-  amount: number | string;
+  amount?: number | string;
   expenditureDateSta?: string;
   expenditureDateEnd?: string;
 }

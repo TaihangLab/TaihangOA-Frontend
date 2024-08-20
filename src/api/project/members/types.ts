@@ -3,7 +3,7 @@ export interface ProjectUserBo {
   userId: number;
 }
 
-export interface ProjectUserVo extends BaseEntity{
+export interface ProjectUserVo extends BaseEntity {
   userId: number;
   nickName: string;
   jobTitle: number;
