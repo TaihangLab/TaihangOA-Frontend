@@ -5,14 +5,7 @@
         <template #header>
           <div class="card-header-content"><i class="el-icon-caret-right"></i> 直接经费（万元） <i class="el-icon-caret-left"></i></div>
         </template>
-        <el-card
-          v-for="(card1, index1) in $props.cards1"
-          :key="index1"
-          shadow="never"
-          class="custom-card"
-          @mouseover="setButtonShowList1(index1, true)"
-          @mouseleave="setButtonShowList1(index1, true)"
-        >
+        <el-card v-for="(card1, index1) in $props.cards1" :key="index1" shadow="never" class="custom-card">
           <template #header>
             <div class="header-container">
               <!-- 左侧按钮 -->
@@ -66,11 +59,7 @@
                   <el-input v-model="card2.content" class="custom-input" clearable placeholder="请输入金额" size="default"></el-input>
                 </div>
               </template>
-              <el-table
-                v-if="isTableDataNotEmpty(index1, index2)"
-                :data="tableData[index1] && tableData[index1][index2]"
-                style="width: 100%"
-              >
+              <el-table v-if="isTableDataNotEmpty(index1, index2)" :data="tableData[index1] && tableData[index1][index2]" style="width: 100%">
                 <el-table-column label="三级标签" align="center" :width="150">
                   <template #default="scope">
                     <el-select v-model="scope.row.value" clearable placeholder="请选择三级级目录" size="small">
@@ -179,41 +168,20 @@ const data = reactive({
   isButtonShowList3: [] as boolean[]
 });
 
-// 判断表格是否可见
-const test = (index1: number, index2: number): boolean => {
-  // 确保 data.isTableVisible[index1] 已初始化
-  if (!data.isTableVisible[index1]) {
-    return false;
-  }
-  // 确保 data.isTableVisible[index1][index2] 已初始化
-  if (typeof data.isTableVisible[index1][index2] === 'undefined') {
-    return false;
-  }
-  // 进行最终判断
-  return isTableDataNotEmpty(index1, index2) || data.isTableVisible[index1][index2];
-};
-
-function setButtonShowList1(index1: number, show: boolean) {
-  if (index1 >= 0 && index1 < data.isButtonShowList1.length) {
-    data.isButtonShowList1[index1] = show;
-  }
-}
-
 function setButtonShowList2(index1: number, index2: number, show: boolean) {
   index2 = props.tableData[index1].length - 1;
   data.isButtonShowList2[index1][index2] = show;
-
 }
 
 function setButtonShowList3(index3: number, show: boolean) {
   data.isButtonShowList3[index3] = show;
 }
 
-function filteredSecondOptions(index1: number) {
+const filteredSecondOptions = computed(() => (index1: number) => {
   const selectedFirstValue = props.cards1[index1]?.value;
   const firstOption = data.categoryOptions1.find((option) => option.value === selectedFirstValue);
   return firstOption ? firstOption.children || [] : [];
-}
+});
 
 const filteredThirdOptions = computed(() => (index1: number, index2: number) => {
   const selectedFirstValue = props.cards1[index1].value;
@@ -243,11 +211,16 @@ onBeforeMount(() => {
 const initializeStates = () => {
   data.isButtonShowList1 = props.cards1 ? new Array(props.cards1.length).fill(false) : [];
   if (props.cards2) {
-    data.isButtonShowList2 = props.cards2.map((card2List) => new Array(card2List.length).fill(false));
-    data.isTableVisible = props.cards2.map((card2List) => card2List.map(() => false));
+    data.isButtonShowList2 = props.cards2.map((card2List) => new Array(card2List.length).fill(true));
+    // data.isTableVisible = props.cards2.map((card2List) => card2List.map(() => false));
+    data.isTableVisible = props.cards2.map((card2List) => new Array(card2List.length).fill(true));
   } else {
     data.isButtonShowList2 = [];
     data.isTableVisible = [[]];
+  }
+  if (props.cards3.length === 0) {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.cards3.push({ value: '', content: '' });
   }
   data.isButtonShowList3 = props.cards3 ? new Array(props.cards3.length).fill(false) : [];
 };
@@ -275,9 +248,13 @@ const addCard2 = (index1: number) => {
     return;
   }
   if (typeof data.isTableVisible[index1] !== 'undefined') {
-    data.isTableVisible[index1].push(false);
+    data.isTableVisible[index1].push(true);
   }
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2[index1].push({ value: '', content: '' });
+  // eslint-disable-next-line vue/no-mutating-props
+  if (props.tableData[index1][0]?.value === '') props.tableData[index1].splice(0, 1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1].push([]);
   let size = props.tableData[index1].length;
   addRow(index1, size - 1);
@@ -285,8 +262,11 @@ const addCard2 = (index1: number) => {
 
 const removeCard = (index1: number) => {
   if (props.cards1.length > 1) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards1.splice(index1, 1);
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards2.splice(index1, 1);
+    // eslint-disable-next-line vue/no-mutating-props
     props.tableData.splice(index1, 1);
     data.isTableVisible.splice(index1, 1);
   } else {
@@ -295,44 +275,44 @@ const removeCard = (index1: number) => {
 };
 
 const removeCard2 = (index1: number) => {
-  // props.cards2[index1].splice(index2, 1);
-  // props.tableData[index1].splice(index2, 1);
-  // data.isTableVisible[index1].splice(index2, 1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2[index1].pop();
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1].pop();
   data.isTableVisible[index1].pop();
 };
 
 const addRow = (index1: number, index2: number) => {
-  if (!props.tableData[index1] || !data.isTableVisible[index1]) {
-    props.tableData[index1] = [];
-    data.isTableVisible[index1] = [];
-  }
+  // if (!props.tableData[index1] || !data.isTableVisible[index1]) {
+  //   // eslint-disable-next-line vue/no-mutating-props
+  //   props.tableData[index1] = [];
+  //   data.isTableVisible[index1] = [];
+  // }
   if (!props.tableData[index1][index2]) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.tableData[index1][index2] = [];
   }
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1][index2].push({ value: '' });
   data.isTableVisible[index1][index2] = true; // 确保可见性为true
-  console.log('index2', index2);
-  console.log('this.tableData[index1][index2]', props.tableData[index1][index2]);
 };
 
 const removeRow = (index1: number, index2: number, rowIndex: number) => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1][index2].splice(rowIndex, 1);
   if (props.tableData[index1][index2].length === 0) {
     data.isTableVisible[index1][index2] = false;
   }
-  console.log('this.cards1', props.cards1);
-  console.log('this.cards2', props.cards2);
-  console.log('this.tableData', props.tableData);
 };
 
 const addIndirectCost = () => {
-  props.cards3.push({ content: '', value: '' });
+  // eslint-disable-next-line vue/no-mutating-props
+  props.cards3.push({ value: '', content: '' });
 };
 
 const removeIndirectCost = (index: number) => {
   if (props.cards3.length > 1) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards3.splice(index, 1);
   } else {
     console.warn('Cannot delete the last item in cards3');
@@ -340,9 +320,13 @@ const removeIndirectCost = (index: number) => {
 };
 
 const reset = () => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards1.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData.length = 0;
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards3.length = 0;
   addCard();
   addIndirectCost();
@@ -368,6 +352,17 @@ watch(
   (newValue, oldValue) => {
     activeNames = 'first';
   }
+);
+
+watch(
+  () => props.cards2,
+  (newVal) => {
+    if (props.cards1.length === 0) {
+      addCard();
+    }
+    initializeStates();
+  },
+  { immediate: true, deep: true }
 );
 </script>
 

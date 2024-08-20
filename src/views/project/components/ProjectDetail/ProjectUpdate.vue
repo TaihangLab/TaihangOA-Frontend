@@ -85,7 +85,8 @@ import {
   categoryOptions5,
   reorganizeData,
   reorganizeJJData,
-  clearCategories, clearContent
+  clearCategories,
+  clearContent
 } from '@/api/project/funds/fundkeys';
 import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
 import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
@@ -217,8 +218,7 @@ const submit = async () => {
         loading.close();
       });
     emits('update:visible', false);
-    // 这行代码会导致修改后重新加载页面
-    // setTimeout(() => location.reload(), 900);
+
     return;
   }
 
@@ -300,6 +300,13 @@ const confirmDialog = () => {
   emits('update:visible', false);
 };
 
+// 遍历函数，将空数组替换为包含 { value: '' } 的对象数组
+function transformTableData(data: Array<Array<Array<{ value: string }>>>): Array<Array<Array<{ value: string }>>> {
+  return data.map((row: Array<Array<{ value: string }>>) =>
+    row.map((cell: Array<{ value: string }>) => (cell.length === 0 ? [{ value: '' }] : cell))
+  );
+}
+
 // 定义获取项目详情的逻辑
 async function fetchProjectDetails(projectId: string) {
   if (projectId) {
@@ -334,6 +341,24 @@ async function fetchProjectDetails(projectId: string) {
       reorganizeData(categoryOption2.value, projectSpecialFundForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
       reorganizeJJData(categoryOption4.value, projectSpecialFundForm.value, cards3Form.value);
       reorganizeJJData(categoryOption5.value, projectSpecialFundForm.value, zcCards3Form.value);
+      // 清楚数据中首地址为空的情况
+      cards1Form.value.splice(0, 1);
+      cards2Form.value.splice(0, 1);
+      cards3Form.value.splice(0, 1);
+      tableDataForm.value.splice(0, 1);
+      tableDataForm.value = transformTableData(tableDataForm.value);
+      if (cards3Form.value.length > 0 && cards3Form.value[cards3Form.value.length - 1].content === '') {
+        cards3Form.value.pop();
+      }
+
+      zcCards1Form.value.splice(0, 1);
+      zcCards2Form.value.splice(0, 1);
+      zcCards3Form.value.splice(0, 1);
+      zcTableDataForm.value.splice(0, 1);
+      zcTableDataForm.value = transformTableData(zcTableDataForm.value);
+      if (zcCards3Form.value.length > 0 && zcCards3Form.value[zcCards3Form.value.length - 1].content === '') {
+        zcCards3Form.value.pop();
+      }
 
       await nextTick(); // 确保 DOM 更新完成
     } catch (error) {
@@ -345,6 +370,7 @@ async function fetchProjectDetails(projectId: string) {
     }
   }
 }
+
 // 监听 updateId 的变化
 watch(
   async () => props.updateId,

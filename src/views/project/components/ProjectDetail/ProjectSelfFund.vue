@@ -5,14 +5,7 @@
         <template #header>
           <div class="card-header-content"><i class="el-icon-caret-right"></i> 直接经费（万元） <i class="el-icon-caret-left"></i></div>
         </template>
-        <el-card
-          v-for="(card1, index1) in $props.cards1"
-          :key="index1"
-          shadow="never"
-          class="custom-card"
-          @mouseover="setButtonShowList1(index1, true)"
-          @mouseleave="setButtonShowList1(index1, true)"
-        >
+        <el-card v-for="(card1, index1) in $props.cards1" :key="index1" shadow="never" class="custom-card">
           <template #header>
             <div class="header-container">
               <!-- 左侧按钮 -->
@@ -21,7 +14,7 @@
                   <el-button class="remove3-button" icon="FolderAdd" plain @click="addCard()"></el-button>
                 </el-tooltip>
                 <el-tooltip class="box-item" effect="dark" content="删除一级目录" placement="top">
-                  <el-button class="remove4-button" v-show="true" icon="FolderDelete" plain @click="removeCard(index1)"></el-button>
+                  <el-button v-show="true" class="remove4-button" icon="FolderDelete" plain @click="removeCard(index1)"></el-button>
                 </el-tooltip>
               </div>
 
@@ -36,18 +29,10 @@
               <!-- 右侧按钮 -->
               <div class="right-buttons">
                 <el-tooltip class="box-item" effect="dark" content="新增二级目录" placement="top">
-                  <el-button class="remove5-button" v-show="true" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
+                  <el-button v-show="true" class="remove5-button" icon="CirclePlus" circle type="success" plain @click="addCard2(index1)"></el-button>
                 </el-tooltip>
                 <el-tooltip class="box-item" effect="dark" content="删除二级目录" placement="top">
-                  <el-button
-                    v-show="true"
-                    class="remove-button"
-                    icon="Remove"
-                    circle
-                    type="danger"
-                    plain
-                    @click="removeCard2(index1)"
-                  ></el-button>
+                  <el-button v-show="true" class="remove-button" icon="Remove" circle type="danger" plain @click="removeCard2(index1)"></el-button>
                 </el-tooltip>
               </div>
             </div>
@@ -74,11 +59,7 @@
                   <el-input v-model="card2.content" class="custom-input" clearable placeholder="请输入金额" size="default"></el-input>
                 </div>
               </template>
-              <el-table
-                v-if="isTableDataNotEmpty(index1, index2)"
-                :data="tableData[index1] && tableData[index1][index2]"
-                style="width: 100%"
-              >
+              <el-table v-if="isTableDataNotEmpty(index1, index2)" :data="tableData[index1] && tableData[index1][index2]" style="width: 100%">
                 <el-table-column label="三级标签" align="center" :width="150">
                   <template #default="scope">
                     <el-select v-model="scope.row.value" clearable placeholder="请选择三级级目录" size="small">
@@ -165,10 +146,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount } from 'vue';
+import { defineProps, defineEmits, watch, reactive, computed, onMounted, onBeforeMount, ref } from 'vue';
 import { categoryOptions2, categoryOptions5 } from '@/api/project/funds/fundkeys';
 import { ElMessage } from 'element-plus';
 
+const emits = defineEmits(['update:visible']);
 const props = defineProps<{
   cards1: Array<{ value: string; content: string }>;
   cards2: Array<Array<{ value: string; content: string }>>;
@@ -186,10 +168,6 @@ const data = reactive({
   isButtonShowList3: [] as boolean[]
 });
 
-function setButtonShowList1(index1: number, show: boolean) {
-  data.isButtonShowList1[index1] = show;
-}
-
 function setButtonShowList2(index1: number, index2: number, show: boolean) {
   index2 = props.tableData[index1].length - 1;
   data.isButtonShowList2[index1][index2] = show;
@@ -199,18 +177,20 @@ function setButtonShowList3(index3: number, show: boolean) {
   data.isButtonShowList3[index3] = show;
 }
 
-function filteredSecondOptions(index1: number) {
+const filteredSecondOptions = computed(() => (index1: number) => {
   const selectedFirstValue = props.cards1[index1]?.value;
   const firstOption = data.categoryOptions2.find((option) => option.value === selectedFirstValue);
   return firstOption ? firstOption.children || [] : [];
-}
+});
 
 const filteredThirdOptions = computed(() => (index1: number, index2: number) => {
   const selectedFirstValue = props.cards1[index1].value;
   const firstOption = data.categoryOptions2.find((option) => option.value === selectedFirstValue);
   if (firstOption) {
+    const children = firstOption.children as Array<{ value: string; label: string; children?: Array<{ value: string; label: string }> }>;
+
     const selectedSecondValue = props.cards2[index1][index2].value;
-    const secondOption = firstOption.children?.find((option) => option.value === selectedSecondValue);
+    const secondOption = children?.find((option) => option.value === selectedSecondValue);
     return secondOption ? secondOption.children || [] : [];
   }
   return [];
@@ -220,14 +200,27 @@ onMounted(() => {
   initializeStates();
 });
 
+onBeforeMount(() => {
+  if (props.cards1.length === 0) {
+    addCard();
+    addIndirectCost();
+  }
+  console.log(props.cards1.length);
+});
+
 const initializeStates = () => {
   data.isButtonShowList1 = props.cards1 ? new Array(props.cards1.length).fill(false) : [];
   if (props.cards2) {
-    data.isButtonShowList2 = props.cards2.map((card2List) => new Array(card2List.length).fill(false));
-    data.isTableVisible = props.cards2.map((card2List) => card2List.map(() => false));
+    data.isButtonShowList2 = props.cards2.map((card2List) => new Array(card2List.length).fill(true));
+    // data.isTableVisible = props.cards2.map((card2List) => card2List.map(() => false));
+    data.isTableVisible = props.cards2.map((card2List) => new Array(card2List.length).fill(true));
   } else {
     data.isButtonShowList2 = [];
     data.isTableVisible = [[]];
+  }
+  if (props.cards3.length === 0) {
+    // eslint-disable-next-line vue/no-mutating-props
+    props.cards3.push({ value: '', content: '' });
   }
   data.isButtonShowList3 = props.cards3 ? new Array(props.cards3.length).fill(false) : [];
 };
@@ -255,9 +248,13 @@ const addCard2 = (index1: number) => {
     return;
   }
   if (typeof data.isTableVisible[index1] !== 'undefined') {
-    data.isTableVisible[index1].push(false);
+    data.isTableVisible[index1].push(true);
   }
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2[index1].push({ value: '', content: '' });
+  // eslint-disable-next-line vue/no-mutating-props
+  if (props.tableData[index1][0]?.value === '') props.tableData[index1].splice(0, 1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1].push([]);
   let size = props.tableData[index1].length;
   addRow(index1, size - 1);
@@ -265,8 +262,11 @@ const addCard2 = (index1: number) => {
 
 const removeCard = (index1: number) => {
   if (props.cards1.length > 1) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards1.splice(index1, 1);
+    // eslint-disable-next-line vue/no-mutating-props
     props.cards2.splice(index1, 1);
+    // eslint-disable-next-line vue/no-mutating-props
     props.tableData.splice(index1, 1);
     data.isTableVisible.splice(index1, 1);
   } else {
@@ -275,28 +275,26 @@ const removeCard = (index1: number) => {
 };
 
 const removeCard2 = (index1: number) => {
-  // props.cards2[index1].splice(index2, 1);
-  // props.tableData[index1].splice(index2, 1);
-  // data.isTableVisible[index1].splice(index2, 1);
+  // eslint-disable-next-line vue/no-mutating-props
   props.cards2[index1].pop();
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1].pop();
   data.isTableVisible[index1].pop();
 };
 
 const addRow = (index1: number, index2: number) => {
-  if (!props.tableData[index1] || !data.isTableVisible[index1]) {
-    props.tableData[index1] = [];
-    data.isTableVisible[index1] = [];
-  }
+  // if (!props.tableData[index1] || !data.isTableVisible[index1]) {
+  //   // eslint-disable-next-line vue/no-mutating-props
+  //   props.tableData[index1] = [];
+  //   data.isTableVisible[index1] = [];
+  // }
   if (!props.tableData[index1][index2]) {
+    // eslint-disable-next-line vue/no-mutating-props
     props.tableData[index1][index2] = [];
   }
+  // eslint-disable-next-line vue/no-mutating-props
   props.tableData[index1][index2].push({ value: '' });
   data.isTableVisible[index1][index2] = true; // 确保可见性为true
-  console.log('index1', index1);
-  console.log('index2', index2);
-  console.log('this.tableData[index1][index2]', props.tableData[index1][index2]);
-  console.log('data.isTableVisible[index1][index2]', data.isTableVisible[index1][index2]);
 };
 
 const removeRow = (index1: number, index2: number, rowIndex: number) => {
@@ -305,14 +303,11 @@ const removeRow = (index1: number, index2: number, rowIndex: number) => {
   if (props.tableData[index1][index2].length === 0) {
     data.isTableVisible[index1][index2] = false;
   }
-  console.log('this.cards1', props.cards1);
-  console.log('this.cards2', props.cards2);
-  console.log('this.tableData', props.tableData);
 };
 
 const addIndirectCost = () => {
   // eslint-disable-next-line vue/no-mutating-props
-  props.cards3.push({ content: '', value: '' });
+  props.cards3.push({ value: '', content: '' });
 };
 
 const removeIndirectCost = (index: number) => {
@@ -338,12 +333,37 @@ const reset = () => {
 };
 defineExpose({ reset });
 
-onBeforeMount(() => {
-  if (props.cards1.length === 0) {
-    addCard();
-    addIndirectCost();
+const updateVisible = (value: boolean) => {
+  emits('update:visible', value);
+};
+
+const closeDialog = () => {
+  emits('update:visible', false);
+};
+
+const confirmDialog = () => {
+  // 处理确定逻辑
+  emits('update:visible', false);
+};
+
+let activeNames = 'first';
+watch(
+  () => props.visible,
+  (newValue, oldValue) => {
+    activeNames = 'first';
   }
-});
+);
+
+watch(
+  () => props.cards2,
+  (newVal) => {
+    if (props.cards1.length === 0) {
+      addCard();
+    }
+    initializeStates();
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <style scoped>
@@ -385,7 +405,6 @@ onBeforeMount(() => {
 .custom-card {
   border-color: #c9c9c9;
   margin-top: 2px;
-
 }
 .header-container {
   display: flex;
