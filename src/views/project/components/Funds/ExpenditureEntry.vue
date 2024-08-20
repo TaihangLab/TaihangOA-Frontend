@@ -114,16 +114,6 @@ watch(
   { immediate: true }
 );
 
-// 格式化日期方法
-// const formatDate = (date: string) => {
-//   const parts = date.split('-');
-//   if (parts.length === 3) {
-//     const [year, month, day] = parts;
-//     return `${year}-${month}-${day}`;
-//   }
-//   return date;
-// };
-// 初始化表单数据
 const initFormData = (item: any) => ({
   projectId: params.value.projectId,
   expenditureDate: item.expenditureDate,
@@ -157,8 +147,8 @@ const addFunds = () => {
   addProjectExpenditure(requestData).then((res) => {
     if (res.code === 200) {
       ElMessage.success('新增支出录入成功');
-      // clearDataOnPageClose();
       updateVisible(false);
+      refreshData();
     } else {
       ElMessage.error(res.msg);
     }
