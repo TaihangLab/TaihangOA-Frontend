@@ -52,11 +52,11 @@ export function importExpenditureData(file: File): AxiosPromise<any> {
 }
 
 // 导出支出信息
-export function exportExpenditure(projectExpenditureBO: ProjectExpenditureBO): AxiosPromise<Blob> {
+export function exportExpenditure(ids: number[]): AxiosPromise<Blob> {
   return request({
     url: '/project/funds/exportData',
     method: 'post',
-    data: projectExpenditureBO,
+    data: ids,
     responseType: 'blob'
   });
 }
