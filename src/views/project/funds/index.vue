@@ -54,10 +54,22 @@
         <el-table-column fixed="right" label="操作" width="150">
           <template #default="scope">
             <el-tooltip content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showFundsDetailDialog(scope.row)"></el-button>
+              <el-button
+                v-hasPermi="['system:role:edit']"
+                link
+                type="primary"
+                icon="Reading"
+                @click="showFundsDetailDialog(scope.row.projectId)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip content="查看支出" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="view" @click="showExpenditureCheckDialog(scope.row)"></el-button>
+              <el-button
+                v-hasPermi="['system:role:edit']"
+                link
+                type="primary"
+                icon="view"
+                @click="showExpenditureDetailDialog(scope.row.projectId)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip content="支出录入" placement="top">
               <el-button
@@ -82,12 +94,12 @@
       </el-table>
 
       <DetailDialog :visible="isDetailDialogVisible" @update:visible="isDetailDialogVisible = $event" />
-      <!--      <ExpenditureCheck-->
-      <!--        :projectId="Number(projectId)"-->
-      <!--        :visible="isExpenditureCheckDialogVisible"-->
-      <!--        @close:visible="isExpenditureCheckDialogVisible = $event"-->
-      <!--        @update:visible="isExpenditureCheckDialogVisible = $event"-->
-      <!--      />-->
+      <ExpenditureDetail
+        :project-id="projectId"
+        :visible="isExpenditureCheckDialogVisible"
+        @close:visible="isExpenditureCheckDialogVisible = $event"
+        @update:visible="isExpenditureCheckDialogVisible = $event"
+      />
       <ExpenditureEntry
         :project-id="projectId"
         :visible="isExpenditureEntryDialogVisible"
@@ -123,6 +135,7 @@ import ExpenditureEntry from '../components/Funds/ExpenditureEntry.vue';
 import FundsReceived from '@/views/project/components/Funds/FundsReceived.vue';
 import { ProjectBaseInfoBO, ProjectFundsManagementVO } from '@/api/project/funds/types';
 import { getProjectList } from '@/api/project/funds';
+import ExpenditureDetail from '@/views/project/components/Funds/ExpenditureDetail.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { pro_level_type } = toRefs<any>(proxy?.useDict('pro_level_type'));
@@ -150,7 +163,7 @@ const showFundsDetailDialog = (id: number) => {
   console.log(isFundsDetailVisible.value);
 };
 
-const showExpenditureCheckDialog = (id: number) => {
+const showExpenditureDetailDialog = (id: number) => {
   projectId.value = id;
   isExpenditureCheckDialogVisible.value = true;
 };
