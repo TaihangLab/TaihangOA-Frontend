@@ -23,9 +23,9 @@
         </template>
       </el-upload>
       <div style="margin-top: 20px">
-        <el-button @click="handleCancel" type="warning">下载模版</el-button>
-        <el-button @click="handleCancel">取消</el-button>
+        <el-button @click="handleTemplateDownload" type="warning">下载模版</el-button>
         <el-button type="primary" :disabled="!fileTemp" @click="confirmUpload">确认</el-button>
+        <el-button @click="handleCancel">取消</el-button>
       </div>
     </div>
   </el-dialog>
@@ -35,6 +35,7 @@
 import { defineProps, defineEmits } from 'vue';
 import { importExpenditureData } from '@/api/project/funds';
 
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const props = defineProps<{ visible: boolean }>();
 const emits = defineEmits(['new-data', 'update:visible', 'close:visible']);
 const fileTemp = ref(null); // 存储用户选择的文件
@@ -84,5 +85,9 @@ const confirmUpload = () => {
     .finally(() => {
       fileTemp.value = null;
     });
+};
+
+const handleTemplateDownload = () => {
+  proxy?.download('project/funds/importTemplate', {}, `经费支出模版${new Date().getTime()}.xlsx`);
 };
 </script>
