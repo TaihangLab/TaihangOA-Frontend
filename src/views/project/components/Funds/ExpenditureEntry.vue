@@ -82,19 +82,16 @@
 
 <script setup Name="ExpenditureEntry" lang="ts">
 import { defineProps, ref, watch, defineEmits } from 'vue';
-import request from '@/utils/request';
 import ExpenditureAdd from './ExpenditureAdd.vue';
 import ExpenditureImport from './ExpenditureImport.vue';
 import { addProjectExpenditure } from '@/api/project/funds';
+import { formatDate } from '../../../../utils';
 
 const props = defineProps<{
   projectId: number | null;
   visible: boolean;
 }>();
 const emits = defineEmits(['update:visible', 'close:visible']);
-const closeExpenselEditDialog = () => {
-  emits('close:visible', false);
-};
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { pro_first_subject, pro_second_subject, pro_third_subject, pro_zxzc_options, pro_zjjj_options } = toRefs<any>(
   proxy?.useDict('pro_first_subject', 'pro_second_subject', 'pro_third_subject', 'pro_zxzc_options', 'pro_zjjj_options')
@@ -118,14 +115,14 @@ watch(
 );
 
 // 格式化日期方法
-const formatDate = (date: string) => {
-  const parts = date.split('-');
-  if (parts.length === 3) {
-    const [year, month, day] = parts;
-    return `${year}-${month}-${day}`;
-  }
-  return date;
-};
+// const formatDate = (date: string) => {
+//   const parts = date.split('-');
+//   if (parts.length === 3) {
+//     const [year, month, day] = parts;
+//     return `${year}-${month}-${day}`;
+//   }
+//   return date;
+// };
 // 初始化表单数据
 const initFormData = (item: any) => ({
   projectId: params.value.projectId,
