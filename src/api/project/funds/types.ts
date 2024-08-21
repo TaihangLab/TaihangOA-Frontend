@@ -106,3 +106,400 @@ export interface ProjectFundsReceived {
   receivedDate: string;
   sysOsses?: OssVO[];
 }
+
+export interface ProjectFundsVO {
+  /**
+   * 项目经费总额
+   */
+  totalFundsAll: number | string;
+
+  /**
+   * 直接经费总额
+   */
+  totalFundsZj: number | string;
+
+  /**
+   * 间接经费总额
+   */
+  totalFundsJj: number | string;
+
+  /**
+   * 专项经费总额
+   */
+  totalFundsZx: number | string;
+
+  /**
+   * 专项到款总额
+   */
+  totalFundsZxDk: number | string;
+
+  /**
+   * 已完成自筹投资
+   */
+  zctzDone: number | string;
+
+  /**
+   * 已完成专项投资
+   */
+  zxtzDone: number | string;
+
+  /**
+   * 自筹经费公司配套
+   */
+  zcGspt: number | string;
+
+  /**
+   * 专项经费公司留存（计划）
+   */
+  zxGslc: number | string;
+
+  /**
+   * 专项设备费
+   */
+  sbfZx: number | string;
+
+  /**
+   * 设备费_直接
+   */
+  sbfZj: number | string;
+
+  /**
+   * 专项直接费用
+   */
+  totalFundsZxZj: number | string;
+
+  /**
+   * 专项间接费用
+   */
+  totalFundsZxJj: number | string;
+
+  /**
+   * 自筹经费总额
+   */
+  totalFundsZc: number | string;
+
+  /**
+   * 自筹设备费
+   */
+  sbfZc: number | string;
+
+  /**
+   * 自筹直接费用
+   */
+  totalFundsZcZj: number | string;
+
+  /**
+   * 自筹间接费用
+   */
+  totalFundsZcJj: number | string;
+
+  /**
+   * 设备费_专项_直接
+   */
+  sbfZxZj: number | string;
+
+  /**
+   * 设备费_自筹_直接
+   */
+  sbfZcZj: number | string;
+
+  /**
+   * 设备费_购置设备费_直接
+   */
+  sbfGzsbZj: number | string;
+
+  /**
+   * 设备费_购置设备费_专项_直接
+   */
+  sbfGzsbZxZj: number | string;
+
+  /**
+   * 设备费_购置设备费_自筹_直接
+   */
+  sbfGzsbZcZj: number | string;
+
+  /**
+   * 设备费_试制设备费_直接
+   */
+  sbfSzsbZj: number | string;
+
+  /**
+   * 设备费_试制设备费_专项_直接
+   */
+  sbfSzsbZxZj: number | string;
+
+  /**
+   * 设备费_试制设备费_自筹_直接
+   */
+  sbfSzsbZcZj: number | string;
+
+  /**
+   * 设备费_设备升级改造费_直接
+   */
+  sbfSbsjgzZj: number | string;
+
+  /**
+   * 设备费_设备升级改造费_专项_直接
+   */
+  sbfSbsjgzZxZj: number | string;
+
+  /**
+   * 设备费_设备升级改造费_自筹_直接
+   */
+  sbfSbsjgzZcZj: number | string;
+
+  /**
+   * 设备费_设备租赁费_直接
+   */
+  sbfSbzlZj: number | string;
+
+  /**
+   * 设备费_设备租赁费_专项_直接
+   */
+  sbfSbzlZxZj: number | string;
+
+  /**
+   * 设备费_设备租赁费_自筹_直接
+   */
+  sbfSbzlZcZj: number | string;
+
+  /**
+   * 业务费_直接
+   */
+  ywfZj: number | string;
+
+  /**
+   * 业务费_专项_直接
+   */
+  ywfZxZj: number | string;
+
+  /**
+   * 业务费_自筹_直接
+   */
+  ywfZcZj: number | string;
+
+  /**
+   * 业务费_材料费_直接
+   */
+  ywfClfZj: number | string;
+
+  /**
+   * 业务费_材料费_专项_直接
+   */
+  ywfClfZxZj: number | string;
+
+  /**
+   * 业务费_材料费_自筹_直接
+   */
+  ywfClfZcZj: number | string;
+
+  /**
+   * 业务费_资料费_直接
+   */
+  ywfZlfZj: number | string;
+
+  /**
+   * 业务费_资料费_专项_直接
+   */
+  ywfZlfZxZj: number | string;
+
+  /**
+   * 业务费_资料费_自筹_直接
+   */
+  ywfZlfZcZj: number | string;
+
+  /**
+   * 业务费_数据样本采集费_直接
+   */
+  ywfSjybcjfZj: number | string;
+
+  /**
+   * 业务费_数据样本采集费_专项_直接
+   */
+  ywfSjybcjfZxZj: number | string;
+
+  /**
+   * 业务费_数据样本采集费_自筹_直接
+   */
+  ywfSjybcjfZcZj: number | string;
+
+  /**
+   * 业务费_测试化验加工费_直接
+   */
+  ywfCshyjgfZj: number | string;
+
+  /**
+   * 业务费_测试化验加工费_专项_直接
+   */
+  ywfCshyjgfZxZj: number | string;
+
+  /**
+   * 业务费_测试化验加工费_自筹_直接
+   */
+  ywfCshyjgfZcZj: number | string;
+
+  /**
+   * 业务费_燃料动力费_直接
+   */
+  ywfRldlfZj: number | string;
+
+  /**
+   * 业务费_燃料动力费_专项_直接
+   */
+  ywfRldlfZxZj: number | string;
+
+  /**
+   * 业务费_燃料动力费_自筹_直接
+   */
+  ywfRldlfZcZj: number | string;
+
+  /**
+   * 业务费_办公费_直接
+   */
+  ywfBgfZj: number | string;
+
+  /**
+   * 业务费_办公费_专项_直接
+   */
+  ywfBgfZxZj: number | string;
+
+  /**
+   * 业务费_办公费_自筹_直接
+   */
+  ywfBgfZcZj: number | string;
+
+  /**
+   * 业务费_印刷出版费_直接
+   */
+  ywfYscbfZj: number | string;
+
+  /**
+   * 业务费_印刷出版费_专项_直接
+   */
+  ywfYscbfZxZj: number | string;
+
+  /**
+   * 业务费_印刷出版费_自筹_直接
+   */
+  ywfYscbfZcZj: number | string;
+
+  /**
+   * 业务费_知识产权事务费_直接
+   */
+  ywfZscqswfZj: number | string;
+
+  /**
+   * 业务费_知识产权事务费_专项_直接
+   */
+  ywfZscqswfZxZj: number | string;
+
+  /**
+   * 业务费_知识产权事务费_自筹_直接
+   */
+  ywfZscqswfZcZj: number | string;
+
+  /**
+   * 业务费_车辆使用费_直接
+   */
+  ywfClsyfZj: number | string;
+
+  /**
+   * 业务费_车辆使用费_专项_直接
+   */
+  ywfClsyfZxZj: number | string;
+
+  /**
+   * 业务费_车辆使用费_自筹_直接
+   */
+  ywfClsyfZcZj: number | string;
+
+  /**
+   * 业务费_差旅费_直接
+   */
+  ywfChlfZj: number | string;
+
+  /**
+   * 业务费_差旅费_专项_直接
+   */
+  ywfChlfZxZj: number | string;
+
+  /**
+   * 业务费_差旅费_自筹_直接
+   */
+  ywfChlfZcZj: number | string;
+
+  /**
+   * 业务费_会议会务费_直接
+   */
+  ywfHyhwfZj: number | string;
+
+  /**
+   * 业务费_会议会务费_专项_直接
+   */
+  ywfHyhwfZxZj: number | string;
+
+  /**
+   * 业务费_会议会务费_自筹_直接
+   */
+  ywfHyhwfZcZj: number | string;
+
+  /**
+   * 业务费_国内协作费_直接
+   */
+  ywfGnxzfZj: number | string;
+
+  /**
+   * 业务费_国内协作费_专项_直接
+   */
+  ywfGnxzfZxZj: number | string;
+
+  /**
+   * 业务费_国内协作费_自筹_直接
+   */
+  ywfGnxzfZcZj: number | string;
+
+  /**
+   * 业务费_国际合作与交流费_直接
+   */
+  ywfGjhzjlZj: number | string;
+
+  /**
+   * 业务费_国际合作与交流费_专项_直接
+   */
+  ywfGjhzjlZxZj: number | string;
+
+  /**
+   * 业务费_国际合作与交流费_自筹_直接
+   */
+  ywfGjhzjlZcZj: number | string;
+
+  /**
+   * 业务费_劳务费_直接
+   */
+  ywfLwfZj: number | string;
+
+  /**
+   * 业务费_劳务费_专项_直接
+   */
+  ywfLwfZxZj: number | string;
+
+  /**
+   * 业务费_劳务费_自筹_直接
+   */
+  ywfLwfZcZj: number | string;
+
+  /**
+   * 业务费_专家咨询费_直接
+   */
+  ywfZjzxfZj: number | string;
+
+  /**
+   * 业务费_专家咨询费_专项_直接
+   */
+  ywfZjzxfZxZj: number | string;
+
+  /**
+   * 业务费_专家咨询费_自筹_直接
+   */
+  ywfZjzxfZcZj: number | string;
+}

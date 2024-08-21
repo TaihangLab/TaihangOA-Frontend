@@ -112,12 +112,12 @@
         @close:visible="isFundsReceivedVisible = $event"
         @update:visible="isFundsReceivedVisible = $event"
       />
-      <!--      <FundsDetail-->
-      <!--        :project-id="projectId"-->
-      <!--        :visible="isFundsDetailVisible"-->
-      <!--        @update:visible="isFundsDetailVisible = $event"-->
-      <!--        @close:visible="isFundsReceivedVisible = $event"-->
-      <!--      />-->
+      <FundsDetail
+        :project-id="projectId"
+        :visible="isFundsDetailVisible"
+        @update:visible="isFundsDetailVisible = $event"
+        @close:visible="isFundsReceivedVisible = $event"
+      />
       <pagination
         v-if="total > 0"
         v-model:total="total"
@@ -136,6 +136,7 @@ import FundsReceived from '@/views/project/components/Funds/FundsReceived.vue';
 import { ProjectBaseInfoBO, ProjectFundsManagementVO } from '@/api/project/funds/types';
 import { getProjectList } from '@/api/project/funds';
 import ExpenditureDetail from '@/views/project/components/Funds/ExpenditureDetail.vue';
+import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { pro_level_type } = toRefs<any>(proxy?.useDict('pro_level_type'));
@@ -159,8 +160,8 @@ const isFundsDetailVisible = ref(false);
 const queryFormRef = ref<ElFormInstance>();
 
 const showFundsDetailDialog = (id: number) => {
+  projectId.value = id;
   isFundsDetailVisible.value = true;
-  console.log(isFundsDetailVisible.value);
 };
 
 const showExpenditureDetailDialog = (id: number) => {

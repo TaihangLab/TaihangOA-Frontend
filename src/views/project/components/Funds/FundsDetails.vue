@@ -1,34 +1,34 @@
 <template>
-  <el-dialog :model-value="visible" width="85%" @update:model-value="updateVisible">
+  <el-dialog :model-value="visible" title="详情" width="1550px" @update:model-value="updateVisible">
     <template #default>
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
           <el-descriptions-item label="基本信息" :span="2"></el-descriptions-item>
           <el-descriptions :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
-            <el-descriptions-item label="项目名称">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="项目任务书编号">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="负责课题">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="课题任务书编号">{{ 'lookDetail.projectInfoVO.subjectAssignmentSerialNo' }} </el-descriptions-item>
-            <el-descriptions-item label="项目牵头单位">{{ 'lookDetail.projectInfoVO.leadingUnit' }} </el-descriptions-item>
-            <el-descriptions-item label="是否牵头单位">{{ 'hasLeading[lookDetail.projectInfoVO.hasLeadingRole]' }} </el-descriptions-item>
-            <el-descriptions-item label="项目专员/联系人">{{ 'lookDetail.projectInfoVO.projectContact' }} </el-descriptions-item>
-            <el-descriptions-item label="项目级别">{{ 'projectLevel[lookDetail.projectInfoVO.projectLevel]' }} </el-descriptions-item>
-            <el-descriptions-item label="项目来源">{{ 'lookDetail.projectInfoVO.projectSource' }} </el-descriptions-item>
-            <el-descriptions-item label="立项时间">{{ 'lookDetail.projectInfoVO.projectEstablishTime' }} </el-descriptions-item>
-            <el-descriptions-item label="项目计划验收时间">{{ 'lookDetail.projectInfoVO.projectScheduledCompletionTime' }} </el-descriptions-item>
-            <el-descriptions-item label="项目执行时间（年）">{{ 'lookDetail.projectInfoVO.projectDuration' }} </el-descriptions-item>
-            <el-descriptions-item label="项目推进情况">{{ 'lookDetail.projectInfoVO.assignedSubjectName]' }} </el-descriptions-item>
-            <el-descriptions-item label="合作单位">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="涉及专家、团队">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="项目经费总额">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="专项经费">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
-            <el-descriptions-item label="自筹经费">{{ 'lookDetail.projectInfoVO.assignedSubjectName' }} </el-descriptions-item>
+            <el-descriptions-item label="项目名称">{{ projectDetails.projectInfoVO.assignedSubjectName }} </el-descriptions-item>
+            <el-descriptions-item label="项目任务书编号">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }} </el-descriptions-item>
+            <el-descriptions-item label="负责课题">{{ projectDetails.projectInfoVO.assignedSubjectSection }} </el-descriptions-item>
+            <el-descriptions-item label="课题任务书编号">{{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }} </el-descriptions-item>
+            <el-descriptions-item label="项目牵头单位">{{ projectDetails.projectInfoVO.leadingUnit }} </el-descriptions-item>
+            <el-descriptions-item label="是否牵头单位">{{ projectDetails.projectInfoVO.hasCooperativeUnit }} </el-descriptions-item>
+            <el-descriptions-item label="项目专员/联系人">{{ projectDetails.projectInfoVO.projectContact }} </el-descriptions-item>
+            <el-descriptions-item label="项目级别">{{ projectDetails.projectInfoVO.projectLevel }} </el-descriptions-item>
+            <el-descriptions-item label="项目来源">{{ projectDetails.projectInfoVO.projectSource }} </el-descriptions-item>
+            <el-descriptions-item label="立项时间">{{ projectDetails.projectInfoVO.projectEstablishTime }} </el-descriptions-item>
+            <el-descriptions-item label="项目计划验收时间">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime }} </el-descriptions-item>
+            <el-descriptions-item label="项目执行时间（年）">{{ projectDetails.projectInfoVO.projectDuration }} </el-descriptions-item>
+            <el-descriptions-item label="项目推进情况">{{ projectDetails.projectInfoVO.projectProgressStatus }} </el-descriptions-item>
+            <el-descriptions-item label="合作单位">{{ projectDetails.projectInfoVO.collaboratingUnit }} </el-descriptions-item>
+            <el-descriptions-item label="涉及专家、团队">{{ projectDetails.projectInfoVO.expertTeam }} </el-descriptions-item>
+            <el-descriptions-item label="项目经费总额">{{ projectDetails.projectFundsVO.totalFundsAll }} </el-descriptions-item>
+            <el-descriptions-item label="专项经费">{{ projectDetails.projectFundsVO.totalFundsZx }} </el-descriptions-item>
+            <el-descriptions-item label="自筹经费">{{ projectDetails.projectFundsVO.totalFundsZc }} </el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
         <el-tab-pane label="经费到账" name="经费到账">
           <div style="margin-top: 5px"></div>
-          <el-table style="margin: 0; padding: 0">
+          <el-table style="margin: 0; padding: 0" :data="fundsReceivedList" border>
             <el-table-column align="center" prop="amountReceived" :show-overflow-tooltip="true">
               <template #header>
                 <div style="text-align: center">
@@ -117,14 +117,32 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch } from 'vue';
+import { ProjectDetailsVO } from '@/api/project/myProject/types';
+import { getProjectDetails } from '@/api/project/myProject';
+import { getFundsReceivedList } from '@/api/project/funds';
+import { ProjectFundsReceivedVo } from '@/api/project/funds/types';
 
-const props = defineProps<{ visible: boolean }>();
+const loading = ref(true);
+const props = defineProps<{
+  projectId: string | number | undefined;
+  visible: boolean;
+}>();
 const emits = defineEmits(['update:visible']);
 const activeTab = ref('基本信息');
 
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
+
+const projectDetails = reactive<ProjectDetailsVO>({
+  projectInfoVO: {},
+  projectPlanVOList: [],
+  projectTargetVOList: [],
+  projectUserVoList: [],
+  projectFundsVO: {},
+  projectAttachmentVOList: []
+});
+const fundsReceivedList = ref<ProjectFundsReceivedVo[]>([]);
 
 // columnStyle 方法定义
 const columnStyle = ({ columnIndex }) => {
@@ -143,12 +161,29 @@ const columnStyle = ({ columnIndex }) => {
   }
 };
 
+const getProjectDetail = async (projectId: number | string) => {
+  const resp = await getProjectDetails(projectId);
+  projectDetails.projectInfoVO = resp.data.projectInfoVO;
+  projectDetails.projectPlanVOList = resp.data.projectPlanVOList;
+  projectDetails.projectTargetVOList = resp.data.projectTargetVOList;
+  projectDetails.projectUserVoList = resp.data.projectUserVoList;
+  projectDetails.projectFundsVO = resp.data.projectFundsVO;
+  projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
+};
+
+const getFundsReceive = async () => {
+  const resp = await getFundsReceivedList(props.projectId);
+  fundsReceivedList.value = resp.data;
+};
+
 // 使用 watch 监听 updateVisible 变化并打印到控制台
 watch(
-  () => props.visible,
+  () => props.projectId,
   (newValue) => {
     if (newValue) {
-      activeTab.value = '基本信息'; // 每次打开对话框时设置默认标签
+      activeTab.value = '基本信息';
+      getProjectDetail(newValue);
+      getFundsReceive();
     }
   }
 );

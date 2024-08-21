@@ -61,17 +61,6 @@ export function exportExpenditure(ids: number[]): AxiosPromise<Blob> {
   });
 }
 
-// 查看经费到账
-export function getFundsReceived(projectId: number | string): AxiosPromise<ProjectFundsReceivedVo[]> {
-  return request({
-    url: '/project/funds/getFundsReceived',
-    method: 'get',
-    params: {
-      projectId: projectId
-    }
-  });
-}
-
 // 新增专项经费到账记录
 export function addFundsReceived(bodyData: ProjectFundsReceived): AxiosPromise<any> {
   return request({

@@ -5,7 +5,9 @@ import {
   combinedSearchDataSetList,
   deleteParams,
   queryProjectData,
+  ProjectDetailsVO
 } from '@/api/project/myProject/types';
+import { AxiosPromise } from 'axios';
 
 // 新增大事记
 export function milestoneAdd(data: MilestoneFrom) {
@@ -57,5 +59,15 @@ export function queryProjectList(data: queryProjectData, PageQuery: PageQuery) {
     method: 'post',
     data: data,
     params: PageQuery
+  });
+}
+
+export function getProjectDetails(projectId: number | string): AxiosPromise<ProjectDetailsVO> {
+  return request({
+    url: `/project/list/getDetails`,
+    method: 'get',
+    params: {
+      projectId
+    }
   });
 }
