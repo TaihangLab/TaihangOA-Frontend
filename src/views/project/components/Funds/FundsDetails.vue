@@ -57,8 +57,10 @@
             style="width: 100%; max-height: 500px; overflow-y: auto"
             :row-style="{ height: '50px' }"
             :cell-style="{ padding: '0px' }"
+            :data="expenditureList"
+            height="500px"
           >
-            <el-table-column label="日期" :resizable="false" align="center" width="100px"> </el-table-column>
+            <el-table-column label="日期" :resizable="false" align="center" width="100px" prop="expenditureDate"> </el-table-column>
             <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>
             <el-table-column label="凭证号" :resizable="false" align="center" prop="voucherNo" width="100px"> </el-table-column>
             <el-table-column label="摘要" :resizable="false" align="center" prop="expenditureAbstract" min-width="200px"> </el-table-column>
@@ -115,12 +117,17 @@
   </el-dialog>
 </template>
 
-<script setup lang="ts">
+<script setup Name="FundsDetails"lang="ts">
 import { defineProps, defineEmits, ref, watch } from 'vue';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
 import { getProjectDetails } from '@/api/project/myProject';
-import { getFundsReceivedList } from '@/api/project/funds';
-import { ProjectFundsReceivedVo } from '@/api/project/funds/types';
+import { getFundsReceivedList, getProjectExpenditureList } from '@/api/project/funds';
+import {
+  ProjectBaseInfoBO,
+  ProjectExpenditureBO,
+  ProjectExpenditureVO,
+  ProjectFundsReceivedVo
+} from '@/api/project/funds/types';
 
 const loading = ref(true);
 const props = defineProps<{
@@ -143,6 +150,11 @@ const projectDetails = reactive<ProjectDetailsVO>({
   projectAttachmentVOList: []
 });
 const fundsReceivedList = ref<ProjectFundsReceivedVo[]>([]);
+const expenditureList = ref<ProjectExpenditureVO[]>([]);
+const projectExpenditureBo = ref<ProjectExpenditureBO>({
+  firstLevelSubject: '', secondLevelSubject: '', thirdLevelSubject: '',
+  projectId: undefined
+})
 
 // columnStyle 方法定义
 const columnStyle = ({ columnIndex }) => {
@@ -171,21 +183,28 @@ const getProjectDetail = async (projectId: number | string) => {
   projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
 };
 
-const getFundsReceive = async () => {
-  const resp = await getFundsReceivedList(props.projectId);
+const getFundsReceive = async (projectId: number | string) => {
+  const resp = await getFundsReceivedList(projectId);
   fundsReceivedList.value = resp.data;
 };
 
-// 使用 watch 监听 updateVisible 变化并打印到控制台
+const getExpenditure = async (projectId: number | string) => {
+  projectExpenditureBo.value.projectId = projectId;
+  const resp = await getProjectExpenditureList(projectExpenditureBo.value, { pageNum: 1, pageSize: 1000 });
+  expenditureList.value = resp.rows;
+}
+
 watch(
-  () => props.projectId,
-  (newValue) => {
-    if (newValue) {
+  () => [props.projectId, props.visible],
+  ([newProjectId, newVisible]) => {
+    if (newProjectId !== undefined && newVisible === true) {
       activeTab.value = '基本信息';
-      getProjectDetail(newValue);
-      getFundsReceive();
+      getProjectDetail(props.projectId);
+      getFundsReceive(props.projectId);
+      getExpenditure(props.projectId)
     }
-  }
+  },
+  { immediate: true }
 );
 </script>
 
