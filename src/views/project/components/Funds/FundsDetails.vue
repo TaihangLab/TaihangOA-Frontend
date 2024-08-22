@@ -1,29 +1,65 @@
 <template>
-  <el-dialog :model-value="visible" title="详情" width="1550px" @update:model-value="updateVisible">
+  <el-dialog :model-value="visible" width="1550px" @update:model-value="updateVisible">
     <template #default>
       <el-tabs v-model="activeTab" type="border-card">
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
           <el-descriptions-item label="基本信息" :span="2"></el-descriptions-item>
           <el-descriptions :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
-            <el-descriptions-item label="项目名称">{{ projectDetails.projectInfoVO.assignedSubjectName }} </el-descriptions-item>
-            <el-descriptions-item label="项目任务书编号">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }} </el-descriptions-item>
-            <el-descriptions-item label="负责课题">{{ projectDetails.projectInfoVO.assignedSubjectSection }} </el-descriptions-item>
-            <el-descriptions-item label="课题任务书编号">{{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }} </el-descriptions-item>
-            <el-descriptions-item label="项目牵头单位">{{ projectDetails.projectInfoVO.leadingUnit }} </el-descriptions-item>
-            <el-descriptions-item label="是否牵头单位">{{ projectDetails.projectInfoVO.hasCooperativeUnit }} </el-descriptions-item>
-            <el-descriptions-item label="项目专员/联系人">{{ projectDetails.projectInfoVO.projectContact }} </el-descriptions-item>
-            <el-descriptions-item label="项目级别">{{ projectDetails.projectInfoVO.projectLevel }} </el-descriptions-item>
-            <el-descriptions-item label="项目来源">{{ projectDetails.projectInfoVO.projectSource }} </el-descriptions-item>
-            <el-descriptions-item label="立项时间">{{ projectDetails.projectInfoVO.projectEstablishTime }} </el-descriptions-item>
-            <el-descriptions-item label="项目计划验收时间">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime }} </el-descriptions-item>
-            <el-descriptions-item label="项目执行时间（年）">{{ projectDetails.projectInfoVO.projectDuration }} </el-descriptions-item>
-            <el-descriptions-item label="项目推进情况">{{ projectDetails.projectInfoVO.projectProgressStatus }} </el-descriptions-item>
-            <el-descriptions-item label="合作单位">{{ projectDetails.projectInfoVO.collaboratingUnit }} </el-descriptions-item>
-            <el-descriptions-item label="涉及专家、团队">{{ projectDetails.projectInfoVO.expertTeam }} </el-descriptions-item>
-            <el-descriptions-item label="项目经费总额">{{ projectDetails.projectFundsVO.totalFundsAll }} </el-descriptions-item>
-            <el-descriptions-item label="专项经费">{{ projectDetails.projectFundsVO.totalFundsZx }} </el-descriptions-item>
-            <el-descriptions-item label="自筹经费">{{ projectDetails.projectFundsVO.totalFundsZc }} </el-descriptions-item>
+            <el-descriptions-item label="项目名称">
+              {{ projectDetails.projectInfoVO.assignedSubjectName }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目任务书编号">
+              {{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}
+            </el-descriptions-item>
+            <el-descriptions-item label="负责课题">
+              {{ projectDetails.projectInfoVO.assignedSubjectSection }}
+            </el-descriptions-item>
+            <el-descriptions-item label="课题任务书编号">
+              {{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目牵头单位">
+              {{ projectDetails.projectInfoVO.leadingUnit }}
+            </el-descriptions-item>
+            <el-descriptions-item label="是否牵头单位">
+              {{ pro_cooperative_unit[projectDetails.projectInfoVO.hasCooperativeUnit]?.label || '未知' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目专员/联系人">
+              {{ projectDetails.projectInfoVO.projectContact }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目级别">
+              {{ pro_level_type[projectDetails.projectInfoVO.projectLevel]?.label || '未知' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目来源">
+              {{ projectDetails.projectInfoVO.projectSource }}
+            </el-descriptions-item>
+            <el-descriptions-item label="立项时间">
+              {{ projectDetails.projectInfoVO.projectEstablishTime }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目计划验收时间">
+              {{ projectDetails.projectInfoVO.projectScheduledCompletionTime }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目执行时间（年）">
+              {{ projectDetails.projectInfoVO.projectDuration }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目推进情况">
+              {{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="合作单位">
+              {{ pro_cocompany_type[projectDetails.projectInfoVO.collaboratingUnit]?.label || '未知' }}
+            </el-descriptions-item>
+            <el-descriptions-item label="涉及专家、团队">
+              {{ projectDetails.projectInfoVO.expertTeam }}
+            </el-descriptions-item>
+            <el-descriptions-item label="项目经费总额">
+              {{ projectDetails.projectFundsVO.totalFundsAll }}
+            </el-descriptions-item>
+            <el-descriptions-item label="专项经费">
+              {{ projectDetails.projectFundsVO.totalFundsZx }}
+            </el-descriptions-item>
+            <el-descriptions-item label="自筹经费">
+              {{ projectDetails.projectFundsVO.totalFundsZc }}
+            </el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
         <el-tab-pane label="经费到账" name="经费到账">
@@ -37,13 +73,17 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="到账类型" align="center" prop="receivedType" :show-overflow-tooltip="true" />
+            <el-table-column label="到账类型" align="center" prop="receivedType" :show-overflow-tooltip="true">
+              <template #default="scope">
+                {{ pro_received_type[scope.row.receivedType]?.label || '未知' }}
+              </template>
+            </el-table-column>
             <el-table-column label="来款单位" align="center" prop="receivedFrom" :show-overflow-tooltip="true" />
             <el-table-column label="到账时间" align="center" prop="receivedDate" :show-overflow-tooltip="true" />
             <el-table-column label="附件" align="center" :show-overflow-tooltip="true">
               <template #default="scope">
                 <div v-for="file in scope.row.sysOsses" :key="file.ossId">
-                  <el-button size="small" type="text" href="#">{{ file.originalName }}</el-button>
+                  <el-button type="text" @click="handleDownload(file)">{{ file.originalName }}</el-button>
                 </div>
               </template>
             </el-table-column>
@@ -64,11 +104,31 @@
             <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>
             <el-table-column label="凭证号" :resizable="false" align="center" prop="voucherNo" width="100px"> </el-table-column>
             <el-table-column label="摘要" :resizable="false" align="center" prop="expenditureAbstract" min-width="200px"> </el-table-column>
-            <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc"> </el-table-column>
-            <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj"> </el-table-column>
-            <el-table-column label="一级科目" :resizable="false" align="center" prop="firstLevelSubject" width="150px"> </el-table-column>
-            <el-table-column label="二级科目" :resizable="false" align="center" prop="secondLevelSubject" width="150px"> </el-table-column>
-            <el-table-column label="三级科目" :resizable="false" align="center" prop="thirdLevelSubject" width="150px"> </el-table-column>
+            <el-table-column label="专项/自筹" :resizable="false" align="center" prop="zxzc">
+              <template #default="scope">
+                {{ pro_zxzc_options[scope.row.thirdLevelSubject]?.label || '无' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="直接/间接" :resizable="false" align="center" prop="zjjj">
+              <template #default="scope">
+                {{ pro_zjjj_options[scope.row.thirdLevelSubject]?.label || '无' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="一级科目" :resizable="false" align="center" prop="firstLevelSubject" width="150px">
+              <template #default="scope">
+                {{ pro_first_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="二级科目" :resizable="false" align="center" prop="secondLevelSubject" width="150px">
+              <template #default="scope">
+                {{ pro_second_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+              </template>
+            </el-table-column>
+            <el-table-column label="三级科目" :resizable="false" align="center" prop="thirdLevelSubject" width="150px">
+              <template #default="scope">
+                {{ pro_third_subject[scope.row.thirdLevelSubject]?.label || '无' }}
+              </template>
+            </el-table-column>
             <el-table-column :resizable="false" align="center" prop="amount" width="150px">
               <template #header>
                 <div style="text-align: center">
@@ -117,18 +177,39 @@
   </el-dialog>
 </template>
 
-<script setup Name="FundsDetails"lang="ts">
+<script setup Name="FundsDetails" lang="ts">
 import { defineProps, defineEmits, ref, watch } from 'vue';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
 import { getProjectDetails } from '@/api/project/myProject';
-import { getFundsReceivedList, getProjectExpenditureList } from '@/api/project/funds';
-import {
-  ProjectBaseInfoBO,
-  ProjectExpenditureBO,
-  ProjectExpenditureVO,
-  ProjectFundsReceivedVo
-} from '@/api/project/funds/types';
+import { getFundsAndBalanceByProjectId, getFundsReceivedList, getProjectExpenditureList } from '@/api/project/funds';
+import { ProjectExpenditureBO, ProjectExpenditureVO, ProjectFundsAndBalanceVO, ProjectFundsReceivedVo } from '@/api/project/funds/types';
 
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const {
+  pro_first_subject,
+  pro_second_subject,
+  pro_third_subject,
+  pro_zxzc_options,
+  pro_zjjj_options,
+  pro_received_type,
+  pro_cocompany_type,
+  pro_level_type,
+  pro_progress_status,
+  pro_cooperative_unit
+} = toRefs<any>(
+  proxy?.useDict(
+    'pro_first_subject',
+    'pro_second_subject',
+    'pro_third_subject',
+    'pro_zxzc_options',
+    'pro_zjjj_options',
+    'pro_received_type',
+    'pro_cocompany_type',
+    'pro_level_type',
+    'pro_progress_status',
+    'pro_cooperative_unit'
+  )
+);
 const loading = ref(true);
 const props = defineProps<{
   projectId: string | number | undefined;
@@ -152,9 +233,19 @@ const projectDetails = reactive<ProjectDetailsVO>({
 const fundsReceivedList = ref<ProjectFundsReceivedVo[]>([]);
 const expenditureList = ref<ProjectExpenditureVO[]>([]);
 const projectExpenditureBo = ref<ProjectExpenditureBO>({
-  firstLevelSubject: '', secondLevelSubject: '', thirdLevelSubject: '',
+  firstLevelSubject: '',
+  secondLevelSubject: '',
+  thirdLevelSubject: '',
   projectId: undefined
-})
+});
+const fundsAndBalance = ref<any>({
+  projectFunds: {},
+  ProjectBalance: {}
+});
+
+function handleDownload(row: any) {
+  proxy?.$download.oss(row.ossId);
+}
 
 // columnStyle 方法定义
 const columnStyle = ({ columnIndex }) => {
@@ -192,7 +283,13 @@ const getExpenditure = async (projectId: number | string) => {
   projectExpenditureBo.value.projectId = projectId;
   const resp = await getProjectExpenditureList(projectExpenditureBo.value, { pageNum: 1, pageSize: 1000 });
   expenditureList.value = resp.rows;
-}
+};
+
+const getFundsAndBalance = async (projectId: number | string) => {
+  const resp = await getFundsAndBalanceByProjectId(projectId);
+  fundsAndBalance.value.projectBalance = resp.data.projectBalance;
+  fundsAndBalance.value.projectFunds = resp.data.projectFunds;
+};
 
 watch(
   () => [props.projectId, props.visible],
@@ -201,7 +298,8 @@ watch(
       activeTab.value = '基本信息';
       getProjectDetail(props.projectId);
       getFundsReceive(props.projectId);
-      getExpenditure(props.projectId)
+      getExpenditure(props.projectId);
+      getFundsAndBalance(props.projectId);
     }
   },
   { immediate: true }

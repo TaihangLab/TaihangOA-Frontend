@@ -3,6 +3,7 @@ import {
   ProjectBaseInfoBO,
   ProjectExpenditureBO,
   ProjectExpenditureVO,
+  ProjectFundsAndBalanceVO,
   ProjectFundsManagementVO,
   ProjectFundsReceived,
   ProjectFundsReceivedVo
@@ -108,5 +109,16 @@ export function getProjectExpenditureList(projectExpenditureBO: ProjectExpenditu
     method: 'post',
     data: projectExpenditureBO,
     params: pageQuery
+  });
+}
+
+//根据项目ID查询项目经费预算和支出明细及汇总
+export function getFundsAndBalanceByProjectId(projectId: number | string): AxiosPromise<ProjectFundsAndBalanceVO> {
+  return request({
+    url: '/project/balance/fundsAndBalance',
+    method: 'get',
+    params: {
+      projectId
+    }
   });
 }
