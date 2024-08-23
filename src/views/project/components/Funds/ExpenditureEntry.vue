@@ -3,7 +3,7 @@
     <div style="max-height: 700px">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" @click="handleAdd">新增</el-button>
+          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" @click="handleAdd(props.projectId)">新增</el-button>
         </el-col>
         <el-col :span="1.5">
           <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" @click="handleImport">导入</el-button>
@@ -61,7 +61,7 @@
       </el-table>
       <!--新增支出录入-->
       <ExpenditureAdd
-        :project-id="props.projectId"
+        :project-id="projectId"
         :visible="isExpenditureAddDialogVisible"
         @new-data="handleNewData"
         @close:visible="isExpenditureAddDialogVisible = $event"
@@ -104,7 +104,7 @@ const loading = ref(true);
 const isExpenditureAddDialogVisible = ref(false);
 const isExpenditureImportDialogVisible = ref(false);
 const expenditureData = ref<any[]>([]);
-
+const projectId = ref<number>();
 // 监听 projectId 变化
 watch(
   () => props.projectId,
@@ -127,8 +127,10 @@ const initFormData = (item: any) => ({
   thirdLevelSubject: item.thirdLevelSubject,
   amount: item.amount
 });
+
 // 新增按钮操作
-const handleAdd = () => {
+const handleAdd = (id: number) => {
+  projectId.value = id;
   isExpenditureAddDialogVisible.value = true;
 };
 

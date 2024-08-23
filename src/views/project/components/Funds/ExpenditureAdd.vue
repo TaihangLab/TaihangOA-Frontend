@@ -4,13 +4,6 @@
       <el-form ref="expenditureForm" :rules="rules" :model="form" label-width="100px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="项目名称" prop="projectName" style="width: 300px">
-              <el-input v-model="form.projectName" with="400px"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
             <el-form-item label="专项/自筹" prop="zxzc" style="width: 300px">
               <el-select v-model="form.zxzc" placeholder="请选择支出类别" clearable>
                 <el-option v-for="item in zxzcOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -90,6 +83,7 @@
 <script setup lang="ts">
 import { defineProps, ref, defineEmits } from 'vue';
 import { getDicts } from '@/api/system/dict/data';
+import { getProjectDetails } from '@/api/project/myProject';
 
 const props = defineProps<{
   projectId: number | null;
@@ -126,8 +120,8 @@ const initFormData = () => ({
   amount: '',
   zxzc: '',
   zjjj: '',
-  projectName: '',
   voucherNo: '',
+  projectName: '',
   expenditureAbstract: '',
   expenditureDate: '',
   firstLevelSubject: '',
@@ -161,7 +155,6 @@ const initOptions = () => {
 };
 
 const rules = ref({
-  projectName: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
   zjjj: [{ required: true, message: '请输入资金类型', trigger: 'blur' }],
   zxzc: [{ required: true, message: '请输入资金类型', trigger: 'blur' }],
   firstLevelSubject: [{ required: true, message: '请输入一级科目', trigger: 'blur' }],
@@ -176,10 +169,13 @@ const onSubmit = () => {
   if (expenditureForm.value) {
     expenditureForm.value.validate((valid) => {
       if (valid) {
-        const formDataArray = [{ ...form.value }];
-        closeExpenselAddDialog();
-        emits('new-data', formDataArray);
-        reset();
+        getProjectDetails(props.projectId).then((resp) => {
+          form.value.projectName = resp.data.projectInfoVO.assignedSubjectName;
+          const formDataArray = [{ ...form.value }];
+          emits('new-data', formDataArray);
+          closeExpenselAddDialog();
+          reset();
+        })
       }
     });
   }
