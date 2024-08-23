@@ -46,7 +46,7 @@
               {{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
             </el-descriptions-item>
             <el-descriptions-item label="合作单位">
-              {{ pro_cocompany_type[projectDetails.projectInfoVO.collaboratingUnit]?.label || '未知' }}
+              {{ projectDetails.projectInfoVO.collaboratingUnit }}
             </el-descriptions-item>
             <el-descriptions-item label="涉及专家、团队">
               {{ projectDetails.projectInfoVO.expertTeam }}
