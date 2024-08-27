@@ -27,7 +27,7 @@ export interface IntellectualPropertyDetailVO {
   ipStatus?: number | string;
   ipDate?: string;
   ipUserVOList?: IpUserVO[];//用户列表
-  userPathList?: number[][];//用户路径列表
+  userPathList?: number[];//用户路径列表
   sysOssVoList?: OssVO[];//附件列表
 }
 

@@ -188,16 +188,7 @@ const onSubmit = () => {
   } else {
     data.ipParams.projectId = responseProject.value;
   }
-  // 确保ipType和ipStatus是number或string类型
-  data.ipParams.ipType = typeof data.ipParams.ipType === 'object' ? data.ipParams.ipType.value : data.ipParams.ipType;
-  data.ipParams.ipStatus = typeof data.ipParams.ipStatus === 'object' ? data.ipParams.ipStatus.value : data.ipParams.ipStatus;
   data.ipParams.ossIdList = ossIds.value;
-  //过滤多余的内容
-  delete data.ipParams.assignedSubjectName;
-  delete data.ipParams.ipUserVOList;
-  delete data.ipParams.projectPath;
-  delete data.ipParams.sysOssVoList;
-  delete data.ipParams.userPathList;
 
   // 调用更新函数
   api

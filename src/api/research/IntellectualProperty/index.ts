@@ -1,6 +1,6 @@
 import { AxiosPromise } from 'axios';
 import request from '@/utils/request';
-import { IntellectualPropertyBO, IntellectualPropertyDetailVO, IntellectualPropertyVO } from '@/api/research/IntellectualProperty/type';
+import { IntellectualPropertyBO, IntellectualPropertyDetailVO, IntellectualPropertyVO } from '@/api/research/IntellectualProperty/types';
 import exp from 'constants';
 
 // 获取项目树结构 项目类型->项目名
@@ -46,7 +46,7 @@ export function updateIntellectualProperty(data: IntellectualPropertyBO): AxiosP
   });
 }
 
-export function getIntellectualPropertyDetails(ipId: number | string): AxiosPromise<IntellectualPropertyDetailVO[]> {
+export function getIntellectualPropertyDetails(ipId: number | string): AxiosPromise<IntellectualPropertyDetailVO> {
   return request({
     url: '/ip/getDetails',
     method: 'get',
