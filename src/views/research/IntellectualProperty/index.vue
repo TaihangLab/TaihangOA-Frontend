@@ -240,7 +240,7 @@ const handleQuery = () => {
   data.ipParams.ipDateSta = String(dateRange.value[0]);
   data.ipParams.ipDateEnd = String(dateRange.value[1]);
   data.ipParams.projectId = Array.isArray(responseProject.value) ? responseProject.value[1] : undefined;
-  data.ipParams.userId = Array.isArray(responseUser.value) ? responseUser.value[1] : undefined;
+  data.ipParams.userId = Array.isArray(responseUser.value) ? responseUser.value[responseUser.value.length - 1] : undefined;
   data.queryParams.pageNum = 1;
   getList();
 };
