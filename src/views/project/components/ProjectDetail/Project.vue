@@ -1,47 +1,29 @@
 <template>
   <div>
-    <el-table
-      ref="multipleTable"
-      :key="tableKey"
-      :data="projectList"
-      border
-      style="width: 100%"
-      :row-style="{ height: '50px' }"
-      :cell-style="{ padding: '0px' }"
-    >
-      <el-table-column label="项目名称" :resizable="false" align="center" prop="assignedSubjectName" width="150" fixed="left"> </el-table-column>
-      <el-table-column label="项目牵头单位" :resizable="false" align="center" prop="leadingUnit" width="180"> </el-table-column>
-      <el-table-column label="项目来源" :resizable="false" align="center" prop="projectSource" width="180"> </el-table-column>
-      <el-table-column label="项目负责人" :resizable="false" align="center" prop="projectLeader" width="180"> </el-table-column>
-      <el-table-column label="项目级别" :resizable="false" align="center" prop="projectLevel" :formatter="projectLevelss" width="110">
+    <el-table ref="multipleTable" :key="tableKey" :data="projectList" border style="width: 100%">
+      <el-table-column label="项目名称" :resizable="false" prop="assignedSubjectName" width="150" fixed="left"> </el-table-column>
+      <el-table-column label="项目牵头单位" :resizable="false" prop="leadingUnit" width="180"> </el-table-column>
+      <el-table-column label="项目来源" :resizable="false" prop="projectSource" width="180"> </el-table-column>
+      <el-table-column label="项目负责人" :resizable="false" prop="projectLeader" width="180"> </el-table-column>
+      <el-table-column label="项目级别" :resizable="false" prop="projectLevel" :formatter="projectLevelss" width="110"> </el-table-column>
+      <el-table-column label="是否牵头单位" :resizable="false" prop="hasLeadingRole" :formatter="hasLeadingRoles" width="150"> </el-table-column>
+      <el-table-column label="负责课题" :resizable="false" prop="assignedSubjectSection" width="150"> </el-table-column>
+      <el-table-column label="公司负责人" :resizable="false" prop="companyLeader" width="180"> </el-table-column>
+      <el-table-column label="部门负责人" :resizable="false" prop="departmentLeader" width="180"> </el-table-column>
+      <el-table-column label="科研项目管理人" :resizable="false" prop="researchManager" width="180"> </el-table-column>
+      <el-table-column label="立项时间" :resizable="false" prop="projectEstablishTime" width="170"> </el-table-column>
+      <el-table-column label="项目计划验收时间" :resizable="false" prop="projectScheduledCompletionTime" width="170"> </el-table-column>
+      <el-table-column label="项目推进情况" :resizable="false" prop="projectProgressStatus" :formatter="projectProgressStatuss" width="150">
       </el-table-column>
-      <el-table-column label="是否牵头单位" :resizable="false" align="center" prop="hasLeadingRole" :formatter="hasLeadingRoles" width="150">
-      </el-table-column>
-      <el-table-column label="负责课题" :resizable="false" align="center" prop="assignedSubjectSection" width="150"> </el-table-column>
-      <el-table-column label="公司负责人" :resizable="false" align="center" prop="companyLeader" width="180"> </el-table-column>
-      <el-table-column label="部门负责人" :resizable="false" align="center" prop="departmentLeader" width="180"> </el-table-column>
-      <el-table-column label="科研项目管理人" :resizable="false" align="center" prop="researchManager" width="180"> </el-table-column>
-      <el-table-column label="立项时间" :resizable="false" align="center" prop="projectEstablishTime" width="170"> </el-table-column>
-      <el-table-column label="项目计划验收时间" :resizable="false" align="center" prop="projectScheduledCompletionTime" width="170">
-      </el-table-column>
-      <el-table-column
-        label="项目推进情况"
-        :resizable="false"
-        align="center"
-        prop="projectProgressStatus"
-        :formatter="projectProgressStatuss"
-        width="150"
-      >
-      </el-table-column>
-      <el-table-column label="合作单位" :resizable="false" align="center" prop="collaboratingUnit" width="150"> </el-table-column>
-      <el-table-column label="经费总额" :resizable="false" align="center" prop="totalFundsAll" width="150"> </el-table-column>
-      <el-table-column label="专项经费总额" :resizable="false" align="center" prop="totalFundsZx" width="150"> </el-table-column>
-      <el-table-column label="专项到款总额" :resizable="false" align="center" prop="totalFundsZxDk" width="150"> </el-table-column>
-      <el-table-column label="已完成自筹投资" :resizable="false" align="center" prop="zctzDone" width="150"> </el-table-column>
-      <el-table-column label="已完成专项投资" :resizable="false" align="center" prop="zxtzDone" width="150"> </el-table-column>、
-      <el-table-column label="自筹经费公司配套" :resizable="false" align="center" prop="zcGspt" width="150"> </el-table-column>
-      <el-table-column label="专项经费公司留存（计划）" :resizable="false" align="center" prop="zxGslc" width="150"> </el-table-column>
-      <el-table-column label="更新时间" :resizable="false" align="center" prop="updateTime" width="170"> </el-table-column>
+      <el-table-column label="合作单位" :resizable="false" prop="collaboratingUnit" width="150"> </el-table-column>
+      <el-table-column label="经费总额" :resizable="false" prop="totalFundsAll" width="150"> </el-table-column>
+      <el-table-column label="专项经费总额" :resizable="false" prop="totalFundsZx" width="150"> </el-table-column>
+      <el-table-column label="专项到款总额" :resizable="false" prop="totalFundsZxDk" width="150"> </el-table-column>
+      <el-table-column label="已完成自筹投资" :resizable="false" prop="zctzDone" width="150"> </el-table-column>
+      <el-table-column label="已完成专项投资" :resizable="false" prop="zxtzDone" width="150"> </el-table-column>、
+      <el-table-column label="自筹经费公司配套" :resizable="false" prop="zcGspt" width="150"> </el-table-column>
+      <el-table-column label="专项经费公司留存（计划）" :resizable="false" prop="zxGslc" width="150"> </el-table-column>
+      <el-table-column label="更新时间" :resizable="false" prop="updateTime" width="170"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="180">
         <template #default="scope">
           <el-tooltip content="查看大事记" placement="top">
@@ -175,35 +157,13 @@ const queryParam = ref({
   pageSize: 10
 });
 const projectId = ref('');
-const rowCenter = ref({
-  'text-align': 'center'
-});
 const size = ref('');
 const border = ref(true);
 const visible = ref(true);
-const refreshEventsPage = ref(false);
-const toggleDetails = ref(true); // 控制详细信息项的显示/隐藏
-const eventsDialogKey = ref(0);
-// 搜索框
-const dataFrom = ref({});
-// 新增
 const form = ref({});
-// 查看
-const formLook = ref({});
-// 编辑
-const formChange = ref({});
 const projectList = ref<Project[]>([]);
-const pageIndex = ref(1);
 const pageSize = ref(5);
-const begin = ref(0);
 const end = computed(() => pageSize.value - 1);
-const dialogFormVisible = ref(false); // 默认关闭新建用户界面
-const dialogFormVisibleChange = ref(false); // 默认关闭编辑用户界面
-const dialogFormVisibleLook = ref(false);
-const eventsDialogVisibleLook = ref(false);
-const eventsDialogVisibleAdd = ref(false);
-const dataListFrom = ref('getDataList'); // 当前数据来源于搜索还是全局
-const activeName = ref('first');
 
 // 监控属性变化
 watch(
@@ -230,10 +190,6 @@ watch(
   },
   { deep: true }
 );
-
-function hasCooperativeUnits(row: Project, column: any, cellValue: number) {
-  return hasCooperativeUnit.value[cellValue] || cellValue;
-}
 
 function projectLevelss(row: Project, column: any, cellValue: number) {
   return projectLevel.value[cellValue] || cellValue;
@@ -270,42 +226,5 @@ function handleDelete(row: Project) {
     .catch(() => {
       console.error('删除失败');
     });
-}
-
-function closeEventsDialog() {
-  eventsDialogVisibleAdd.value = false;
-}
-
-function sizeChangeHandle(val: number) {
-  queryParam.value.pageSize = val;
-  fetchData();
-}
-
-function CurrentChangeHandle(val: number) {
-  queryParam.value.pageNum = val;
-  fetchData();
-}
-
-function fetchData() {
-  router.currentRoute.value.meta.reloadProjectList(queryParam.value);
-}
-
-function handleDropdownCommand(command: { command: string; row: Project }) {
-  if (command.command === 'view') {
-    eventsDialogVisibleLook.value = true;
-    projectId.value = command.row.projectId;
-  } else if (command.command === 'add') {
-    projectId.value = command.row.projectId;
-    eventsDialogVisibleAdd.value = true;
-  }
-}
-
-function handleEventsDialogOpen() {
-  refreshEventsPage.value = !refreshEventsPage.value;
-}
-
-async function refreshList() {
-  await nextTick();
-  emit('reloadProjectList');
 }
 </script>
