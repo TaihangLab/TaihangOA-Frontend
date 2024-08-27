@@ -10,9 +10,15 @@
           :row-style="{ height: '50px' }" :cell-style="{ padding: '0px' }">
           <el-table-column label="姓名" :resizable="false" align="center" prop="nickName">
           </el-table-column>
-          <el-table-column label="职称" :resizable="false" align="center" prop="jobTitle" :formatter="jobTitles">
+          <el-table-column label="职称" :resizable="false" align="center" prop="jobTitle" >
+            <template #default="scope">
+                {{ sys_jobtitle_type[scope.row.jobTitle]?.label || '未知' }}
+              </template>
           </el-table-column>
-          <el-table-column label="学历" :resizable="false" align="center" prop="diploma" :formatter="diplomas">
+          <el-table-column label="学历" :resizable="false" align="center" prop="diploma" >
+            <template #default="scope">
+                {{ sys_diploma_type[scope.row.diploma]?.label || '未知' }}
+              </template>
           </el-table-column>
           <el-table-column label="邮箱" :resizable="false" align="center" prop="email">
           </el-table-column>
@@ -61,79 +67,61 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue';
-import request from '@/utils/request';
+<script setup lang="ts" name="GetIntellectualDetails">
+import { ref, reactive, watch } from 'vue';
+import api from '@/api/research/IntellectualProperty/index';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { sys_diploma_type, sys_jobtitle_type} = toRefs<any>(proxy?.useDict('sys_diploma_type', 'sys_jobtitle_type'));
+const emit = defineEmits(['close-dialog']);
+const activeNames = ref(['1', '2']);
+
 const props = defineProps<{
   ipId: string;
 }>();
 
-const jobTitle = reactive({
-  0: '正高级工程师',
-  1: '副高级工程师',
-  2: '中级工程师',
-  3: '初级工程师',
-  4: '研究员',
-  5: '副研究员',
-  6: '助理研究员',
-  7: '研究实习员',
-});
-const diploma = reactive({
-  0: '博士研究生',
-  1: '硕士研究生',
-  2: '本科',
-  3: '专科',
-});
-
-const activeNames = ref(['1', '2']);
 const params = reactive({
   ipId: null,
 });
+
 const intellectualLook = reactive({
   ipUserVOList: [],
   sysOssVoList: [],
 });
 
-const checkIntellectual = async () => {
+const reset = () => {
+  intellectualLook.ipUserVOList = [];
+  intellectualLook.sysOssVoList = [];
+};
+
+/** 获取知识产权详情 */
+const GetIntellectualDetails = async () => {
+  reset();
   params.ipId = Number(props.ipId);
-  console.log(params);
-  const resp = await request({
-    url: '/ip/getDetails',
-    method: 'get',
-    params: params,
-  });
-  console.log(resp);
+  const resp = await api.getIntellectualPropertyDetails(params.ipId)
   intellectualLook.ipUserVOList = resp.data.ipUserVOList;
-  console.log(intellectualLook.ipUserVOList);
   intellectualLook.sysOssVoList = resp.data.sysOssVoList;
 };
 
-watch(() => props.ipId, (newVal) => {
-  params.ipId = Number(newVal);
-  console.log(props.ipId);
-  console.log(newVal);
-  activeNames.value = ['1', '2'];
-  checkIntellectual();
-}, { immediate: true });
-
+/** 下载附件 */
 const handleDownload = (row) => {
   proxy?.$download.oss(row.ossId);
 };
 
+
+/** 截断附件名称 */
 const truncatedName = (originalName) => {
   const lastDotIndex = originalName.lastIndexOf('.');
   return lastDotIndex !== -1 ? originalName.substring(0, lastDotIndex) : originalName;
 };
 
-const jobTitles = (row, column, cellValue) => {
-  return jobTitle[cellValue] || cellValue;
-};
+/** 根据点击的id刷新详情 */
+watch(() => props.ipId, (newVal) => {
+  params.ipId = Number(newVal);
+  activeNames.value = ['1', '2'];
+  GetIntellectualDetails();
+}, { immediate: true });
 
-const diplomas = (row, column, cellValue) => {
-  return diploma[cellValue] || cellValue;
-};
 </script>
 
 <style scoped>
