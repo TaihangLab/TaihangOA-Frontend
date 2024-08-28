@@ -77,31 +77,34 @@
           <el-col :span="1.5">
             <el-button v-hasPermi="['project:ip:add']" type="primary" plain icon="Plus" @click="handleAdd">新增 </el-button>
           </el-col>
+          <el-col :span="1.5">
+            <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+          </el-col>
           <right-toolbar v-model:showSearch="showSearchRef" @query-table="resetQuery"></right-toolbar>
         </el-row>
       </template>
       <div>
         <el-table ref="multipleTable" :data="iplist" border style="width: 100%" :row-style="{ height: '50px' }" :cell-style="{ padding: '0px' }">
           <!-- 关联项目名称 -->
-          <el-table-column label="关联项目名称" :resizable="false" align="center" prop="assignedSubjectName" width="300"> </el-table-column>
+          <el-table-column label="关联项目名称" :resizable="false" prop="assignedSubjectName" width="300"> </el-table-column>
           <!-- 知识产权名 -->
-          <el-table-column label="知识产权名" :resizable="false" align="center" prop="ipName" width="300"> </el-table-column>
+          <el-table-column label="知识产权名" :resizable="false" prop="ipName" width="300"> </el-table-column>
           <!-- 知识产权类别 -->
-          <el-table-column label="知识产权类别" :resizable="false" align="center" prop="ipType" width="200">
+          <el-table-column label="知识产权类别" :resizable="false" prop="ipType" width="200">
             <template #default="scope">
               {{ ip_type[scope.row.ipType]?.label || '未知' }}
             </template>
           </el-table-column>
           <!-- 知识产权状态 -->
-          <el-table-column label="知识产权状态" :resizable="false" align="center" prop="ipStatus" width="200">
+          <el-table-column label="知识产权状态" :resizable="false" prop="ipStatus" width="200">
             <template #default="scope">
               {{ ip_status[scope.row.ipStatus]?.label || '未知' }}
             </template>
           </el-table-column>
           <!-- 获得日期 -->
-          <el-table-column label="获得日期" :resizable="false" align="center" prop="ipDate" width="150"> </el-table-column>
+          <el-table-column label="获得日期" :resizable="false" prop="ipDate" width="150"> </el-table-column>
           <!-- 操作 -->
-          <el-table-column label="操作" :resizable="false" align="center" min-width="200px" fixed="right">
+          <el-table-column label="操作" :resizable="false" min-width="200px" fixed="right">
             <template #default="scope">
               <!-- 详情 -->
               <el-tooltip content="详情" placement="top">
@@ -120,7 +123,7 @@
         </el-table>
 
         <!-- 详情打开的界面 -->
-        <el-dialog v-model="dialogIntellectualLook" title="详情" destroy-on-close width="50%">
+        <el-dialog v-model="dialogIntellectualLook" title="详情" destroy-on-close width="1200px">
           <GetIntellectualDetails :ip-id="ipId" @close-dialog="closeIntellectualDialogLook"></GetIntellectualDetails>
         </el-dialog>
         <!--新增知识产权-->
@@ -296,11 +299,10 @@ const handleDelete = async (row?: IntellectualPropertyDetailVO) => {
   getList();
   proxy?.$modal.msgSuccess('删除成功');
 };
+
+const handleExport = () => {
+  proxy.$modal.msgError('导出功能未实现');
+};
 </script>
 
-<style>
-.box-card {
-  width: 100%;
-  margin-bottom: 20px;
-}
-</style>
+<style></style>

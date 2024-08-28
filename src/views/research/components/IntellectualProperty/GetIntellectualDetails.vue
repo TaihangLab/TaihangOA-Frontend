@@ -59,10 +59,10 @@
               <el-tag v-else type="info">{{ scope.row.fileSuffix }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="上传人" :resizable="false" align="center" prop="createBy"> </el-table-column>
+          <el-table-column label="上传人" :resizable="false" align="center" prop="createByName"> </el-table-column>
           <el-table-column :label="'操作'" :resizable="false" align="center" min-width="100px">
             <template #default="scope">
-              <el-button type="text" icon="el-icon-download" @click="handleDownload(scope.row)">下载 </el-button>
+              <el-button type="text" icon="download" @click="handleDownload(scope.row)" size="small">下载 </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,7 +81,7 @@ const emit = defineEmits(['close-dialog']);
 const activeNames = ref(['1', '2']);
 
 const props = defineProps<{
-  ipId: string;
+  ipId: number;
 }>();
 
 const params = reactive({

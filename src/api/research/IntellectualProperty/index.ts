@@ -66,13 +66,10 @@ export function getIntellectualPropertyList(PageQuery: PageQuery, data: Intellec
   });
 }
 
-
 export default {
-  getProjectTree,
   addIntellectualProperty,
   deleteIntellectualProperty,
   updateIntellectualProperty,
   getIntellectualPropertyDetails,
   getIntellectualPropertyList,
-  getProjectIdNameMap
 }
