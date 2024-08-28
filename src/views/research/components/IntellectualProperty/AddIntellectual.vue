@@ -79,7 +79,7 @@
 import { ref, onMounted } from 'vue';
 import FileUpload from '@/components/FileUpload/index.vue';
 import { ElForm } from 'element-plus';
-import api from '@/api/research/IntellectualProperty/index';
+import api from '@/api/research/IntellectualProperty';
 import { IntellectualPropertyBO } from '@/api/research/IntellectualProperty/types';
 import { defineEmits } from 'vue';
 import { userTreeSelect } from '@/api/system/user';

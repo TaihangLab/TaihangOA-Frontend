@@ -73,7 +73,7 @@
 
 <script setup lang="ts" name="GetIntellectualDetails">
 import { ref, reactive, watch } from 'vue';
-import api from '@/api/research/IntellectualProperty/index';
+import api from '@/api/research/IntellectualProperty';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { sys_diploma_type, sys_jobtitle_type } = toRefs<any>(proxy?.useDict('sys_diploma_type', 'sys_jobtitle_type'));

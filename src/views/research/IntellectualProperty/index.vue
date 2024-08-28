@@ -148,9 +148,9 @@
 
 <script setup lang="ts" name="IntellectualProperty">
 import { ref, onMounted } from 'vue';
-import AddIntellectual from '../components/AddIntellectual/AddIntellectual.vue';
-import EditIntellectual from '../components/EditIntellectual/EditIntellectual.vue';
-import GetIntellectualDetails from '../components/IntellectualDetails/GetIntellectualDetails.vue';
+import AddIntellectual from '../components/IntellectualProperty/AddIntellectual.vue';
+import EditIntellectual from '../components/IntellectualProperty/EditIntellectual.vue';
+import GetIntellectualDetails from '../components/IntellectualProperty/GetIntellectualDetails.vue';
 import api from '@/api/research/IntellectualProperty/index';
 import { Option } from 'element-plus/es/components/segmented/src/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';

@@ -93,7 +93,7 @@
 
 <script setup lang="ts" name="EditIntellectual">
 import { ref, reactive, watch, onMounted, defineProps, defineEmits } from 'vue';
-import api from '@/api/research/IntellectualProperty/index';
+import api from '@/api/research/IntellectualProperty';
 import FileUpload from '@/components/FileUpload/index.vue';
 import { IntellectualPropertyBO } from '@/api/research/IntellectualProperty/types';
 import { userTreeSelect } from '@/api/system/user';
