@@ -62,7 +62,6 @@
         </el-card>
       </div>
     </transition>
-    <!-- 表格 -->
     <el-card class="box-card" style="margin: auto">
       <!-- 新增 -->
       <template #header>

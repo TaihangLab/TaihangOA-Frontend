@@ -85,7 +85,7 @@ const reset = () => {
 };
 
 /** 获取知识产权详情 */
-const GetIntellectualDetails = async () => {
+const getIntellectualDetails = async () => {
   reset();
   params.ipId = Number(props.ipId);
   const resp = await api.getIntellectualPropertyDetails(params.ipId);
@@ -108,9 +108,9 @@ const truncatedName = (originalName) => {
 watch(
   () => props.ipId,
   (newVal) => {
-    params.ipId = Number(newVal);
+    params.ipId = newVal;
     activeNames.value = ['1', '2'];
-    GetIntellectualDetails();
+    getIntellectualDetails();
   },
   { immediate: true }
 );

@@ -168,10 +168,3 @@ const resetIpParams = () => {
   ossIds.value = [];
 };
 </script>
-
-<style>
-.box-card {
-  width: 100%;
-  margin-bottom: 20px;
-}
-</style>
