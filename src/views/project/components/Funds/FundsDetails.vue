@@ -307,12 +307,12 @@ watch(
 </script>
 
 <style scoped>
-::v-deep .budget-summary-tab .el-table tbody tr:hover > td {
+.budget-summary-tab .el-table tbody tr:hover > td {
   background-color: rgb(44, 133, 44) !important;
   color: #eef1f6;
 }
 
-::v-deep .budget-summary-tab .el-table__body tr.current-row > td {
+.budget-summary-tab .el-table__body tr.current-row > td {
   background-color: rgb(44, 133, 44) !important;
   color: #eef1f6;
 }

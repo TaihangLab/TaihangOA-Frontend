@@ -6,14 +6,7 @@
         <template #title>
           <span>知识产权成员列表</span>
         </template>
-        <el-table
-          ref="table1"
-          :data="intellectualLook.ipUserVOList"
-          border
-          style="width: 100%"
-          :row-style="{ height: '50px' }"
-          :cell-style="{ padding: '0px' }"
-        >
+        <el-table ref="table1" :data="intellectualDetail.ipUserVOList" border style="width: 100%">
           <el-table-column label="姓名" :resizable="false" align="center" prop="nickName"> </el-table-column>
           <el-table-column label="职称" :resizable="false" align="center" prop="jobTitle">
             <template #default="scope">
@@ -34,14 +27,7 @@
         <template #title>
           <span>知识产权附件列表</span>
         </template>
-        <el-table
-          ref="table2"
-          :data="intellectualLook.sysOssVoList"
-          border
-          style="width: 100%"
-          :row-style="{ height: '50px' }"
-          :cell-style="{ padding: '0px' }"
-        >
+        <el-table ref="table2" :data="intellectualDetail.sysOssVoList" border style="width: 100%">
           <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="150px">
             <template #default="scope">
               {{ truncatedName(scope.row.originalName) }}
@@ -62,7 +48,7 @@
           <el-table-column label="上传人" :resizable="false" align="center" prop="createByName"> </el-table-column>
           <el-table-column :label="'操作'" :resizable="false" align="center" min-width="100px">
             <template #default="scope">
-              <el-button type="text" icon="download" @click="handleDownload(scope.row)" size="small">下载 </el-button>
+              <el-button type="text" icon="download" size="small" @click="handleDownload(scope.row.ossId)">下载 </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -88,14 +74,14 @@ const params = reactive({
   ipId: null
 });
 
-const intellectualLook = reactive({
+const intellectualDetail = reactive({
   ipUserVOList: [],
   sysOssVoList: []
 });
 
 const reset = () => {
-  intellectualLook.ipUserVOList = [];
-  intellectualLook.sysOssVoList = [];
+  intellectualDetail.ipUserVOList = [];
+  intellectualDetail.sysOssVoList = [];
 };
 
 /** 获取知识产权详情 */
@@ -103,13 +89,13 @@ const GetIntellectualDetails = async () => {
   reset();
   params.ipId = Number(props.ipId);
   const resp = await api.getIntellectualPropertyDetails(params.ipId);
-  intellectualLook.ipUserVOList = resp.data.ipUserVOList;
-  intellectualLook.sysOssVoList = resp.data.sysOssVoList;
+  intellectualDetail.ipUserVOList = resp.data.ipUserVOList;
+  intellectualDetail.sysOssVoList = resp.data.sysOssVoList;
 };
 
 /** 下载附件 */
-const handleDownload = (row) => {
-  proxy?.$download.oss(row.ossId);
+const handleDownload = (ossId) => {
+  proxy?.$download.oss(ossId);
 };
 
 /** 截断附件名称 */
@@ -129,10 +115,3 @@ watch(
   { immediate: true }
 );
 </script>
-
-<style scoped>
-.box-card {
-  width: 100%;
-  margin-bottom: 20px;
-}
-</style>
