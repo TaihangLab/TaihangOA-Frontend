@@ -253,7 +253,6 @@ const getReceivedTypes = () => {
       });
     });
   });
-  console.log('receivedTypes', receivedTypes);
 };
 /** 添加经费到账记录 */
 const submitNewReceived = (formData: ProjectFundsReceived) => {

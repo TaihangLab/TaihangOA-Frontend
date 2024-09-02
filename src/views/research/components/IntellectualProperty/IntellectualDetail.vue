@@ -6,7 +6,7 @@
         <template #title>
           <span>知识产权成员列表</span>
         </template>
-        <el-table ref="table1" :data="intellectualDetail.ipUserVOList" border style="width: 100%">
+        <el-table ref="table1" :data="intellectualDetail.ipUserVOList" v-loading="loading" border style="width: 100%">
           <el-table-column label="姓名" :resizable="false" align="center" prop="nickName"> </el-table-column>
           <el-table-column label="职称" :resizable="false" align="center" prop="jobTitle">
             <template #default="scope">
@@ -27,7 +27,7 @@
         <template #title>
           <span>知识产权附件列表</span>
         </template>
-        <el-table ref="table2" :data="intellectualDetail.sysOssVoList" border style="width: 100%">
+        <el-table ref="table2" :data="intellectualDetail.sysOssVoList" border v-loading="loading" style="width: 100%">
           <el-table-column label="文件名称" :resizable="false" align="center" :show-overflow-tooltip="true" width="150px">
             <template #default="scope">
               {{ truncatedName(scope.row.originalName) }}
@@ -65,7 +65,7 @@ const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { sys_diploma_type, sys_jobtitle_type } = toRefs<any>(proxy?.useDict('sys_diploma_type', 'sys_jobtitle_type'));
 const emit = defineEmits(['close-dialog']);
 const activeNames = ref(['1', '2']);
-
+const loading = ref(true);
 const props = defineProps<{
   ipId: number;
 }>();
@@ -87,10 +87,11 @@ const reset = () => {
 /** 获取知识产权详情 */
 const getIntellectualDetails = async () => {
   reset();
-  params.ipId = Number(props.ipId);
+  params.ipId = props.ipId;
   const resp = await api.getIntellectualPropertyDetails(params.ipId);
   intellectualDetail.ipUserVOList = resp.data.ipUserVOList;
   intellectualDetail.sysOssVoList = resp.data.sysOssVoList;
+  loading.value = false;
 };
 
 /** 下载附件 */

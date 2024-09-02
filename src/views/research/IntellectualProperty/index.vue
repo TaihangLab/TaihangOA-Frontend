@@ -100,11 +100,11 @@
             <template #default="scope">
               <!-- 详情 -->
               <el-tooltip content="详情" placement="top">
-                <el-button v-hasPermi="['project:ip:getDetails']" type="text" icon="Reading" @click="lookIntellectual(scope.row.ipId)"></el-button>
+                <el-button v-hasPermi="['project:ip:getDetails']" type="text" icon="Reading" @click="intellectualDetail(scope.row.ipId)"></el-button>
               </el-tooltip>
               <!-- 修改 -->
               <el-tooltip content="修改" placement="top">
-                <el-button v-hasPermi="['project:ip:update']" type="text" icon="Edit" @click="handleUpdate(scope.row.ipId)"> </el-button>
+                <el-button v-hasPermi="['project:ip:update']" type="text" icon="Edit" @click="handleUpdate(scope.row)"> </el-button>
               </el-tooltip>
               <!-- 删除 -->
               <el-tooltip content="删除" placement="top">
@@ -116,15 +116,83 @@
 
         <!-- 详情打开的界面 -->
         <el-dialog v-model="IntellectualDetail" title="详情" destroy-on-close width="1200px">
-          <IntellectualDetails :ip-id="ipId" @close-dialog="closeIntellectualDialogLook"></IntellectualDetails>
+          <IntellectualDetails :ip-id="ipId" @close-dialog="closeIntellectualDetailDialog"></IntellectualDetails>
         </el-dialog>
-        <!--新增知识产权-->
-        <el-dialog v-model="intellectualDialogVisibleAdd" title="新增知识产权" destroy-on-close width="700px">
-          <AddIntellectual @close-dialog="closeIntellectualDialog"></AddIntellectual>
-        </el-dialog>
-        <!--修改知识产权-->
-        <el-dialog v-model="intellectualDialogVisibleEdit" title="修改知识产权" destroy-on-close width="700px">
-          <EditIntellectual :ip-id="ipId" @close-dialog="closeIntellectualDialogs"></EditIntellectual>
+        <!-- 新增/修改界面 -->
+        <el-dialog v-model="IntellectualEdit" :model-value="isIPAddDialogVisible" :title="dialogTitle" width="700px" @close="closeAddIPDialog">
+          <el-form ref="ipFormRef" :model="ipParams" label-width="120px">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="知识产权名" :rules="[{ required: true, message: '请输入知识产权名', trigger: 'blur' }]" style="width: 300px">
+                  <el-input v-model="ipParams.ipName" placeholder="请输入知识产权名" clearable style="width: 192px"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="关联项目名称" prop="responseProject" style="width: 300px">
+                  <el-cascader
+                    v-model="ipParams.projectId"
+                    :options="projectOptions"
+                    clearable
+                    :props="{ emitPath: false }"
+                    :show-all-levels="false"
+                    placeholder="请选择关联项目"
+                  ></el-cascader>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="知识产权类别" prop="ipType" style="width: 300px">
+                  <el-select v-model="ipParams.ipType" clearable placeholder="请选择知识产权类别">
+                    <el-option v-for="item in ipTypeOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <!-- 知识产权状态 -->
+                <el-form-item label="知识产权状态" prop="ipStatus" style="width: 300px">
+                  <el-select v-model="ipParams.ipStatus" placeholder="请选择知识产权状态" clearable>
+                    <el-option v-for="item in ipStatusOptions" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="获得日期" prop="ipDate" style="width: 300px">
+                  <el-date-picker v-model="ipParams.ipDate" type="date" placeholder="选择日期" style="width: 192px" value-format="YYYY-MM-DD">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="知识产权成员" prop="responsePerson" style="width: 300px">
+                  <el-cascader
+                    v-model="ipParams.userIdList"
+                    :options="userOptions"
+                    :props="{
+                      multiple: true,
+                      checkStrictly: true,
+                      emitPath: false,
+                      value: 'id',
+                      label: 'label',
+                      children: 'children'
+                    }"
+                    collapse-tags
+                    collapse-tags-tooltip
+                    clearable
+                    :show-all-levels="false"
+                    placeholder="请选择成员"
+                  ></el-cascader>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="附件">
+              <fileUpload ref="fileUpload" :id-list="ipParams.ossIdList" :model-value="sysOssVoList" />
+            </el-form-item>
+            <el-form-item style="text-align: center; margin-left: 180px">
+              <el-button type="primary" @click="onSubmit">确定</el-button>
+            </el-form-item>
+          </el-form>
         </el-dialog>
       </div>
       <!-- 分页 -->
@@ -141,15 +209,15 @@
 </template>
 
 <script setup lang="ts" name="IntellectualProperty">
-import { ref, onMounted } from 'vue';
-import AddIntellectual from '../components/IntellectualProperty/AddIntellectual.vue';
-import EditIntellectual from '../components/IntellectualProperty/EditIntellectual.vue';
+import { ref } from 'vue';
 import IntellectualDetails from '../components/IntellectualProperty/IntellectualDetail.vue';
 import api from '@/api/research/IntellectualProperty/index';
 import { Option } from 'element-plus/es/components/segmented/src/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
 import { userTreeSelect } from '@/api/system/user';
 import { IntellectualPropertyBO, IntellectualPropertyDetailVO, IntellectualPropertyVO } from '@/api/research/IntellectualProperty/types';
+import { ElForm } from 'element-plus';
+import { getDicts } from '@/api/system/dict/data';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { ip_type, ip_status } = toRefs<any>(proxy?.useDict('ip_type', 'ip_status'));
@@ -169,8 +237,14 @@ const total = ref<number>(0);
 const showSearchRef = ref(true);
 // 对话框
 const IntellectualDetail = ref(false);
-const intellectualDialogVisibleAdd = ref(false);
-const intellectualDialogVisibleEdit = ref(false);
+const IntellectualEdit = ref(false);
+const isEditing = ref(false); // 用于区分新增和编辑
+const dialogTitle = ref('新增知识产权');
+const isIPAddDialogVisible = ref(false);
+const ipFormRef = ref<InstanceType<typeof ElForm>>();
+const ipTypeOptions = ref([]);
+const ipStatusOptions = ref([]);
+const sysOssVoList = ref([]);
 
 const initIpParams: IntellectualPropertyBO = {
   ipId: undefined,
@@ -197,13 +271,6 @@ const data = reactive({
 });
 
 const { ipParams, queryParams } = toRefs(data);
-
-// 组件挂载时执行
-onMounted(() => {
-  getProjectTreeSelect();
-  getUserTreeSelect();
-  getList();
-});
 
 /** 查询项目树 */
 const getProjectTreeSelect = async () => {
@@ -242,7 +309,6 @@ const handleQuery = () => {
 const resetQuery = () => {
   responseProject.value = [];
   responseUser.value = [];
-  dateRange.value = ['', ''];
   ipParams.value = { ...initIpParams };
   queryFormRef.value?.resetFields();
   getList();
@@ -250,45 +316,127 @@ const resetQuery = () => {
 
 /** 打开新增对话框 */
 const handleAdd = () => {
-  intellectualDialogVisibleAdd.value = true;
+  isEditing.value = false;
+  isIPAddDialogVisible.value = true;
+  sysOssVoList.value = [];
 };
-/** 关闭新增对话框 */
-const closeIntellectualDialog = () => {
-  intellectualDialogVisibleAdd.value = false;
-  intellectualDialogVisibleEdit.value = false;
-  resetQuery();
-};
+
 /** 打开详情对话框 */
-const lookIntellectual = (ipIdRef: number) => {
+const intellectualDetail = (ipIdRef: number) => {
   IntellectualDetail.value = true;
-  ipId.value = Number(ipIdRef);
-};
-/** 关闭详情对话框 */
-const closeIntellectualDialogLook = () => {
-  resetQuery();
-  ipId.value = 0;
-  IntellectualDetail.value = false;
-};
-/** 打开修改对话框 */
-const handleUpdate = (ipIdRef: number) => {
-  intellectualDialogVisibleEdit.value = true;
   ipId.value = ipIdRef;
 };
-/** 关闭修改对话框 */
-const closeIntellectualDialogs = () => {
-  intellectualDialogVisibleEdit.value = false;
+/** 关闭详情对话框 */
+const closeIntellectualDetailDialog = () => {
   resetQuery();
+  IntellectualDetail.value = false;
 };
+
+/** 初始化字典 */
+const initOptions = () => {
+  const dicts = [
+    { key: 'ip_type', ref: ipTypeOptions },
+    { key: 'ip_status', ref: ipStatusOptions }
+  ];
+
+  dicts.forEach(({ key, ref }) => {
+    getDicts(key).then((resp) => {
+      resp.data.forEach((item: any) => {
+        ref.value.push({
+          id: item.dictValue,
+          name: item.dictLabel
+        });
+      });
+    });
+  });
+};
+
+/** 打开修改对话框 */
+const handleUpdate = async (row: IntellectualPropertyDetailVO) => {
+  const resp = await api.getIntellectualPropertyDetails(row.ipId);
+  sysOssVoList.value = resp.data.sysOssVoList;
+  ipParams.value = {
+    ...row, // 将行数据复制到表单中
+    ipStatus: String(row.ipStatus),
+    ipType: String(row.ipType),
+    ossIdList: Array.isArray(resp.data.sysOssVoList) ? resp.data.sysOssVoList.map((item: any) => item.ossId) : [],
+    userIdList: Array.isArray(resp.data.userPathList) ? resp.data.userPathList.map((item: any) => item[item.length - 1]) : []
+  };
+  isEditing.value = true;
+  isIPAddDialogVisible.value = true;
+  dialogTitle.value = '修改知识产权';
+};
+
 /** 删除按钮操作 */
 const handleDelete = async (row?: IntellectualPropertyDetailVO) => {
   const ipId = row.ipId;
-  await proxy.$modal.confirm('确认删除编号为' + ipId + '的数据项？');
+  await proxy.$modal.confirm('确认删除名为为' + row.ipName + '的数据项？');
   await api.deleteIntellectualProperty(ipId);
   await getList();
   proxy?.$modal.msgSuccess('删除成功');
 };
 
+/** 关闭新增对话框 */
+const closeAddIPDialog = () => {
+  isIPAddDialogVisible.value = false;
+  ipParams.value = { ...initIpParams };
+};
+
+/** 新增知识产权 */
+const submitNewIP = (formData: IntellectualPropertyBO) => {
+  const formRef = ipFormRef.value;
+  if (formRef) {
+    formRef.validate((valid) => {
+      api
+        .addIntellectualProperty(data.ipParams)
+        .then(() => {
+          ElMessage.success('新增知识产权成功');
+        })
+        .catch(() => {
+          ElMessage.error('新增知识产权失败');
+        })
+        .finally(() => {
+          closeAddIPDialog();
+          getList();
+        });
+    });
+  }
+};
+
+/** 修改知识产权 */
+const updateIP = (formData: IntellectualPropertyBO) => {
+  api
+    .updateIntellectualProperty(data.ipParams)
+    .then(() => {
+      ElMessage.success('修改知识产权成功');
+    })
+    .catch(() => {
+      ElMessage.error('修改知识产权失败');
+    })
+    .finally(() => {
+      closeAddIPDialog();
+      getList();
+    });
+};
+
+/** 新增按钮操作 */
+const onSubmit = () => {
+  if (isEditing.value) {
+    updateIP({ ...ipParams.value });
+  } else {
+    submitNewIP({ ...ipParams.value });
+  }
+};
+
 const handleExport = () => {
   proxy.$modal.msgError('导出功能未实现');
 };
+
+// 组件挂载时执行
+onMounted(() => {
+  getProjectTreeSelect();
+  getUserTreeSelect();
+  getList();
+  initOptions();
+});
 </script>

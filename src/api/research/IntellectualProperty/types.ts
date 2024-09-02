@@ -26,9 +26,9 @@ export interface IntellectualPropertyDetailVO {
   ipType?: number | string;
   ipStatus?: number | string;
   ipDate?: string;
-  ipUserVOList?: IpUserVO[];//用户列表
-  userPathList?: number[];//用户路径列表
-  sysOssVoList?: OssVO[];//附件列表
+  ipUserVOList?: IpUserVO[]; //用户列表
+  userPathList?: number[]; //用户路径列表
+  sysOssVoList: OssVO[]; //附件列表
 }
 
 //用户信息VO
@@ -46,7 +46,7 @@ export interface IpUserVO {
 export interface IntellectualPropertyVO {
   ipId?: number;
   projectId?: number;
-  assignedSubjectName?: string;//  关联项目名称
+  assignedSubjectName?: string; //  关联项目名称
   ipName?: string;
   ipType?: number | string;
   ipStatus?: number | string;

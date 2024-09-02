@@ -1,15 +1,9 @@
 <template>
   <el-dialog :model-value="visible" title="详情" width="50%" @update:model-value="updateVisible" @close="closeDialog">
     <div style="margin-top: 10px"></div>
-    <el-collapse :model-value="activeNames" v-loading="loading">
+    <el-collapse :model-value="activeNames">
       <el-collapse-item name="1" title="当前参与的国家级项目详情">
-        <el-table
-          :data="projectList.nationProjectBaseInfos"
-          border
-          style="width: 100%"
-          :row-style="{ height: '50px' }"
-          :cell-style="{ padding: '0px' }"
-        >
+        <el-table v-loading="loading" :data="projectList.nationProjectBaseInfos" border style="width: 100%">
           <el-table-column label="项目任务书编号" :resizable="false" align="center" prop="projectAssignmentSerialNo"> </el-table-column>
           <el-table-column label="项目名称" :resizable="false" align="center" prop="assignedSubjectName"> </el-table-column>
           <el-table-column label="负责课题" :resizable="false" align="center" prop="assignedSubjectSection"> </el-table-column>
@@ -19,13 +13,7 @@
         </el-table>
       </el-collapse-item>
       <el-collapse-item name="2" title="当前参与的省部级项目详情">
-        <el-table
-          :data="projectList.provincialProjectBaseInfos"
-          border
-          style="width: 100%"
-          :row-style="{ height: '50px' }"
-          :cell-style="{ padding: '0px' }"
-        >
+        <el-table v-loading="loading" :data="projectList.provincialProjectBaseInfos" border style="width: 100%">
           <el-table-column label="项目任务书编号" :resizable="false" align="center" prop="projectAssignmentSerialNo"> </el-table-column>
           <el-table-column label="项目名称" :resizable="false" align="center" prop="assignedSubjectName"> </el-table-column>
           <el-table-column label="负责课题" :resizable="false" align="center" prop="assignedSubjectSection"> </el-table-column>
@@ -35,13 +23,7 @@
         </el-table>
       </el-collapse-item>
       <el-collapse-item name="3" title="当前参与的自研项目详情">
-        <el-table
-          :data="projectList.enterpriseProjectBaseInfos"
-          border
-          style="width: 100%"
-          :row-style="{ height: '50px' }"
-          :cell-style="{ padding: '0px' }"
-        >
+        <el-table :data="projectList.enterpriseProjectBaseInfos" border v-loading="loading" style="width: 100%">
           <el-table-column label="项目任务书编号" :resizable="false" align="center" prop="projectAssignmentSerialNo"> </el-table-column>
           <el-table-column label="项目名称" :resizable="false" align="center" prop="assignedSubjectName"> </el-table-column>
           <el-table-column label="负责课题" :resizable="false" align="center" prop="assignedSubjectSection"> </el-table-column>
@@ -74,10 +56,9 @@ const projectList = ref<ProjectUserDetailVo>({
 
 const activeNames = ref<string[]>(['1', '2', '3']);
 
-const projectDetail = () => {
-  loading.value = true;
+const projectDetail = async () => {
   if (props.memberId !== undefined) {
-    getDetails(props.memberId).then((resp) => {
+    await getDetails(props.memberId).then((resp) => {
       projectList.value = resp.data;
     });
   }

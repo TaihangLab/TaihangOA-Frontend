@@ -175,7 +175,7 @@ const onSubmit = () => {
           emits('new-data', formDataArray);
           closeExpenselAddDialog();
           reset();
-        })
+        });
       }
     });
   }
