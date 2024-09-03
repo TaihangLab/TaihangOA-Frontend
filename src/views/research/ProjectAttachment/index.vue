@@ -44,11 +44,11 @@
           <el-table-column :label="'文件格式'" prop="fileSuffix" :show-overflow-tooltip="true" width="120">
             <template #default="scope">
               <div width="120">
-                <el-tag v-if="scope.row.fileSuffix === '.pdf'" type="success">{{ scope.row.fileSuffix }}</el-tag>
+                <el-tag v-if="scope.row.fileSuffix === '.pdf'" type="danger">{{ scope.row.fileSuffix }}</el-tag>
                 <el-tag v-else-if="scope.row.fileSuffix === '.docx'" type="warning">{{ scope.row.fileSuffix }}</el-tag>
                 <el-tag v-else-if="scope.row.fileSuffix === '.doc'" type="warning">{{ scope.row.fileSuffix }}</el-tag>
-                <el-tag v-else-if="scope.row.fileSuffix === '.xls'">{{ scope.row.fileSuffix }}</el-tag>
-                <el-tag v-else-if="scope.row.fileSuffix === '.xlsx'">{{ scope.row.fileSuffix }}</el-tag>
+                <el-tag v-else-if="scope.row.fileSuffix === '.xls'" type="success">{{ scope.row.fileSuffix }}</el-tag>
+                <el-tag v-else-if="scope.row.fileSuffix === '.xlsx'" type="success">{{ scope.row.fileSuffix }}</el-tag>
                 <el-tag v-else-if="scope.row.fileSuffix === '.ppt'" type="danger">{{ scope.row.fileSuffix }}</el-tag>
                 <el-tag v-else-if="scope.row.fileSuffix === '.pptx'" type="danger">{{ scope.row.fileSuffix }}</el-tag>
                 <el-tag v-else type="info">{{ scope.row.fileSuffix }}</el-tag>

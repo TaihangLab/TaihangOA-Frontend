@@ -208,7 +208,8 @@ const confirmRollBackExpenditure = (expenditureId: number) => {
     cancelButtonText: '取消',
     type: 'warning'
   }).then(() => {
-    rollBackProjectExpenditure(expenditureId);
+    rollBackProjectExpenditure(expenditureId)
+      .then(fetchProjectExpenditureList);
   });
 };
 

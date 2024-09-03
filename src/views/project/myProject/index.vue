@@ -215,12 +215,7 @@ const userList = ref<any[]>([]);
 const total = ref(0);
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const isDetailDialogVisible = ref(false);
 const isAddDialogVisible = ref(false);
-
-const showDetailDialog = () => {
-  isDetailDialogVisible.value = true;
-};
 
 const showAddDialog = () => {
   isAddDialogVisible.value = true;
@@ -357,12 +352,6 @@ function adaptUserData(data: any[]): any[] {
     };
   });
 }
-
-// 定义一个方法来处理项目新增事件
-const handleProjectAdded = () => {
-  // 调用获取项目列表的方法
-  getProjectList();
-};
 
 onMounted(() => {
   getProjectList();

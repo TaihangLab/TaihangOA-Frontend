@@ -213,7 +213,6 @@ import { ref } from 'vue';
 import IntellectualDetails from '../components/IntellectualProperty/IntellectualDetail.vue';
 import api, { getProjectIdNameMap } from '@/api/research/IntellectualProperty/index';
 import { Option } from 'element-plus/es/components/segmented/src/types';
-import { getProjectTree } from '@/api/research/IntellectualProperty';
 import { userTreeSelect } from '@/api/system/user';
 import { IntellectualPropertyBO, IntellectualPropertyDetailVO, IntellectualPropertyVO } from '@/api/research/IntellectualProperty/types';
 import { ElForm } from 'element-plus';

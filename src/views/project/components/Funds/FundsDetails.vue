@@ -194,7 +194,7 @@ import { defineProps, defineEmits, ref, watch } from 'vue';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
 import { getProjectDetails } from '@/api/project/myProject';
 import { getFundsAndBalanceByProjectId, getFundsReceivedList, getProjectExpenditureList } from '@/api/project/funds';
-import { ProjectExpenditureBO, ProjectExpenditureVO, ProjectFundsAndBalanceVO, ProjectFundsReceivedVo } from '@/api/project/funds/types';
+import { ProjectExpenditureBO, ProjectExpenditureVO, ProjectFundsReceivedVo } from '@/api/project/funds/types';
 import { categoryOptions3 } from '@/api/project/funds/fundkeys';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -315,10 +315,7 @@ const getFundsAndBalance = async (projectId: number | string) => {
   const resp = await getFundsAndBalanceByProjectId(projectId);
   fundsAndBalance.value.projectBalance = resp.data.projectBalance;
   fundsAndBalance.value.projectFunds = resp.data.projectFunds;
-  console.log('length',tableDataList.value.length)
-  console.log('tableDataList',tableDataList)
   await handleData(fundsAndBalance.value.projectFunds, fundsAndBalance.value.projectBalance);
-  console.log('-----------',tableDataList);
 };
 
 const handleData = async (projectFunds,projectBalance) => {
