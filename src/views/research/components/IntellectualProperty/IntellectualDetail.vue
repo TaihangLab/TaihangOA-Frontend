@@ -36,6 +36,7 @@
           <el-table-column :label="'文件格式'" align="center" prop="fileSuffix" :show-overflow-tooltip="true" width="120">
             <template #default="scope">
               <el-tag v-if="scope.row.fileSuffix === '.pdf'" type="success">{{ scope.row.fileSuffix }}</el-tag>
+              <el-tag v-if="scope.row.fileSuffix === '.txt'" type="success">{{ scope.row.fileSuffix }}</el-tag>
               <el-tag v-else-if="scope.row.fileSuffix === '.docx'" type="warning">{{ scope.row.fileSuffix }}</el-tag>
               <el-tag v-else-if="scope.row.fileSuffix === '.doc'" type="warning">{{ scope.row.fileSuffix }}</el-tag>
               <el-tag v-else-if="scope.row.fileSuffix === '.xls'">{{ scope.row.fileSuffix }}</el-tag>
