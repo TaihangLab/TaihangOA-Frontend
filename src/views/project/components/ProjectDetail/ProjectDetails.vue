@@ -211,10 +211,8 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
-import request from '@/utils/request';
 import ProjectFunds from '@/views/project/components/ProjectDetail/ProjectFunds.vue';
 import { ElLoading } from 'element-plus'; // 引入ElLoading
-import { ProjectFundsV0List } from '@/api/project/myProject/projectFundsV0List';
 import { getProjectDetails } from '@/api/project/myProject/project';
 
 // 接收组件的props
@@ -391,16 +389,8 @@ interface ProjectDetails {
 // 定义响应式引用
 const size = ref('');
 const border = ref(true);
-const toggleDetails = ref(false); // 控制详细信息项的显示/隐藏
-const pageIndex = ref(1);
 const pageSize = ref(10);
-const totalPage = ref(0);
-const begin = ref(0);
 const end = ref(pageSize.value - 1);
-const dialogFormVisible = ref(false); //默认关闭新建用户界面
-const dialogFormVisibleChange = ref(false); //默认关闭编辑用户界面
-const dialogFormVisibleLook = ref(false);
-const dataListFrom = ref('getDataList'); //当前数据来源于搜索还是全局
 const activeName = ref('first');
 const activeNames = ref('first');
 
@@ -466,13 +456,6 @@ const formatProjectUserRole = (row: any, column: any, cellValue: number) => {
 };
 
 const projectpepole = () => {
-  // request({
-  //   url: '/project/list/getDetails',
-  //   method: 'get',
-  //   params: {
-  //     projectId: props.projectId
-  //   }
-  // })
   getProjectDetails(props.projectId)
     .then((resp) => {
       userList.value = resp.data.projectUserVoList;
@@ -572,45 +555,9 @@ function projectdetail() {
     });
 }
 
-// //改变数组大小
-// function sizeChangeHandle(val: number) {
-//   pageSize.value = val;
-//   SizeOrCurrentChangeAfter();
-// }
-//
-// //改变当前页号
-// function CurrentChangeHandle(val: number) {
-//   pageIndex.value = val;
-//   SizeOrCurrentChangeAfter();
-// }
-
-// //在更改数组大小或者页号前，判断数据来源
-// function SizeOrCurrentChangeAfter() {
-//   if (dataListFrom.value === 'getDataList') {
-//     getDataList();
-//   } else {
-//     getDataListByName();
-//   }
-// }
-
-// 生命周期钩子
-onMounted(() => {
-  // 可以在这里进行初始化逻辑
-});
-
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
 };
-
-const closeDialog = () => {
-  emits('update:visible', false);
-};
-
-const confirmDialog = () => {
-  // 处理确定逻辑
-  emits('update:visible', false);
-};
-
 
 watch(
   () => props.visible,
