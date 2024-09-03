@@ -7,7 +7,7 @@
             <el-form-item label="项目名称" prop="projectId">
               <el-cascader
                 v-model="responseProject"
-                :options="extendedProjectOptions"
+                :options="projectOptions"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择项目"
@@ -131,7 +131,7 @@
                 <el-form-item label="关联项目名称" style="width: 300px">
                   <el-cascader
                     v-model="ipParams.projectId"
-                    :options="extendedProjectOptions"
+                    :options="projectOptions"
                     clearable
                     :props="{ emitPath: false }"
                     :show-all-levels="false"
@@ -211,7 +211,7 @@
 <script setup lang="ts" name="IntellectualProperty">
 import { ref } from 'vue';
 import IntellectualDetails from '../components/IntellectualProperty/IntellectualDetail.vue';
-import api from '@/api/research/IntellectualProperty/index';
+import api, { getProjectIdNameMap } from '@/api/research/IntellectualProperty/index';
 import { Option } from 'element-plus/es/components/segmented/src/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
 import { userTreeSelect } from '@/api/system/user';
@@ -274,14 +274,9 @@ const { ipParams, queryParams } = toRefs(data);
 
 /** 查询项目树 */
 const getProjectTreeSelect = async () => {
-  const resp = await getProjectTree();
+  const resp = await getProjectIdNameMap();
   projectOptions.value = resp.data;
 };
-
-// 扩展项目选项，添加“无关联项目”选项
-const extendedProjectOptions = computed(() => {
-  return [{ id: -1, label: '无关联项目' }, ...projectOptions.value];
-});
 
 /** 查询用户下拉树结构 */
 const getUserTreeSelect = async () => {
@@ -304,7 +299,8 @@ const getList = async () => {
 const handleQuery = () => {
   data.ipParams.ipDateSta = String(dateRange.value[0]);
   data.ipParams.ipDateEnd = String(dateRange.value[1]);
-  data.ipParams.projectId = Array.isArray(responseProject.value) ? (responseProject.value.length > 1 ? responseProject.value[1] : -1) : undefined;
+  data.ipParams.projectId = Array.isArray(responseProject.value) ? responseProject.value[responseProject.value.length - 1] : undefined;
+  console.log('', responseProject.value);
   data.ipParams.userId = Array.isArray(responseUser.value) ? responseUser.value[responseUser.value.length - 1] : undefined;
   data.queryParams.pageNum = 1;
   getList();
