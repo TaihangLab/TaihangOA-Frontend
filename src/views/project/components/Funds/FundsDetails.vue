@@ -2,7 +2,6 @@
   <el-dialog :model-value="visible" width="1550px" @update:model-value="updateVisible">
     <template #default>
       <el-tabs v-model="activeTab" type="border-card">
-
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
@@ -150,8 +149,6 @@
         <el-tab-pane label="经费明细汇总" name="经费明细汇总" class="budget-summary-tab">
           <div style="margin-top: 5px"></div>
           <el-table
-            @row-mouseenter="handleRowMouseEnter"
-            @row-mouseleave="handleRowMouseLeave"
             :row-class-name="getRowClassName"
             :data="tableDataList"
             style="width: 100%"
@@ -161,6 +158,8 @@
             :cell-style="columnStyle"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
             highlight-current-row
+            @row-mouseenter="handleRowMouseEnter"
+            @row-mouseleave="handleRowMouseLeave"
           >
             <el-table-column prop="label" width="180">
               <template #header>
@@ -230,7 +229,7 @@ const props = defineProps<{
 }>();
 const emits = defineEmits(['update:visible']);
 const activeTab = ref('基本信息');
-const tableDataList = ref<[{},{},{},{},{},{},{},{},{},{}]>(categoryOptions3);
+const tableDataList = ref<[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]>(categoryOptions3);
 const hoverRowIndex = ref<number | null>(null);
 
 const updateVisible = (value: boolean) => {
@@ -318,7 +317,7 @@ const getFundsAndBalance = async (projectId: number | string) => {
   await handleData(fundsAndBalance.value.projectFunds, fundsAndBalance.value.projectBalance);
 };
 
-const handleData = async (projectFunds,projectBalance) => {
+const handleData = async (projectFunds, projectBalance) => {
   /* 一、经费支出 */
   tableDataList.value[0].budget = projectFunds.totalFundsAll;
   tableDataList.value[0].specialBudget = projectFunds.totalFundsZx;
@@ -932,7 +931,7 @@ const handleData = async (projectFunds,projectBalance) => {
   tableDataList.value[9].children[17].selfUnpaid = projectBalance.othersZcUnpaid;
   tableDataList.value[9].children[17].totalPaid = projectBalance.othersJjPaid;
   tableDataList.value[9].children[17].totalUnpaid = projectBalance.othersJjUnpaid;
-}
+};
 
 watch(
   () => [props.projectId, props.visible],
