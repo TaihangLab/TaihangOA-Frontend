@@ -5,9 +5,8 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions-item label="基本信息" :span="2"></el-descriptions-item>
-          <el-descriptions :column="3" :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
-            <el-descriptions-item label="项目名称">
+          <el-descriptions :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border >
+            <el-descriptions-item label="项目名称" >
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">
@@ -100,10 +99,7 @@
             ref="multipleTable"
             border
             style="width: 100%; max-height: 500px; overflow-y: auto"
-            :row-style="{ height: '50px' }"
-            :cell-style="{ padding: '0px' }"
             :data="expenditureList"
-            height="500px"
           >
             <el-table-column label="日期" :resizable="false" align="center" width="100px" prop="expenditureDate"> </el-table-column>
             <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>

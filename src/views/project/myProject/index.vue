@@ -13,7 +13,8 @@
             <el-form-item label="项目成员">
               <el-cascader
                 v-model="responsiblePerson"
-                :options="cascaderOptions"
+                :options="userOptions"
+                :props="{ value: 'id', label: 'label', children: 'children' }"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择项目成员"
@@ -21,13 +22,9 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="合作单位">
-              <el-cascader
-                v-model="CoCompany"
-                :options="cocompanyOptions"
-                clearable
-                placeholder="请选择有无合作单位"
-                @keyup.enter="handleQuery"
-              ></el-cascader>
+              <el-select v-model="CoCompany" placeholder="请选择项目级别" clearable>
+                <el-option v-for="dict in pro_cocompany_type" :key="dict.value" :label="dict.label" :value="dict.value" />
+              </el-select>
             </el-form-item>
             <el-form-item label="立项时间">
               <el-date-picker
@@ -58,13 +55,9 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="项目级别">
-              <el-cascader
-                v-model="projectLevel"
-                :options="levelOptions"
-                clearable
-                placeholder="请选择项目级别"
-                @keyup.enter="handleQuery"
-              ></el-cascader>
+              <el-select v-model="projectLevel" placeholder="请选择项目级别" clearable>
+                <el-option v-for="dict in pro_level_type" :key="dict.value" :label="dict.label" :value="dict.value" />
+              </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -116,13 +109,7 @@ import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
 import Project from '@/views/project/components/ProjectDetail/Project.vue';
 import { queryProjectList } from '@/api/project/myProject';
-import { listUser, deptTreeSelect } from '@/api/system/user';
-
-interface Option {
-  value: number;
-  label: string;
-  children?: Option[];
-}
+import { userTreeSelect } from '@/api/system/user';
 
 const queryParams = reactive({
   pageNum: 2,
@@ -143,79 +130,25 @@ const queryParam = reactive({
   pageSize: 10
 });
 
-const levelOptions = ref<Option[]>([
-  { value: 0, label: '国家级' },
-  { value: 1, label: '省级' },
-  { value: 2, label: '企业级' }
-]);
-
-const cocompanyOptions = ref<Option[]>([
-  { value: 0, label: '无' },
-  { value: 1, label: '有' }
-]);
-const cascaderOptions = ref<Option[]>([]);
-const pickerOptions = ref({
-  shortcuts: [
-    {
-      text: '最近一周',
-      onClick(picker: any) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-        picker.$emit('pick', [start, end]);
-      }
-    },
-    {
-      text: '最近一个月',
-      onClick(picker: any) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-        picker.$emit('pick', [start, end]);
-      }
-    },
-    {
-      text: '最近三个月',
-      onClick(picker: any) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-        picker.$emit('pick', [start, end]);
-      }
-    },
-    {
-      text: '最近半年',
-      onClick(picker: any) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 183);
-        picker.$emit('pick', [start, end]);
-      }
-    },
-    {
-      text: '最近一年',
-      onClick(picker: any) {
-        const end = new Date();
-        const start = new Date();
-        start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-        picker.$emit('pick', [start, end]);
-      }
-    }
-  ]
-});
-const CoCompany = ref<number[]>([]);
-const projectLevel = ref<number[]>([]);
+const userOptions = ref<any[]>([]);
+const CoCompany = ref<number>(undefined);
+const projectLevel = ref<number>(undefined);
 const responsiblePerson = ref<number[]>([]);
 const projectEstablishTime = ref<(Date | undefined)[]>([]);
 const projectScheduledCompletionTime = ref<(Date | undefined)[]>([]);
 const projectListLook = ref<any[]>([]);
 const myProjectLook = ref<any[]>([]);
-const deptOptions = ref<any[]>([]);
-const userList = ref<any[]>([]);
 const total = ref(0);
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { pro_level_type, pro_cocompany_type} = toRefs<any>(proxy?.useDict('pro_level_type','pro_cocompany_type'));
 const isAddDialogVisible = ref(false);
+
+/** 查询用户下拉树结构 */
+const getUserTreeSelect = async () => {
+  const resp = await userTreeSelect();
+  userOptions.value = resp.data;
+};
 
 const showAddDialog = () => {
   isAddDialogVisible.value = true;
@@ -256,8 +189,8 @@ function handleQuery() {
     queryParams.projectScheduledCompletionTimeEnd = undefined;
   }
 
-  queryParams.hasCooperativeUnit = CoCompany.value[0];
-  queryParams.projectLevel = projectLevel.value[0];
+  queryParams.hasCooperativeUnit = CoCompany.value;
+  queryParams.projectLevel = projectLevel.value;
   handleQueryRequest(queryParams);
 }
 
@@ -274,88 +207,16 @@ function resetQuery() {
   queryParams.projectScheduledCompletionTimeSta = undefined;
   queryParams.projectScheduledCompletionTimeEnd = undefined;
   responsiblePerson.value = [];
-  CoCompany.value = [];
-  projectLevel.value = [];
+  CoCompany.value = undefined;
+  projectLevel.value = undefined;
   projectEstablishTime.value = [];
   projectScheduledCompletionTime.value = [];
   handleQueryRequest(queryParams);
 }
 
-// 获取部门和用户列表的方法
-async function getDeptAndUserList() {
-  await getDeptTree(); // 等待部门数据加载完成
-  await getList(); // 等待用户数据加载完成
-  cascaderOptions.value = adaptData(deptOptions.value);
-}
-
-// 查询部门下拉树结构
-async function getDeptTree() {
-  const response = await deptTreeSelect();
-  deptOptions.value = response.data;
-}
-
-// 分页查询接口
-interface PageQuery {
-  pageNum: number;
-  pageSize: number;
-}
-
-// 用户查询参数接口
-export interface UserQuery extends PageQuery {
-  userName?: string;
-  phonenumber?: string;
-  status?: string;
-  deptId?: string | number;
-  roleId?: string | number;
-}
-
-const userQuery: UserQuery = {
-  pageNum: 1, // 页码
-  pageSize: 100, // 页面大小，调整以获取更多用户
-  userName: '', // 无用户名过滤
-  phonenumber: '', // 无电话号码过滤
-  status: '', // 无状态过滤
-  deptId: '', // 无部门过滤
-  roleId: '' // 无角色过滤
-};
-
-// 查询用户列表
-async function getList() {
-  const response = await listUser(userQuery);
-  userList.value = response.rows;
-  total.value = response.total;
-}
-
-// 适配部门和用户数据的方法
-function adaptData(data: any[]): any[] {
-  return data.map((item) => {
-    const newItem = {
-      value: item.id,
-      label: item.label,
-      children: []
-    };
-    if (item.children && item.children.length > 0) {
-      newItem.children = adaptData(item.children);
-    } else {
-      const usersInDept = userList.value.filter((user) => user.deptId === item.id);
-      newItem.children = adaptUserData(usersInDept);
-    }
-    return newItem;
-  });
-}
-
-function adaptUserData(data: any[]): any[] {
-  return data.map((item) => {
-    return {
-      value: item.userId,
-      label: item.nickName
-    };
-  });
-}
-
 onMounted(() => {
   getProjectList();
-  getDeptAndUserList();
+  getUserTreeSelect();
 });
 </script>
 

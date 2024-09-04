@@ -4,28 +4,28 @@
       <el-tabs v-model="activeNames" type="border-card">
         <el-tab-pane label="基本信息" name="first">
           <div style="margin-top: 5px"></div>
-          <el-descriptions-item label="基本信息" :span="2"/>
+          <el-descriptions-item label="基本信息" :span="2" />
           <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '25%' }" :content-style="{ width: '25%' }" border>
             <el-descriptions-item label="项目名称">{{ projectDetails.projectInfoVO.assignedSubjectName }}</el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}</el-descriptions-item>
             <el-descriptions-item label="负责课题">{{ projectDetails.projectInfoVO.assignedSubjectSection }}</el-descriptions-item>
             <el-descriptions-item label="课题任务书编号">{{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }}</el-descriptions-item>
             <el-descriptions-item label="项目牵头单位">{{ projectDetails.projectInfoVO.leadingUnit }}</el-descriptions-item>
-            <el-descriptions-item label="是否牵头单位">{{ pro_cooperative_unit[projectDetails.projectInfoVO.hasLeadingRole]?.label || '未知'
-              }}
+            <el-descriptions-item label="是否牵头单位"
+              >{{ pro_cooperative_unit[projectDetails.projectInfoVO.hasLeadingRole]?.label || '未知' }}
             </el-descriptions-item>
             <el-descriptions-item label="项目负责人">{{ projectDetails.projectInfoVO.projectLeader }}</el-descriptions-item>
             <el-descriptions-item label="项目专员/联系人">{{ projectDetails.projectInfoVO.projectContact }}</el-descriptions-item>
-            <el-descriptions-item label="项目级别">{{ pro_level_type[projectDetails.projectInfoVO.projectLevel]?.label || '未知'
-              }}
+            <el-descriptions-item label="项目级别"
+              >{{ pro_level_type[projectDetails.projectInfoVO.projectLevel]?.label || '未知' }}
             </el-descriptions-item>
             <el-descriptions-item label="项目来源">{{ projectDetails.projectInfoVO.projectSource }}</el-descriptions-item>
             <el-descriptions-item label="立项时间">{{ projectDetails.projectInfoVO.projectEstablishTime }}</el-descriptions-item>
-            <el-descriptions-item label="项目计划验收时间">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime
-              }}
-            </el-descriptions-item>
+            <el-descriptions-item label="项目计划验收时间">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime }} </el-descriptions-item>
             <el-descriptions-item label="项目执行时间（年）">{{ projectDetails.projectInfoVO.projectDuration }}</el-descriptions-item>
-            <el-descriptions-item label="项目推进情况">{{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}</el-descriptions-item>
+            <el-descriptions-item label="项目推进情况">{{
+              pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知'
+            }}</el-descriptions-item>
             <el-descriptions-item label="合作单位">{{ projectDetails.projectInfoVO.collaboratingUnit }}</el-descriptions-item>
             <el-descriptions-item label="涉及专家、团队">{{ projectDetails.projectInfoVO.expertTeam }}</el-descriptions-item>
             <el-descriptions-item label="项目经费总额">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
@@ -91,32 +91,20 @@
           <div>
             <div style="margin-top: 5px"></div>
             <el-table v-loading="loading" :data="transformedUserList" style="margin: 0; padding: 0">
-              <el-table-column  label="用户名称" align="center" prop="nickName" :show-overflow-tooltip="true" />
-              <el-table-column
-                label="职称"
-                align="center"
-                prop="jobTitle"
-                :show-overflow-tooltip="true">
+              <el-table-column label="用户名称" align="center" prop="nickName" :show-overflow-tooltip="true" />
+              <el-table-column label="职称" align="center" prop="jobTitle" :show-overflow-tooltip="true">
                 <template #default="scope">
                   {{ sys_jobtitle_type[scope.row.jobTitle]?.label || '未知' }}
                 </template>
               </el-table-column>
-              <el-table-column
-                label="学历"
-                align="center"
-                prop="diploma"
-                :show-overflow-tooltip="true">
+              <el-table-column label="学历" align="center" prop="diploma" :show-overflow-tooltip="true">
                 <template #default="scope">
                   {{ sys_diploma_type[scope.row.diploma]?.label || '未知' }}
                 </template>
               </el-table-column>
               <el-table-column label="手机号码" align="center" prop="phonenumber" :show-overflow-tooltip="true" />
               <el-table-column label="所属部门" align="center" prop="deptName" :show-overflow-tooltip="true" />
-              <el-table-column
-                label="项目角色"
-                align="center"
-                prop="projectUserRole"
-                :show-overflow-tooltip="true">
+              <el-table-column label="项目角色" align="center" prop="projectUserRole" :show-overflow-tooltip="true">
                 <template #default="scope">
                   {{ pro_user_role[scope.row.projectUserRole]?.label || '未知' }}
                 </template>
@@ -180,16 +168,12 @@
               <div style="margin-top: 5px"></div>
               <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
                 <el-descriptions-item label="经费总额" :span="2">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
-                <el-descriptions-item label="专项到款总额" :span="1">{{ projectDetails.projectFundsVO.totalFundsZxDk
-                  }}
-                </el-descriptions-item>
+                <el-descriptions-item label="专项到款总额" :span="1">{{ projectDetails.projectFundsVO.totalFundsZxDk }} </el-descriptions-item>
                 <el-descriptions-item label="专项经费总额" :span="1">{{ projectDetails.projectFundsVO.totalFundsZx }}</el-descriptions-item>
                 <el-descriptions-item label="已完成自筹投资" :span="1">{{ projectDetails.projectFundsVO.zctzDone }}</el-descriptions-item>
                 <el-descriptions-item label="已完成专项投资" :span="1">{{ projectDetails.projectFundsVO.zxtzDone }}</el-descriptions-item>
                 <el-descriptions-item label="自筹经费公司配套" :span="1">{{ projectDetails.projectFundsVO.zcGspt }}</el-descriptions-item>
-                <el-descriptions-item label="专项经费公司留存(计划)" :span="1">{{ projectDetails.projectFundsVO.zxGslc
-                  }}
-                </el-descriptions-item>
+                <el-descriptions-item label="专项经费公司留存(计划)" :span="1">{{ projectDetails.projectFundsVO.zxGslc }} </el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
 
@@ -200,13 +184,9 @@
               <div style="margin-top: 5px"></div>
               <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
                 <el-descriptions-item label="获奖情况（项）" :span="1">{{ projectDetails.projectInfoVO.awardDetails }}</el-descriptions-item>
-                <el-descriptions-item label="论文情况（项）" :span="1">{{ projectDetails.projectInfoVO.publicationDetails
-                  }}
-                </el-descriptions-item>
+                <el-descriptions-item label="论文情况（项）" :span="1">{{ projectDetails.projectInfoVO.publicationDetails }} </el-descriptions-item>
                 <el-descriptions-item label="专利情况" :span="1">{{ projectDetails.projectInfoVO.patentDetails }}</el-descriptions-item>
-                <el-descriptions-item label="软著情况" :span="1">{{ projectDetails.projectInfoVO.softwareCopyrightDetails
-                  }}
-                </el-descriptions-item>
+                <el-descriptions-item label="软著情况" :span="1">{{ projectDetails.projectInfoVO.softwareCopyrightDetails }} </el-descriptions-item>
                 <el-descriptions-item label="标准情况" :span="1">{{ projectDetails.projectInfoVO.standardDetails }}</el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
@@ -228,25 +208,18 @@ const props = defineProps<{
 }>();
 const emits = defineEmits(['update:visible']);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const {
-  pro_cocompany_type,
-  pro_level_type,
-  pro_progress_status,
-  pro_cooperative_unit,
-  pro_user_role,
-  sys_jobtitle_type,
-  sys_diploma_type
-} = toRefs<any>(
-  proxy?.useDict(
-    'pro_cocompany_type',
-    'pro_level_type',
-    'pro_progress_status',
-    'pro_cooperative_unit',
-    'pro_user_role',
-    'sys_jobtitle_type',
-    'sys_diploma_type'
-  )
-);
+const { pro_cocompany_type, pro_level_type, pro_progress_status, pro_cooperative_unit, pro_user_role, sys_jobtitle_type, sys_diploma_type } =
+  toRefs<any>(
+    proxy?.useDict(
+      'pro_cocompany_type',
+      'pro_level_type',
+      'pro_progress_status',
+      'pro_cooperative_unit',
+      'pro_user_role',
+      'sys_jobtitle_type',
+      'sys_diploma_type'
+    )
+  );
 
 interface User {
   nickName: string;
@@ -481,7 +454,7 @@ function projectDetail() {
     })
     .finally(() => {
       loading.value = false;
-  });
+    });
 }
 
 const updateVisible = (value: boolean) => {
