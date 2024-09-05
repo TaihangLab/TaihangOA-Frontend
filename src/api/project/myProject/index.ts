@@ -18,6 +18,7 @@ export function milestoneAdd(data: MilestoneFrom) {
   });
 }
 
+// 查询大事记
 export function queryMilestoneList(data: combinedSearchDataList, PageQuery: PageQuery) {
   return request({
     url: '/project/list/milestonequery',
@@ -27,6 +28,7 @@ export function queryMilestoneList(data: combinedSearchDataList, PageQuery: Page
   });
 }
 
+// 查询大事记类别
 export function queryMilestoneCategorySelectSetList(params: combinedSearchDataSetList) {
   return request({
     url: '/project/list/milestoneCategorySelectSet',
@@ -62,6 +64,7 @@ export function queryProjectList(data: queryProjectData, PageQuery: PageQuery) {
   });
 }
 
+// 查询项目详情
 export function getProjectDetails(projectId: number | string): AxiosPromise<ProjectDetailsVO> {
   return request({
     url: `/project/list/getDetails`,

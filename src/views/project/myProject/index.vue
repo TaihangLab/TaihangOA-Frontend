@@ -141,7 +141,7 @@ const myProjectLook = ref<any[]>([]);
 const total = ref(0);
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { pro_level_type, pro_cocompany_type} = toRefs<any>(proxy?.useDict('pro_level_type','pro_cocompany_type'));
+const { pro_level_type, pro_cocompany_type } = toRefs<any>(proxy?.useDict('pro_level_type', 'pro_cocompany_type'));
 const isAddDialogVisible = ref(false);
 
 /** 查询用户下拉树结构 */
