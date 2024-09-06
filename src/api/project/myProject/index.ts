@@ -5,9 +5,10 @@ import {
   combinedSearchDataSetList,
   deleteParams,
   queryProjectData,
-  ProjectDetailsVO
+  ProjectDetailsVO, ProjectBaseInfoVO
 } from '@/api/project/myProject/types';
 import { AxiosPromise } from 'axios';
+import { ProjectBaseInfoBO } from '@/api/project/funds/types';
 
 // 新增大事记
 export function milestoneAdd(data: MilestoneFrom) {
@@ -19,12 +20,12 @@ export function milestoneAdd(data: MilestoneFrom) {
 }
 
 // 查询大事记
-export function queryMilestoneList(data: combinedSearchDataList, PageQuery: PageQuery) {
+export function queryMilestoneList(data: combinedSearchDataList, pageQuery: PageQuery) {
   return request({
     url: '/project/list/milestonequery',
     method: 'post',
     data: data,
-    params: PageQuery
+    params: pageQuery
   });
 }
 
@@ -37,11 +38,11 @@ export function queryMilestoneCategorySelectSetList(params: combinedSearchDataSe
   });
 }
 
-export function getMilestoneCategorySelectList(PageQuery: PageQuery) {
+export function getMilestoneCategorySelectList(pageQuery: PageQuery) {
   return request({
     url: '/project/list/milestoneCategorySelect',
     method: 'get',
-    data: PageQuery
+    data: pageQuery
   });
 }
 
@@ -55,12 +56,12 @@ export function milestoneDelete(params: deleteParams) {
 }
 
 // 查询项目列表
-export function queryProjectList(data: queryProjectData, PageQuery: PageQuery) {
+export function queryProjectList(data: queryProjectData, pageQuery: PageQuery) {
   return request({
     url: '/project/my/getMyList',
     method: 'post',
     data: data,
-    params: PageQuery
+    params: pageQuery
   });
 }
 
@@ -72,5 +73,14 @@ export function getProjectDetails(projectId: number | string): AxiosPromise<Proj
     params: {
       projectId
     }
+  });
+}
+
+export function getAllProjectList(data: ProjectBaseInfoBO, pageQuery: PageQuery): AxiosPromise<ProjectBaseInfoVO[]> {
+  return request({
+    url: '/project/list/getAllList',
+    method: 'post',
+    params: pageQuery,
+    data: data
   });
 }

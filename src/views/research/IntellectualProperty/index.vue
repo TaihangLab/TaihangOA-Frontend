@@ -77,6 +77,7 @@
       </template>
       <div>
         <el-table ref="multipleTable" :data="iplist" border style="width: 100%">
+          <el-table-column type="selection" width="55" align="center" />
           <!-- 关联项目名称 -->
           <el-table-column label="关联项目名称" :resizable="false" prop="assignedSubjectName" width="300"> </el-table-column>
           <!-- 知识产权名 -->

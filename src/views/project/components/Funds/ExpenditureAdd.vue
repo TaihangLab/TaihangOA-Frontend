@@ -170,6 +170,7 @@ const onSubmit = () => {
     expenditureForm.value.validate((valid) => {
       if (valid) {
         getProjectDetails(props.projectId).then((resp) => {
+          console.log('props.projectId', props.projectId);
           form.value.projectName = resp.data.projectInfoVO.assignedSubjectName;
           const formDataArray = [{ ...form.value }];
           emits('new-data', formDataArray);

@@ -1,14 +1,9 @@
 import request from '@/utils/request';
 import { AxiosPromise } from 'axios';
-import {
-  ProjectTargetBO,
-  ProjectTargetProgressBO,
-  ProjectTargetProgressVO,
-  ProjectTargetVO
-} from '@/api/project/target/types';
+import { ProjectTargetBO, ProjectTargetProgressBO, ProjectTargetProgressVO, ProjectTargetVO } from '@/api/project/target/types';
 
 // 查询某个项目下的指标列表
-export function getAllProjectTargetList(pageQuery: PageQuery, data: ProjectTargetBO): AxiosPromise<ProjectTargetVO[]>{
+export function getAllProjectTargetList(pageQuery: PageQuery, data: ProjectTargetBO): AxiosPromise<ProjectTargetVO[]> {
   return request({
     url: '/project/target/all',
     method: 'post',
@@ -18,7 +13,7 @@ export function getAllProjectTargetList(pageQuery: PageQuery, data: ProjectTarge
 }
 
 // 某项目添加指标
-export function addProjectTarget(data: ProjectTargetBO): AxiosPromise<any>{
+export function addProjectTarget(data: ProjectTargetBO): AxiosPromise<any> {
   return request({
     url: '/project/target/add',
     method: 'post',
@@ -27,7 +22,7 @@ export function addProjectTarget(data: ProjectTargetBO): AxiosPromise<any>{
 }
 
 // 删除项目指标
-export function deleteProjectTarget(targetId: number): AxiosPromise<any>{
+export function deleteProjectTarget(targetId: number): AxiosPromise<any> {
   return request({
     url: '/project/target/delete',
     method: 'post',
@@ -36,7 +31,7 @@ export function deleteProjectTarget(targetId: number): AxiosPromise<any>{
 }
 
 // 更新项目指标
-export function updateProjectTarget(data: ProjectTargetBO): AxiosPromise<any>{
+export function updateProjectTarget(data: ProjectTargetBO): AxiosPromise<any> {
   return request({
     url: '/project/target/update',
     method: 'post',
@@ -45,7 +40,7 @@ export function updateProjectTarget(data: ProjectTargetBO): AxiosPromise<any>{
 }
 
 // 查询某指标全部进度
-export function getProjectTargetDetail(data: ProjectTargetProgressBO): AxiosPromise<ProjectTargetProgressVO[]>{
+export function getProjectTargetDetail(data: ProjectTargetProgressBO): AxiosPromise<ProjectTargetProgressVO[]> {
   return request({
     url: '/project/target/detail',
     method: 'post',
@@ -54,7 +49,7 @@ export function getProjectTargetDetail(data: ProjectTargetProgressBO): AxiosProm
 }
 
 // 添加指标进度
-export function addProjectTargetProgress(data: ProjectTargetProgressBO): AxiosPromise<any>{
+export function addProjectTargetProgress(data: ProjectTargetProgressBO): AxiosPromise<any> {
   return request({
     url: '/project/target/addProgress',
     method: 'post',
@@ -63,7 +58,7 @@ export function addProjectTargetProgress(data: ProjectTargetProgressBO): AxiosPr
 }
 
 // 删除指标进度
-export function deleteProjectTargetProgress(progressId: number): AxiosPromise<any>{
+export function deleteProjectTargetProgress(progressId: number): AxiosPromise<any> {
   return request({
     url: '/project/target/deleteProgress',
     method: 'get',
@@ -72,7 +67,7 @@ export function deleteProjectTargetProgress(progressId: number): AxiosPromise<an
 }
 
 // 更新指标进度
-export function updateProjectTargetProgress(data: ProjectTargetProgressBO): AxiosPromise<any>{
+export function updateProjectTargetProgress(data: ProjectTargetProgressBO): AxiosPromise<any> {
   return request({
     url: '/project/target/updateProgress',
     method: 'post',
