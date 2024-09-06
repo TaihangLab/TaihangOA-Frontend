@@ -1,4 +1,4 @@
-export interface ProjectTargetBO {
+export interface ProjectTargetBO extends BaseEntity{
   targetId?: number; // 指标ID，EditGroup 必填
   projectId?: number; // 项目ID，QueryGroup 必填
   targetName?: string; // 指标名称，AddGroup, EditGroup 必填，最长 50 字符
@@ -31,4 +31,3 @@ export interface ProjectTargetProgressVO {
   detailedDescription?: string; // 详细描述
   completionTime?: string; // 完成时间 (格式: YYYY-MM-DD)
 }
-

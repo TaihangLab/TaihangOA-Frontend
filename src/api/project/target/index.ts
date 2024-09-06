@@ -3,7 +3,7 @@ import { AxiosPromise } from 'axios';
 import { ProjectTargetBO, ProjectTargetProgressBO, ProjectTargetProgressVO, ProjectTargetVO } from '@/api/project/target/types';
 
 // 查询某个项目下的指标列表
-export function getAllProjectTargetList(pageQuery: PageQuery, data: ProjectTargetBO): AxiosPromise<ProjectTargetVO[]> {
+export function getAllProjectTargetList(data: ProjectTargetBO, pageQuery: PageQuery): AxiosPromise<ProjectTargetVO[]> {
   return request({
     url: '/project/target/all',
     method: 'post',
@@ -40,10 +40,11 @@ export function updateProjectTarget(data: ProjectTargetBO): AxiosPromise<any> {
 }
 
 // 查询某指标全部进度
-export function getProjectTargetDetail(data: ProjectTargetProgressBO): AxiosPromise<ProjectTargetProgressVO[]> {
+export function getProjectTargetDetail(data: ProjectTargetProgressBO, pageQuery: PageQuery): AxiosPromise<ProjectTargetProgressVO[]> {
   return request({
     url: '/project/target/detail',
     method: 'post',
+    params: pageQuery,
     data: data
   });
 }

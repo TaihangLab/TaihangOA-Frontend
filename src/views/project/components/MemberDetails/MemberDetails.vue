@@ -70,6 +70,7 @@ watch(
   ([newMemberId, newVisible]) => {
     if (newMemberId !== undefined) {
       projectDetail();
+      console.log('newMemberId',newMemberId)
     }
   },
   { immediate: true }
