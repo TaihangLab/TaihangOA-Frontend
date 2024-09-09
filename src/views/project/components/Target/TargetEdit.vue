@@ -29,8 +29,8 @@
                   >修改</el-button
                 >
                 <el-button v-hasPermi="['project:expense:receivedDelete']" type="text" icon="delete" size="small" @click="handleDelete(row)"
-                  >删除
-                </el-button>
+                  >删除</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -44,7 +44,7 @@
       @update:model-value="updateAddDialogVisible"
       @close="closeAddProgressDialog"
     >
-      <el-form ref="progressFormRef" :model="form" :rules="rules" label-width="120px">
+      <el-form ref="progressFormRef" :model="progressFrom" :rules="rules" label-width="120px">
         <el-form-item label="对应指标" prop="targetId">
           <el-select v-model="progressFrom.targetId" placeholder="请选择指标" style="width: 340px" :disabled="isEdit" clearable>
             <el-option
@@ -131,9 +131,9 @@ const data = reactive({
   }
 });
 const rules = {
-  // targetId: [{ required: true, message: '请输入对应指标', trigger: 'blur' }],
-  // completionStatus: [{ required: true, message: '请输入推进情况', trigger: 'blur' }],
-  // completionTime: [{ required: true, message: '请输入推进时间', trigger: 'blur' }]
+  targetId: [{ required: true, message: '请输入对应指标', trigger: 'blur' }],
+  completionStatus: [{ required: true, message: '请输入推进情况', trigger: 'blur' }],
+  completionTime: [{ required: true, message: '请输入推进时间', trigger: 'blur' }]
 };
 
 const { form, progressFrom, queryParams } = toRefs(data);
