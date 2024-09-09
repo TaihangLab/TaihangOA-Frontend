@@ -13,8 +13,8 @@
             <span style="font-weight: bold; font-size: 16px">{{ item.targetName }}</span>
           </template>
           <div class="content">
-            <p><strong>中期目标:</strong> {{ item.midtermTarget }}</p>
-            <p><strong>最终目标:</strong> {{ item.endTarget }}</p>
+            <p><strong>中期目标: </strong> {{ item.midtermTarget }}</p>
+            <p><strong>最终目标: </strong> {{ item.endTarget }}</p>
           </div>
           <el-table v-loading="loading" :data="progressData[item.targetId] || []" border style="width: 100%">
             <el-table-column label="指标完成情况" :resizable="false" align="center" prop="completionStatus" :show-overflow-tooltip="true">

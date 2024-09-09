@@ -100,6 +100,7 @@ import { ref } from 'vue';
 import { getAllProjectList } from '@/api/project/myProject';
 import { ProjectBaseInfoVO, queryProjectData } from '@/api/project/myProject/types';
 import TargetEdit from '@/views/project/components/Target/TargetEdit.vue';
+import TargetDetail from '@/views/project/components/Target/TargetDetail.vue';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const total = ref(0);
@@ -153,7 +154,7 @@ const handleQuery = () => {
 const showTargetEditDialog = (projectId: number) => {
   targetEditDialog.value = true;
   editProjectId.value = projectId;
-  console.log('showTargetEditDialog', projectId)
+  console.log('showTargetEditDialog', projectId);
 };
 
 const showTargetDetailDialog = (projectId: number) => {
