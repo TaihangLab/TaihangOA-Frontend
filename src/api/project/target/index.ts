@@ -63,7 +63,7 @@ export function deleteProjectTargetProgress(progressId: number): AxiosPromise<an
   return request({
     url: '/project/target/deleteProgress',
     method: 'get',
-    data: { progressId: progressId }
+    params: { progressId: progressId }
   });
 }
 
