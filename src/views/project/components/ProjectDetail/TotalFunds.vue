@@ -12,7 +12,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="经费总额">
-            <el-input v-model.number="$props.form.jfze"></el-input>
+            <el-input v-model="$props.form.jfze" type="text" ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -33,12 +33,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="专项直接">
-            <el-input v-model.number="$props.form.zxzjx"></el-input>
+            <el-input v-model="$props.form.zxzjx" type="text"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label-width="100px" label="专项间接">
-            <el-input v-model.number="$props.form.zxjjy"></el-input>
+            <el-input v-model="$props.form.zxjjy" type="text"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -46,12 +46,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="专项经费总额">
-            <el-input v-model.number="$props.form.zxjfze"></el-input>
+            <el-input v-model="$props.form.zxjfze" type="text"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label-width="100px" label="专项设备费">
-            <el-input v-model.number="$props.form.zxsbf"></el-input>
+            <el-input v-model="$props.form.zxsbf" type="text"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -72,12 +72,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="自筹直接">
-            <el-input v-model.number="$props.form.zczjx"></el-input>
+            <el-input v-model="$props.form.zczjx" type="text"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label-width="100px" label="自筹间接">
-            <el-input v-model.number="$props.form.zcjjy"></el-input>
+            <el-input v-model="$props.form.zcjjy" type="text"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -85,12 +85,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label-width="100px" label="自筹经费总额">
-            <el-input v-model.number="$props.form.zcjfze"></el-input>
+            <el-input v-model="$props.form.zcjfze" type="text"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label-width="100px" label="自筹设备费">
-            <el-input v-model.number="$props.form.zcsbf"></el-input>
+            <el-input v-model="$props.form.zcsbf" type="text"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -99,28 +99,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed } from 'vue';
 
-// eslint-disable-next-line vue/require-prop-types
 const props = defineProps(['form']);
 const data = {
   return: {}
 };
 
-interface Form {
-  zcjfze?: number;
-  zxjfze?: number;
-  zxsbf?: number;
-  zcsbf?: number;
-}
-
-function mounted() {}
-
-let number1 = ref<number>(100);
-const number2 = ref<number>(200);
-let testComputed = computed<number>(() => {
-  return number1.value + number2.value;
-});
 function computeXY(ze: number, sbf: number): [number, number] {
   const RANGE1 = 500;
   const RANGE2 = 1000;
@@ -170,4 +155,5 @@ let zcXY = computed<[number, number]>(() => {
   margin-right: 20px;
   color: #3e8ee0;
 }
+
 </style>

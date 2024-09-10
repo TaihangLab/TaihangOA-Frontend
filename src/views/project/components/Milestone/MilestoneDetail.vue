@@ -366,13 +366,6 @@ function editMilestone(item: any) {
 
 async function deleteMilestone(item: any) {
   const milestoneId = item.milestoneId;
-  // request({
-  //   url: `/project/my/milestonedelete`,
-  //   method: 'delete',
-  //   params: {
-  //     milestoneId: milestoneId
-  //   }
-  // })
   await milestoneDelete({ milestoneId: milestoneId }).then(() => {
     fetchMilestoneList();
   });
@@ -470,11 +463,6 @@ const milestoneCategorySelectSetList = async () => {
     milestoneEndTime: milestoneEndTime.value
   };
 
-  // request({
-  //   url: '/project/list/milestoneCategorySelectSet',
-  //   method: 'get',
-  //   params: combinedSearchData
-  // })
   await queryMilestoneCategorySelectSetList(combinedSearchData)
     .then((resp) => {
       // 将数字值转换为 labelMappings 中的文字描述
@@ -490,11 +478,6 @@ const milestoneCategorySelectSetList = async () => {
 
 // 方法：获取里程碑类别选择列表
 const milestoneCategorySelectList = async () => {
-  // request({
-  //   url: '/project/list/milestoneCategorySelect',
-  //   method: 'get',
-  //   data: queryPara.value // 假设 this.data 是从 queryPara 获取的
-  // })
   await getMilestoneCategorySelectList(queryPara.value)
     .then((resp) => {
       // 将数字值转换为 labelMappings 中的文字描述
@@ -644,9 +627,6 @@ function handleQuery() {
   console.log('Search data:', searchData);
   // 判断是否选择了时间范围
   if (searchForm.value.dateRange && searchForm.value.dateRange.length === 2) {
-    // milestoneStaTime.value = dateRange.value[0];
-    // milestoneEndTime.value = dateRange.value[1];
-
     // 将日期转换为字符串格式
     milestoneStaTime.value = searchForm.value.dateRange[0].toISOString().split('T')[0]; // yyyy-mm-dd 格式
     milestoneEndTime.value = searchForm.value.dateRange[1].toISOString().split('T')[0]; // yyyy-mm-dd 格式
@@ -654,8 +634,6 @@ function handleQuery() {
     milestoneStaTime.value = undefined;
     milestoneEndTime.value = undefined;
   }
-  // 发起请求，获取符合搜索条件的数据
-  // fetchMilestoneList(searchData);
   fetchMilestoneList();
   // 显示搜索框
   updateTimelineDisplay();

@@ -151,11 +151,10 @@
                 <span>项目推进情况</span>
               </template>
               <div style="margin-top: 5px"></div>
-              <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
+              <el-descriptions class="margin-top" title="" :column="1" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
                 <el-descriptions-item label="推进情况" :span="1"
                   >{{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
                 </el-descriptions-item>
-                <el-descriptions-item label="" :span="1">{{}} </el-descriptions-item>
                 <el-descriptions-item label="完成进度" :span="2">{{ projectDetails.projectInfoVO.completionProgress }}</el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
