@@ -127,7 +127,7 @@
               <el-select v-model="card.value" class="select-container" placeholder="请选择经费条目" size="default">
                 <el-option v-for="option in categoryOptions4" :key="option.value" :label="option.label" :value="option.value"></el-option>
               </el-select>
-              <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" size="default"></el-input>
+              <el-input v-model="card.content" class="custom-input" placeholder="请输入金额" size="default" clearable></el-input>
               <el-button
                 v-show="data.isButtonShowList3[index]"
                 class="remove2-button"
