@@ -31,9 +31,7 @@
     <!-- 文件列表 -->
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li v-for="(file, index) in fileList" :key="file.uid" class="el-upload-list__item ele-upload-list__item-content">
-        <el-link :href="`${file.url}`" :underline="false" target="_blank">
-          <Document size="15px"/> {{ getFileName(file.name) }}
-        </el-link>
+        <el-link :href="`${file.url}`" :underline="false" target="_blank"> <Document size="15px" /> {{ getFileName(file.name) }} </el-link>
         <div class="ele-upload-list__item-content-action">
           <el-button type="danger" link @click="handleDelete(index)">删除</el-button>
         </div>
@@ -198,7 +196,7 @@ const uploadedSuccessfully = () => {
 
 // 获取文件名称
 const getFileName = (name: string) => {
-  if(!name) {
+  if (!name) {
     return '';
   }
   // 如果是url那么取最后的名字 如果不是直接返回
@@ -219,7 +217,7 @@ const listToString = (list: any[], separator?: string) => {
     }
   });
   return strs != '' ? strs.substring(0, strs.length - 1) : '';
-}
+};
 
 // 重置
 function reset() {

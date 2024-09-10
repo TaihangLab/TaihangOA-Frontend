@@ -5,16 +5,16 @@
         <el-card shadow="hover">
           <el-form ref="queryFormRef" :inline="true" :model="queryParams">
             <el-form-item label="项目名称">
-              <el-input v-model="queryParams.assignedSubjectName" clearable placeholder="请输入项目名称" @keyup.enter="handleQuery"></el-input>
+              <el-input v-model="form.assignedSubjectName" clearable placeholder="请输入项目名称" @keyup.enter="handleQuery"></el-input>
             </el-form-item>
             <el-form-item label="负责课题">
-              <el-input v-model="queryParams.assignedSubjectSection" clearable placeholder="请输入负责课题名称" @keyup.enter="handleQuery"></el-input>
+              <el-input v-model="form.assignedSubjectSection" clearable placeholder="请输入负责课题名称" @keyup.enter="handleQuery"></el-input>
             </el-form-item>
             <el-form-item label="项目成员">
               <el-cascader
-                v-model="responsiblePerson"
+                v-model="form.userId"
                 :options="userOptions"
-                :props="{ value: 'id', label: 'label', children: 'children' }"
+                :props="{ value: 'id', label: 'label', children: 'children', emitPath: false }"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择项目成员"
@@ -22,13 +22,13 @@
               ></el-cascader>
             </el-form-item>
             <el-form-item label="合作单位">
-              <el-select v-model="CoCompany" placeholder="请选择项目级别" clearable>
+              <el-select v-model="form.hasCooperativeUnit" placeholder="请选择项目级别" clearable>
                 <el-option v-for="dict in pro_cocompany_type" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
             </el-form-item>
             <el-form-item label="立项时间">
               <el-date-picker
-                v-model="projectEstablishTime"
+                v-model="establishDateRange"
                 type="daterange"
                 unlink-panels
                 clearable
@@ -36,13 +36,12 @@
                 end-placeholder="如：2000-01-01"
                 value-format="YYYY-MM-DD"
                 range-separator="至"
-                :picker-options="pickerOptions"
                 @keyup.enter="handleQuery"
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="项目计划验收时间" label-width="125px">
               <el-date-picker
-                v-model="projectScheduledCompletionTime"
+                v-model="scheduledCompletionDateRange"
                 type="daterange"
                 unlink-panels
                 clearable
@@ -50,12 +49,11 @@
                 end-placeholder="如：2000-01-01"
                 value-format="YYYY-MM-DD"
                 range-separator="至"
-                :picker-options="pickerOptions"
                 @keyup.enter="handleQuery"
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="项目级别">
-              <el-select v-model="projectLevel" placeholder="请选择项目级别" clearable>
+              <el-select v-model="form.projectLevel" placeholder="请选择项目级别" clearable>
                 <el-option v-for="dict in pro_level_type" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
             </el-form-item>
@@ -74,29 +72,123 @@
             <el-col :span="1.5">
               <el-button type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
             </el-col>
+            <el-col :span="1.5">
+              <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+            </el-col>
             <right-toolbar v-model:showSearch="showSearch" @query-table="resetQuery"></right-toolbar>
           </el-row>
         </template>
-        <Project
-          :button-type="1"
-          :my-project-look="myProjectLook"
-          :project-list-look="projectListLook"
-          :total="total"
-          :query-param="queryParam"
-          @reload-project-list="getProjectList"
+        <el-table ref="multipleTable" v-loading="loading" :data="projectList" border style="width: 100%" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="项目名称" :resizable="false" prop="assignedSubjectName" width="150" :show-overflow-tooltip="true" fixed="left">
+          </el-table-column>
+          <el-table-column label="项目牵头单位" :resizable="false" prop="leadingUnit" width="180" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="项目来源" :resizable="false" prop="projectSource" width="180" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="项目负责人" :resizable="false" prop="projectLeader" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="项目级别" :resizable="false" prop="projectLevel" width="110" :show-overflow-tooltip="true">
+            <template #default="scope">
+              {{ pro_level_type[scope.row.projectLevel]?.label || '未知' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="是否牵头单位" :resizable="false" prop="hasLeadingRole" width="110" :show-overflow-tooltip="true">
+            <template #default="scope">
+              {{ pro_cooperative_unit[scope.row.hasLeadingRole]?.label || '未知' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="负责课题" :resizable="false" prop="assignedSubjectSection" width="150" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column label="公司负责人" :resizable="false" prop="companyLeader" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="部门负责人" :resizable="false" prop="departmentLeader" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="科研项目管理人" :resizable="false" prop="researchManager" width="150" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column label="立项时间" :resizable="false" prop="projectEstablishTime" width="130" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column
+            label="项目计划验收时间"
+            :resizable="false"
+            prop="projectScheduledCompletionTime"
+            width="150"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+          <el-table-column
+            label="项目推进情况"
+            :resizable="false"
+            prop="projectProgressStatus"
+            :formatter="projectProgressStatuss"
+            width="130"
+            :show-overflow-tooltip="true"
+          >
+            <template #default="scope">
+              {{ pro_progress_status[scope.row.hasLeadingRole]?.label || '未知' }}
+            </template>
+          </el-table-column>
+          <el-table-column label="合作单位" :resizable="false" prop="collaboratingUnit" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="经费总额" :resizable="false" prop="totalFundsAll" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="专项经费总额" :resizable="false" prop="totalFundsZx" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="专项到款总额" :resizable="false" prop="totalFundsZxDk" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="已完成自筹投资" :resizable="false" prop="zctzDone" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="已完成专项投资" :resizable="false" prop="zxtzDone" width="150" :show-overflow-tooltip="true"> </el-table-column>、
+          <el-table-column label="自筹经费公司配套" :resizable="false" prop="zcGspt" width="150" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column label="专项经费公司留存（计划）" :resizable="false" prop="zxGslc" width="150" :show-overflow-tooltip="true">
+          </el-table-column>
+          <el-table-column label="更新时间" :resizable="false" prop="updateTime" width="170" :show-overflow-tooltip="true"> </el-table-column>
+          <el-table-column fixed="right" label="操作" width="180">
+            <template #default="scope">
+              <el-tooltip content="查看大事记" placement="top">
+                <el-button link type="primary" icon="Notebook" @click="showMilestoneDetailDialog(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="新增大事记" placement="top">
+                <el-button link type="primary" icon="DocumentAdd" @click="showMilestoneAddDialog(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="详情" placement="top">
+                <el-button link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="修改" placement="top">
+                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
+              </el-tooltip>
+              <el-tooltip content="删除" placement="top">
+                <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 详情打开的界面 -->
+        <ProjectDetailDialog
+          v-if="isDetailDialogVisible"
+          :visible="isDetailDialogVisible"
+          :project-id="projectId"
+          @update:visible="isDetailDialogVisible = $event"
         />
-        <pagination
-          v-if="total > 0"
-          v-model:total="total"
-          v-model:page="queryParam.pageNum"
-          v-model:limit="queryParam.pageSize"
-          @pagination="getProjectList"
+        <!-- 大事记查看打开的界面 -->
+        <MilestoneDetailDialog
+          v-if="isMilestoneDetailDialogVisible"
+          :visible="isMilestoneDetailDialogVisible"
+          :project-id="projectId"
+          :update-id="projectId"
+          @update:visible="isMilestoneDetailDialogVisible = $event"
+        />
+        <!--新增大事记-->
+        <MilestoneAddDialog :visible="isAddMilestoneDialogVisible" :project-id="projectId" @update:visible="isAddMilestoneDialogVisible = $event" />
+        <!-- 修改项目弹出的对话框-->
+        <ProjectUpdateDialog
+          :visible="isUpdateDialogVisible"
+          :update-id="updateId"
+          @update:visible="isUpdateDialogVisible = $event"
+          @reload-project-list="getProjectList"
         />
         <ProjectAddDialog
           :visible="isAddDialogVisible"
           update-id=""
           @update:visible="isAddDialogVisible = $event"
           @reload-project-list="getProjectList"
+        />
+        <pagination
+          v-if="total > 0"
+          v-model:total="total"
+          v-model:page="queryParams.pageNum"
+          v-model:limit="queryParams.pageSize"
+          @pagination="getProjectList"
         />
       </el-card>
     </div>
@@ -107,42 +199,59 @@
 import { ref } from 'vue';
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
-import Project from '@/views/project/components/ProjectDetail/Project.vue';
-import { queryProjectList } from '@/api/project/myProject';
+import { getAllProjectList } from '@/api/project/myProject';
 import { userTreeSelect } from '@/api/system/user';
+import { ProjectBaseInfoBO } from '@/api/project/funds/types';
+import { getProjectList } from '@/api/project/funds';
+import MilestoneAddDialog from '@/views/project/components/Milestone/MilestoneAdd.vue';
+import ProjectUpdateDialog from '@/views/project/components/ProjectDetail/ProjectUpdate.vue';
+import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
+import MilestoneDetailDialog from '@/views/project/components/Milestone/MilestoneDetail.vue';
+import { ProjectBaseInfoVO } from '@/api/project/myProject/types';
+import { deleteProject } from '@/api/project/myProject/project';
 
-const queryParams = reactive({
-  pageNum: 2,
-  pageSize: 5,
-  assignedSubjectName: undefined, // 项目名称
+const loading = ref(true);
+const projectList = ref<ProjectBaseInfoVO[]>([]);
+const queryFormRef = ref<ElFormInstance>();
+const establishDateRange = ref<[DateModelType, DateModelType]>(['', '']);
+const scheduledCompletionDateRange = ref<[DateModelType, DateModelType]>(['', '']);
+const userOptions = ref<any[]>([]);
+const projectLevel = ref<number>(undefined);
+const total = ref(0);
+const showSearch = ref(true);
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+const { pro_level_type, pro_cocompany_type, pro_cooperative_unit, pro_progress_status } = toRefs<any>(
+  proxy?.useDict('pro_level_type', 'pro_cocompany_type', 'pro_cooperative_unit', 'pro_progress_status')
+);
+const isAddDialogVisible = ref(false);
+const isDetailDialogVisible = ref(false);
+const isMilestoneDetailDialogVisible = ref(false);
+const isAddMilestoneDialogVisible = ref(false);
+const isUpdateDialogVisible = ref(false);
+const projectId = ref<number>(undefined);
+const updateId = ref<number>(undefined);
+
+const initFormData: ProjectBaseInfoBO = {
+  assignedSubjectName: '', // 项目名称
   projectLevel: undefined, // 项目级别
   assignedSubjectSection: undefined, // 负责课题
   hasCooperativeUnit: undefined, // 合作单位
   userId: undefined, // 项目成员
-  projectEstablishTimeSta: undefined, // 立项时间开始时间
-  projectEstablishTimeEnd: undefined, // 立项时间结束时间
-  projectScheduledCompletionTimeSta: undefined, // 项目计划验收时间开始时间
-  projectScheduledCompletionTimeEnd: undefined // 项目计划验收时间结束时间
+  projectEstablishTimeSta: '', // 立项时间开始时间
+  projectEstablishTimeEnd: '', // 立项时间结束时间
+  projectScheduledCompletionTimeSta: '', // 项目计划验收时间开始时间
+  projectScheduledCompletionTimeEnd: '' // 项目计划验收时间结束时间
+};
+
+const data = reactive({
+  form: { ...initFormData },
+  queryParams: {
+    pageNum: 1,
+    pageSize: 10
+  }
 });
 
-const queryParam = reactive({
-  pageNum: 1,
-  pageSize: 10
-});
-
-const userOptions = ref<any[]>([]);
-const CoCompany = ref<number>(undefined);
-const projectLevel = ref<number>(undefined);
-const responsiblePerson = ref<number[]>([]);
-const projectEstablishTime = ref<(Date | undefined)[]>([]);
-const projectScheduledCompletionTime = ref<(Date | undefined)[]>([]);
-const projectListLook = ref<any[]>([]);
-const myProjectLook = ref<any[]>([]);
-const total = ref(0);
-const showSearch = ref(true);
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-const { pro_level_type, pro_cocompany_type } = toRefs<any>(proxy?.useDict('pro_level_type', 'pro_cocompany_type'));
-const isAddDialogVisible = ref(false);
+const { form, queryParams } = toRefs(data);
 
 /** 查询用户下拉树结构 */
 const getUserTreeSelect = async () => {
@@ -154,65 +263,70 @@ const showAddDialog = () => {
   isAddDialogVisible.value = true;
 };
 
-function handleQueryRequest(queryParams: { [key: string]: any }) {
-  // 执行后端查询等操作
-  if (queryParams && Object.keys(queryParams).length > 0) {
-    Object.assign(queryParams, queryParams); // 更新查询参数
-  }
-  queryParam.pageNum = 1;
-  getProjectList();
-}
+const showDetailDialog = (row: ProjectBaseInfoVO) => {
+  isDetailDialogVisible.value = true;
+  projectId.value = row.projectId;
+};
 
-async function getProjectList() {
-  await queryProjectList(queryParams, queryParam)
-    .then((resp) => {
-      projectListLook.value = resp.rows;
-      total.value = resp.total;
-    })
-    .catch((error) => {
-      ElMessage.error('获取数据时出错：' + error.message);
-      console.error('获取数据时出错：', error);
+const showMilestoneDetailDialog = (row: ProjectBaseInfoVO) => {
+  isMilestoneDetailDialogVisible.value = true;
+  projectId.value = row.projectId;
+};
+
+const showMilestoneAddDialog = (row: ProjectBaseInfoVO) => {
+  isAddMilestoneDialogVisible.value = true;
+  projectId.value = row.projectId;
+};
+
+const handleUpdate = (row: ProjectBaseInfoVO) => {
+  updateId.value = null; // 暂时清空 updateId
+  setTimeout(() => {
+    updateId.value = row.projectId;
+    isUpdateDialogVisible.value = true;
+  }, 0);
+};
+
+const handleDelete = (row: ProjectBaseInfoVO) => {
+  proxy?.$modal.confirm(`负责课题：${row.assignedSubjectSection}，确认删除该数据项？`).then(() => {
+    deleteProject(row.projectId).then(() => {
+      getProjectList().then(() => {
+        ElMessage.success('删除成功');
+      });
     });
-}
+  });
+};
 
-// 处理按钮点击事件
-function handleQuery() {
-  queryParams.userId = responsiblePerson.value[responsiblePerson.value.length - 1];
-  queryParams.projectEstablishTimeSta = projectEstablishTime.value[0];
-  queryParams.projectEstablishTimeEnd = projectEstablishTime.value[1];
+/** 获取项目列表 */
+const getProjectList = async () => {
+  loading.value = true;
+  getAllProjectList(data.form, data.queryParams).then((res) => {
+    projectList.value = res.rows;
+    total.value = res.total;
+    loading.value = false;
+  });
+};
 
-  if (projectScheduledCompletionTime.value) {
-    queryParams.projectScheduledCompletionTimeSta = projectScheduledCompletionTime.value[0];
-    queryParams.projectScheduledCompletionTimeEnd = projectScheduledCompletionTime.value[1];
-  } else {
-    queryParams.projectScheduledCompletionTimeSta = undefined;
-    queryParams.projectScheduledCompletionTimeEnd = undefined;
-  }
+const handleQuery = () => {
+  form.value.projectEstablishTimeSta = establishDateRange.value[0];
+  form.value.projectEstablishTimeEnd = establishDateRange.value[1];
+  form.value.projectScheduledCompletionTimeSta = scheduledCompletionDateRange.value[0];
+  form.value.projectScheduledCompletionTimeEnd = scheduledCompletionDateRange.value[1];
+  queryParams.value.pageNum = 1;
+  getProjectList();
+};
 
-  queryParams.hasCooperativeUnit = CoCompany.value;
-  queryParams.projectLevel = projectLevel.value;
-  handleQueryRequest(queryParams);
-}
+/** 重置 */
+const resetQuery = () => {
+  form.value = { ...initFormData };
+  queryFormRef.value?.resetFields();
+  establishDateRange.value = ['', ''];
+  scheduledCompletionDateRange.value = ['', ''];
+  handleQuery();
+};
 
-function resetQuery() {
-  queryParams.pageNum = 1;
-  queryParams.pageSize = 5;
-  queryParams.assignedSubjectName = undefined;
-  queryParams.projectLevel = undefined;
-  queryParams.assignedSubjectSection = undefined;
-  queryParams.hasCooperativeUnit = undefined;
-  queryParams.userId = undefined;
-  queryParams.projectEstablishTimeSta = undefined;
-  queryParams.projectEstablishTimeEnd = undefined;
-  queryParams.projectScheduledCompletionTimeSta = undefined;
-  queryParams.projectScheduledCompletionTimeEnd = undefined;
-  responsiblePerson.value = [];
-  CoCompany.value = undefined;
-  projectLevel.value = undefined;
-  projectEstablishTime.value = [];
-  projectScheduledCompletionTime.value = [];
-  handleQueryRequest(queryParams);
-}
+const handleSelectionChange = (val: any) => {
+  console.log(val);
+};
 
 onMounted(() => {
   getProjectList();
