@@ -6,9 +6,9 @@
           <el-form ref="queryFormRef" :model="form" :inline="true">
             <el-form-item label="项目成员" prop="userName">
               <el-cascader
-                v-model="responseUser"
+                v-model="form.userId"
                 :options="userOptions"
-                :props="{ value: 'id', label: 'label', children: 'children' }"
+                :props="{ value: 'id', label: 'label', children: 'children', emitPath: false }"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择成员"
@@ -17,9 +17,10 @@
             </el-form-item>
             <el-form-item label="项目名称" prop="projectName">
               <el-cascader
-                v-model="responseProject"
+                v-model="form.projectId"
                 :options="projectOptions"
                 clearable
+                :props="{ emitPath: false}"
                 :show-all-levels="false"
                 placeholder="请选择项目"
                 @keyup.enter="handleQuery"
@@ -106,8 +107,6 @@ const memberId = ref<number>();
 const memberList = ref<ProjectUserVo[]>([]);
 const queryFormRef = ref<ElFormInstance>();
 const memberTableRef = ref<ElTableInstance>();
-const responseProject = ref([]);
-const responseUser = ref([]);
 const loading = ref(true);
 const total = ref(0);
 
@@ -160,25 +159,12 @@ const getUserTreeSelect = async () => {
  * 搜索按钮操作
  */
 const handleQuery = () => {
-  if (Array.isArray(responseProject.value) && responseProject.value.length > 0) {
-    form.value.projectId = responseProject.value[responseProject.value.length - 1];
-  } else {
-    form.value.projectId = undefined;
-  }
-  // 处理 userId
-  if (Array.isArray(responseUser.value) && responseUser.value.length > 0) {
-    form.value.userId = responseUser.value[responseUser.value.length - 1];
-  } else {
-    form.value.userId = undefined;
-  }
   queryParams.value.pageNum = 1;
   getMemberList();
 };
 
 /** 重置 */
 const resetQuery = () => {
-  responseProject.value = [];
-  responseUser.value = [];
   queryFormRef.value?.resetFields();
   form.value = { ...initFormData };
   handleQuery();

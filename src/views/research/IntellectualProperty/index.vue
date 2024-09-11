@@ -6,9 +6,10 @@
           <el-form ref="queryFormRef" :model="ipParams" :inline="true">
             <el-form-item label="项目名称" prop="projectId">
               <el-cascader
-                v-model="responseProject"
+                v-model="ipParams.projectId"
                 :options="projectOptions"
                 clearable
+                :props="{ emitPath: false}"
                 :show-all-levels="false"
                 placeholder="请选择项目"
                 @keyup.enter="handleQuery"
@@ -28,11 +29,11 @@
                 <el-option v-for="dict in ip_status" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="项目成员" prop="userIdList">
+            <el-form-item label="项目成员" prop="userId">
               <el-cascader
-                v-model="responseUser"
+                v-model="ipParams.userId"
                 :options="userOptions"
-                :props="{ value: 'id', label: 'label', children: 'children' }"
+                :props="{ value: 'id', label: 'label', children: 'children', emitPath: false}"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择项目成员"
@@ -222,9 +223,6 @@ import { getDicts } from '@/api/system/dict/data';
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const { ip_type, ip_status } = toRefs<any>(proxy?.useDict('ip_type', 'ip_status'));
 
-// 组件绑定的消息
-const responseProject = ref([]);
-const responseUser = ref([]);
 const pickerOptions = ref({});
 const projectOptions = ref<Option[]>([]);
 const userOptions = ref<any>([]);
@@ -299,17 +297,12 @@ const getList = async () => {
 const handleQuery = () => {
   data.ipParams.ipDateSta = String(dateRange.value[0]);
   data.ipParams.ipDateEnd = String(dateRange.value[1]);
-  data.ipParams.projectId = Array.isArray(responseProject.value) ? responseProject.value[responseProject.value.length - 1] : undefined;
-  console.log('', responseProject.value);
-  data.ipParams.userId = Array.isArray(responseUser.value) ? responseUser.value[responseUser.value.length - 1] : undefined;
   data.queryParams.pageNum = 1;
   getList();
 };
 
 /** 重置参数 */
 const resetQuery = () => {
-  responseProject.value = [];
-  responseUser.value = [];
   ipParams.value = { ...initIpParams };
   queryFormRef.value?.resetFields();
   getList();

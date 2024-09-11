@@ -6,9 +6,10 @@
         <el-form ref="dataFormRef" :model="projectParams" :inline="true" class="demo-form-inline">
           <el-form-item label="项目名称" prop="ProjectName">
             <el-cascader
-              v-model="ProjectIdRef"
+              v-model="projectParams.projectId"
               :data="projectTreeRef"
               :options="projectTreeRef"
+              :props="{ emitPath: false}"
               clearable
               :show-all-levels="false"
               placeholder="请选择项目"
@@ -123,13 +124,11 @@ const getAttachments = async () => {
 
 /** 搜索按钮操作 */
 const handleQuery = () => {
-  data.projectParams.projectId = ProjectIdRef.value[ProjectIdRef.value.length - 1];
   getAttachments();
 };
 
 /** 重置按钮操作 */
 const resetQuery = () => {
-  ProjectIdRef.value = [];
   data.projectParams.projectId = undefined;
   data.pageParams.pageNum = 1;
   data.pageParams.pageSize = 10;

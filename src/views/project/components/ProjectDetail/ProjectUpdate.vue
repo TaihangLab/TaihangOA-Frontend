@@ -107,7 +107,6 @@ const props = defineProps<{ visible: boolean; updateId: string }>();
 const emits = defineEmits(['update:visible', 'reloadProjectList']);
 
 const stepID = ref(0);
-const isStepHover = ref(false);
 const nextButtonText = ref('下一步');
 const titles = ref(['项目信息', '项目成员', '项目经费', '专项经费', '自筹经费', '经费来源', '项目指标', '项目计划', '项目申报附件', '项目推进情况']);
 
@@ -119,7 +118,6 @@ const zcFundsDetailForm = ref({}); // 弃用
 const projectIndicatorForm = ref({});
 const projectPlanForm = ref({});
 const fundsSourceForm = ref({});
-const mainAttachmentForm = ref({});
 const otherAttachmentForm = ref({ uploadList: [] });
 const projectProgressForm = ref({});
 const cards1Form = ref([]);
@@ -130,7 +128,6 @@ const zcCards1Form = ref([]);
 const zcCards2Form = ref([]);
 const zcCards3Form = ref([]);
 const zcTableDataForm = ref([]);
-const projectAllFundsForm = ref([]);
 const projectSpecialFundForm = ref([]);
 const categoryOption1 = ref(categoryOptions1);
 const categoryOption2 = ref([]);
@@ -254,8 +251,6 @@ const submit = async () => {
       loading.close();
     });
   emits('update:visible', false);
-  // 这行代码会导致修改后重新加载页面
-  // setTimeout(() => location.reload(), 900);
 };
 
 const projectFundForm = (cards1Form: any[], cards2Form: any[], tableDataForm: any[], result: any) => {
