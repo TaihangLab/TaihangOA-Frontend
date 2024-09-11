@@ -5,7 +5,16 @@
         <el-tab-pane label="基本信息" name="first">
           <div style="margin-top: 5px"></div>
           <el-descriptions-item label="基本信息" :span="2" />
-          <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '25%' }" :content-style="{ width: '25%' }" border v-loading="loading" :data="projectDetails">
+          <el-descriptions
+            v-loading="loading"
+            class="margin-top"
+            title=""
+            :column="2"
+            :label-style="{ width: '25%' }"
+            :content-style="{ width: '25%' }"
+            border
+            :data="projectDetails"
+          >
             <el-descriptions-item label="项目名称">{{ projectDetails.projectInfoVO.assignedSubjectName }}</el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}</el-descriptions-item>
             <el-descriptions-item label="负责课题">{{ projectDetails.projectInfoVO.assignedSubjectSection }}</el-descriptions-item>
@@ -202,7 +211,6 @@ import ProjectFunds from '@/views/project/components/ProjectDetail/ProjectFunds.
 import { getProjectDetails } from '@/api/project/myProject/project';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
 
-
 const props = defineProps<{
   visible: boolean;
   projectId: string;
@@ -242,18 +250,21 @@ const handleDownload = (row: { ossId: string }) => {
 const getProjectDetail = async () => {
   loading.value = true;
   activeNames.value = 'first';
-  await getProjectDetails(props.projectId).then((resp) => {
-    projectDetails.projectFundsVO = resp.data.projectFundsVO;
-    projectDetails.projectInfoVO = resp.data.projectInfoVO;
-    projectDetails.projectPlanVOList = resp.data.projectPlanVOList;
-    projectDetails.projectTargetVOList = resp.data.projectTargetVOList;
-    projectDetails.projectUserVoList = resp.data.projectUserVoList;
-    projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
-  }).catch((error) => {
-    console.error('获取用户数据时出错：', error);
-  }).finally(() => {
-    loading.value = false;
-  })
+  await getProjectDetails(props.projectId)
+    .then((resp) => {
+      projectDetails.projectFundsVO = resp.data.projectFundsVO;
+      projectDetails.projectInfoVO = resp.data.projectInfoVO;
+      projectDetails.projectPlanVOList = resp.data.projectPlanVOList;
+      projectDetails.projectTargetVOList = resp.data.projectTargetVOList;
+      projectDetails.projectUserVoList = resp.data.projectUserVoList;
+      projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
+    })
+    .catch((error) => {
+      console.error('获取用户数据时出错：', error);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 const updateVisible = (value: boolean) => {
@@ -262,7 +273,7 @@ const updateVisible = (value: boolean) => {
 
 watch(
   () => props.projectId,
-  ( newValue, oldValue) => {
+  (newValue, oldValue) => {
     getProjectDetail();
   },
   { immediate: true }
