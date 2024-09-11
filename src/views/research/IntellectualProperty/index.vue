@@ -295,14 +295,23 @@ const getList = async () => {
 
 /** 查询按钮 */
 const handleQuery = () => {
-  data.ipParams.ipDateSta = String(dateRange.value[0]);
-  data.ipParams.ipDateEnd = String(dateRange.value[1]);
+  // 检查 dateRange 是否为 null 或不符合预期
+  if (!dateRange.value || !dateRange.value[0] || !dateRange.value[1]) {
+    // 处理清空情况
+    data.ipParams.ipDateSta = null; // 这里也可以用 '' 或其他表示空的值
+    data.ipParams.ipDateEnd = null;
+  } else {
+    // 正常情况下赋值
+    data.ipParams.ipDateSta = dateRange.value[0];
+    data.ipParams.ipDateEnd = dateRange.value[1];
+  }
   data.queryParams.pageNum = 1;
   getList();
 };
 
 /** 重置参数 */
 const resetQuery = () => {
+  dateRange.value = ['', ''];
   ipParams.value = { ...initIpParams };
   queryFormRef.value?.resetFields();
   getList();

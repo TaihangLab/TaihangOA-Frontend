@@ -307,10 +307,22 @@ const getProjectList = async () => {
 };
 
 const handleQuery = () => {
-  form.value.projectEstablishTimeSta = establishDateRange.value[0];
-  form.value.projectEstablishTimeEnd = establishDateRange.value[1];
-  form.value.projectScheduledCompletionTimeSta = scheduledCompletionDateRange.value[0];
-  form.value.projectScheduledCompletionTimeEnd = scheduledCompletionDateRange.value[1];
+  // 检查 establishDateRange 是否为空
+  if (establishDateRange.value && establishDateRange.value[0] && establishDateRange.value[1]) {
+    form.value.projectEstablishTimeSta = establishDateRange.value[0];
+    form.value.projectEstablishTimeEnd = establishDateRange.value[1];
+  } else {
+    form.value.projectEstablishTimeSta = null; // 或者 ''
+    form.value.projectEstablishTimeEnd = null; // 或者 ''
+  }
+  // 检查 scheduledCompletionDateRange 是否为空
+  if (scheduledCompletionDateRange.value && scheduledCompletionDateRange.value[0] && scheduledCompletionDateRange.value[1]) {
+    form.value.projectScheduledCompletionTimeSta = scheduledCompletionDateRange.value[0];
+    form.value.projectScheduledCompletionTimeEnd = scheduledCompletionDateRange.value[1];
+  } else {
+    form.value.projectScheduledCompletionTimeSta = null; // 或者 ''
+    form.value.projectScheduledCompletionTimeEnd = null; // 或者 ''
+  }
   queryParams.value.pageNum = 1;
   getProjectList();
 };

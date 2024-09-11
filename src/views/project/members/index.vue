@@ -20,7 +20,7 @@
                 v-model="form.projectId"
                 :options="projectOptions"
                 clearable
-                :props="{ emitPath: false}"
+                :props="{ emitPath: false }"
                 :show-all-levels="false"
                 placeholder="请选择项目"
                 @keyup.enter="handleQuery"
@@ -44,7 +44,7 @@
         </el-row>
       </template>
 
-      <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" @selection-change="handleSelectionChange" style="width: 100%">
+      <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" fixed="left" prop="nickName" :show-overflow-tooltip="true" width="190" />
         <el-table-column label="所属公司" prop="companyName" :show-overflow-tooltip="true" width="200" />

@@ -52,14 +52,3 @@ export interface IntellectualPropertyVO {
   ipStatus?: number | string;
   ipDate?: string;
 }
-
-/**
- * 菜单树形结构类型
- */
-export interface DeptTreeOption {
-  id: string;
-  label: string;
-  parentId: string;
-  weight: number;
-  children?: DeptTreeOption[];
-}
