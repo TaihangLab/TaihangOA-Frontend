@@ -198,14 +198,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
-import ProjectAddDialog from '../components/ProjectDetail/ProjectAdd.vue';
+import ProjectAddDialog from '@/views/project/components/Project/ProjectAdd.vue';
 import { getAllProjectList } from '@/api/project/myProject';
 import { userTreeSelect } from '@/api/system/user';
 import { ProjectBaseInfoBO } from '@/api/project/funds/types';
 import { getProjectList } from '@/api/project/funds';
 import MilestoneAddDialog from '@/views/project/components/Milestone/MilestoneAdd.vue';
-import ProjectUpdateDialog from '@/views/project/components/ProjectDetail/ProjectUpdate.vue';
-import ProjectDetailDialog from '@/views/project/components/ProjectDetail/ProjectDetails.vue';
+import ProjectUpdateDialog from '@/views/project/components/Project/ProjectUpdate.vue';
+import ProjectDetailDialog from '@/views/project/components/Project/ProjectDetails.vue';
 import MilestoneDetailDialog from '@/views/project/components/Milestone/MilestoneDetail.vue';
 import { ProjectBaseInfoVO } from '@/api/project/myProject/types';
 import { deleteProject } from '@/api/project/myProject/project';

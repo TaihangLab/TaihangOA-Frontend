@@ -86,16 +86,16 @@ import {
   reorganizeData,
   reorganizeJJData
 } from '@/api/project/funds/fundkeys';
-import ProjectInfo from '@/views/project/components/ProjectDetail/ProjectInfo.vue';
-import ProjectSpecialFund from '@/views/project/components/ProjectDetail/ProjectSpecialFund.vue';
-import ProjectSelfFund from '@/views/project/components/ProjectDetail/ProjectSelfFund.vue';
-import ProjectMember from '@/views/project/components/ProjectDetail/ProjectMember.vue';
-import TotalFunds from '@/views/project/components/ProjectDetail/TotalFunds.vue';
-import FundsSource from '@/views/project/components/ProjectDetail/FundSource.vue';
-import ProjectIndicator from '@/views/project/components/ProjectDetail/ProjectIndicator.vue';
-import ProjectPlan from '@/views/project/components/ProjectDetail/ProjectPlans.vue';
-import OtherAttachment from '@/views/project/components/ProjectDetail/OtherAttachment.vue';
-import ProjectProgress from '@/views/project/components/ProjectDetail/ProjectProgress.vue';
+import ProjectInfo from '@/views/project/components/Project/ProjectInfo.vue';
+import ProjectSpecialFund from '@/views/project/components/Project/ProjectSpecialFund.vue';
+import ProjectSelfFund from '@/views/project/components/Project/ProjectSelfFund.vue';
+import ProjectMember from '@/views/project/components/Project/ProjectMember.vue';
+import TotalFunds from '@/views/project/components/Project/TotalFunds.vue';
+import FundsSource from '@/views/project/components/Project/FundSource.vue';
+import ProjectIndicator from '@/views/project/components/Project/ProjectIndicator.vue';
+import ProjectPlan from '@/views/project/components/Project/ProjectPlans.vue';
+import OtherAttachment from '@/views/project/components/Project/OtherAttachment.vue';
+import ProjectProgress from '@/views/project/components/Project/ProjectProgress.vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import { addProject, getProject, updateProject } from '@/api/project/myProject/project';
 

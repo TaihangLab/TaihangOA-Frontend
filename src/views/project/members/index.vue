@@ -92,7 +92,7 @@
 
 <script setup name="Members" lang="ts">
 import { ref } from 'vue';
-import MemberDetail from '@/views/project/components/MemberDetails/MemberDetails.vue';
+import MemberDetail from '@/views/project/components/Member/MemberDetails.vue';
 import { getAllList } from '@/api/project/members';
 import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
