@@ -5,8 +5,8 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border >
-            <el-descriptions-item label="项目名称" >
+          <el-descriptions :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
+            <el-descriptions-item label="项目名称">
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
             <el-descriptions-item label="项目任务书编号">
@@ -95,12 +95,7 @@
         <!-- 支出明细 -->
         <el-tab-pane label="支出明细" name="支出明细">
           <div style="margin-top: 5px"></div>
-          <el-table
-            ref="multipleTable"
-            border
-            style="width: 100%; max-height: 500px; overflow-y: auto"
-            :data="expenditureList"
-          >
+          <el-table ref="multipleTable" border style="width: 100%; max-height: 500px; overflow-y: auto" :data="expenditureList">
             <el-table-column label="日期" :resizable="false" align="center" width="100px" prop="expenditureDate"> </el-table-column>
             <el-table-column label="项目名称" :resizable="false" align="center" prop="projectName" width="250px"> </el-table-column>
             <el-table-column label="凭证号" :resizable="false" align="center" prop="voucherNo" width="100px"> </el-table-column>

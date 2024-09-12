@@ -156,6 +156,7 @@ const handleUploadSuccess = (res: any, file: UploadFile) => {
     uploadedSuccessfully();
     if (props.idList) {
       // this.$props.idList.push({ossId: res.data.ossId, name: res.data.fileName});
+      // eslint-disable-next-line vue/no-mutating-props
       props.idList.push(res.data.ossId);
       // this.$emit('update:idList', this.idList);
     } else console.log('没有传递列表');
@@ -176,10 +177,9 @@ const handleDelete = (index: number) => {
   emit('update:modelValue', listToString(fileList.value));
 
   if (props.idList) {
-    // let delId = this.$props.idList.findIndex(item => item.ossId === ossId);
     let delId = props.idList.findIndex((item) => item === ossId);
+    // eslint-disable-next-line vue/no-mutating-props
     props.idList.splice(delId, 1);
-    // this.$emit('update:idList', this.idList);
   }
 };
 

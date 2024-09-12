@@ -9,7 +9,7 @@
                 v-model="ipParams.projectId"
                 :options="projectOptions"
                 clearable
-                :props="{ emitPath: false}"
+                :props="{ emitPath: false }"
                 :show-all-levels="false"
                 placeholder="请选择项目"
                 @keyup.enter="handleQuery"
@@ -302,8 +302,8 @@ const handleQuery = () => {
     data.ipParams.ipDateEnd = null;
   } else {
     // 正常情况下赋值
-    data.ipParams.ipDateSta = dateRange.value[0];
-    data.ipParams.ipDateEnd = dateRange.value[1];
+    data.ipParams.ipDateSta = <string>dateRange.value[0];
+    data.ipParams.ipDateEnd = <string>dateRange.value[1];
   }
   data.queryParams.pageNum = 1;
   getList();

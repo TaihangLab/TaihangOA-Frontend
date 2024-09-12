@@ -101,6 +101,7 @@ import ProjectProgress from '@/views/project/components/ProjectDetail/ProjectPro
 import { ElMessage, ElLoading } from 'element-plus';
 import { addProject, getProject, updateProject } from '@/api/project/myProject/project';
 import { nextTick } from 'vue';
+import { OssForm, OssVO } from '@/api/system/oss/types';
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
@@ -354,7 +355,6 @@ async function fetchProjectDetails(projectId: string) {
       if (zcCards3Form.value.length > 0 && zcCards3Form.value[zcCards3Form.value.length - 1].content === '') {
         zcCards3Form.value.pop();
       }
-
       await nextTick(); // 确保 DOM 更新完成
     } catch (error) {
       // 捕获并显示错误信息
