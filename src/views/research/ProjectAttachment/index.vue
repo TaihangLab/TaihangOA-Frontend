@@ -9,7 +9,7 @@
               v-model="projectParams.projectId"
               :data="projectTreeRef"
               :options="projectTreeRef"
-              :props="{ emitPath: false}"
+              :props="{ emitPath: false }"
               clearable
               :show-all-levels="false"
               placeholder="请选择项目"
@@ -86,7 +86,6 @@ import api from '@/api/research/ProjectAttachment';
 import { projectParams } from '@/api/research/ProjectAttachment/types';
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
-const ProjectIdRef = ref([]);
 const dataFormRef = ref<ElFormInstance>();
 const totalRef = ref(0);
 const attachmentsListRef = ref([]);

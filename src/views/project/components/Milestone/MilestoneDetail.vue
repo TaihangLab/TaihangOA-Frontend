@@ -120,7 +120,7 @@
                 {{ getLabel(parseInt(typeId, 10)) }}
               </el-tag>
               <el-select v-model="selectedTag" placeholder="请选择标签" style="flex: 1; width: 140px" clearable @change="addTag">
-                <el-option v-for="tag in tagOptions" :key="tag.value" :label="tag.label" :value="tag.label"></el-option>
+                <el-option v-for="tag in pro_milestone_type" :key="tag.value" :label="tag.label" :value="tag.label"></el-option>
               </el-select>
             </div>
           </el-form-item>
@@ -151,55 +151,33 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, defineProps, watch } from 'vue';
+import { defineEmits, defineProps } from 'vue';
 import request from '@/utils/request';
 import FileUpload from '@/components/FileUpload/index.vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import {
-  queryMilestoneList,
-  queryMilestoneCategorySelectSetList,
-  getMilestoneCategorySelectList,
-  milestoneDelete
-} from '@/api/project/myProject/index';
+import { queryMilestoneList, queryMilestoneCategorySelectSetList, milestoneDelete } from '@/api/project/myProject/index';
 
 const props = defineProps<{
   visible: boolean;
   updateId: string;
-  projectId: string;
+  projectId: number;
 }>();
-
-const searchForm = ref({
-  searchKeyword: '',
-  dateRange: [] as Date[],
-  milestoneCategorySelectSet: [] as string[]
-});
-
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const emits = defineEmits(['update:visible']);
-const queryPara = ref({});
 const eventsDialogVisibleEdit = ref(false);
 const showTimeline = ref(false);
-const select = ref('');
-const keyword = ref('');
-const milestoneType = ref('');
-// const searchKeyword = ref('');
 const milestoneStaTime = ref('');
 const milestoneEndTime = ref('');
-const projectEstablishTime = ref('');
-const projectLevel = ref<string[]>([]);
-// const dateRange = ref<Date[]>([]);
 const timelineItems = ref<any[]>([]);
 const milestoneIds = ref<string[]>([]);
-const title = ref(''); // 初始化 title
 const ossids = ref<string[]>([]);
 const categoryTypeSet = ref<any[]>([]);
-// const milestoneCategorySelectSet = ref<any[]>([]);
 const categorySelect = ref<any[]>([]);
 const tagOptions = ref<any[]>([]); // 标签选项从 milestoneCategorySelectList 方法中获取
 const selectedTag = ref(''); // 用户选择的标签（中文文字）
+const { pro_milestone_type } = toRefs<any>(proxy?.useDict('pro_milestone_type'));
 const projectMilestoneTypes = ref<string[]>([]); // 用于存储用户选择的标签（中文文字）
-const params = reactive<{ projectId: string | null }>({
-  projectId: null
-});
+
 const form = reactive({
   projectId: props.projectId,
   milestoneTitle: '',
@@ -209,6 +187,12 @@ const form = reactive({
   projectMilestoneTypes: [] as string[],
   milestoneId: '',
   sysOsses: [] as any[]
+});
+
+const searchForm = ref({
+  searchKeyword: '',
+  dateRange: [] as Date[],
+  milestoneCategorySelectSet: [] as string[]
 });
 
 const labelMappings: Record<number, string> = {
@@ -317,8 +301,6 @@ const pickerOptions = [
   }
 ];
 
-const { proxy } = getCurrentInstance() as ComponentInternalInstance;
-
 // 初始化 Form Project Milestone Types 为 Project Milestone Types 的副本
 form.projectMilestoneTypes = [...projectMilestoneTypes.value];
 
@@ -342,8 +324,8 @@ function handleTagChange(value: string | null) {
 }
 
 function addTag() {
-  const selectdId = getLabelId(selectedTag.value);
-  projectMilestoneTypes.value = [...projectMilestoneTypes.value, String(selectdId)];
+  const selectId = getLabelId(selectedTag.value);
+  projectMilestoneTypes.value = [...projectMilestoneTypes.value, String(selectId)];
 }
 
 // 辅助方法，根据标签获取对应的数字 ID
@@ -419,13 +401,7 @@ const fetchMilestoneList = async () => {
     milestoneEndTime: milestoneEndTime.value,
     milestoneType: searchForm.value.milestoneCategorySelectSet.join(',')
   };
-  // request({
-  //   url: '/project/list/milestonequery',
-  //   method: 'post',
-  //   data: combinedSearchData,
-  //   params: queryPara.value
-  // })
-  await queryMilestoneList(combinedSearchData, queryPara.value)
+  await queryMilestoneList(combinedSearchData)
     .then((resp) => {
       // 根据 milestoneDate 对 timelineItems 进行排序
       timelineItems.value = resp.data.sort((a: any, b: any) => {
@@ -456,39 +432,13 @@ const fetchMilestoneList = async () => {
 
 // 方法：获取里程碑类别选择集列表
 const milestoneCategorySelectSetList = async () => {
-  const combinedSearchData = {
-    projectId: form.projectId,
-    keyword: searchForm.value.searchKeyword,
-    milestoneStaTime: milestoneStaTime.value,
-    milestoneEndTime: milestoneEndTime.value
-  };
-
-  await queryMilestoneCategorySelectSetList(combinedSearchData)
-    .then((resp) => {
-      // 将数字值转换为 labelMappings 中的文字描述
-      categorySelect.value = resp.data.map((item: any) => ({
-        label: getLabel(item),
-        value: item
-      }));
-    })
-    .catch((error) => {
-      console.error('获取数据时出错：', error);
-    });
-};
-
-// 方法：获取里程碑类别选择列表
-const milestoneCategorySelectList = async () => {
-  await getMilestoneCategorySelectList(queryPara.value)
-    .then((resp) => {
-      // 将数字值转换为 labelMappings 中的文字描述
-      tagOptions.value = resp.data.map((item: any) => ({
-        label: getLabel(item),
-        value: item
-      }));
-    })
-    .catch((error) => {
-      console.error('获取数据时出错：', error);
-    });
+  await queryMilestoneCategorySelectSetList(props.projectId).then((resp) => {
+    // 将数字值转换为 labelMappings 中的文字描述
+    categorySelect.value = resp.data.map((item: any) => ({
+      label: getLabel(item),
+      value: item
+    }));
+  });
 };
 
 function getLabel(typeId: number) {
@@ -607,24 +557,6 @@ function getTextColor(typeId: number) {
 }
 
 function handleQuery() {
-  // 处理milestoneType为非数组的情况
-  let milestoneType = '';
-
-  if (Array.isArray(searchForm.value.milestoneCategorySelectSet)) {
-    milestoneType = searchForm.value.milestoneCategorySelectSet.join(',');
-  } else {
-    console.log(typeof searchForm.value.milestoneCategorySelectSet);
-    console.error('milestoneCategorySelectSet is not an array', searchForm.value.milestoneCategorySelectSet);
-  }
-  // 设置搜索参数
-  const searchData = {
-    projectId: params.projectId,
-    keyword: searchForm.value.searchKeyword,
-    milestoneStaTime: '',
-    milestoneEndTime: '',
-    milestoneType: milestoneType
-  };
-  console.log('Search data:', searchData);
   // 判断是否选择了时间范围
   if (searchForm.value.dateRange && searchForm.value.dateRange.length === 2) {
     // 将日期转换为字符串格式
@@ -678,7 +610,6 @@ const handleReset = () => {
 onMounted(() => {
   fetchMilestoneList();
   milestoneCategorySelectSetList();
-  milestoneCategorySelectList();
 });
 </script>
 

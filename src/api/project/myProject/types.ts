@@ -17,7 +17,7 @@ export interface deleteParams {
 }
 
 export interface combinedSearchDataList {
-  projectId: string | null;
+  projectId: number | null;
   keyword: string;
   milestoneStaTime: string;
   milestoneEndTime: string;
@@ -25,7 +25,7 @@ export interface combinedSearchDataList {
 }
 
 export interface combinedSearchDataSetList {
-  projectId: string;
+  projectId: number;
   keyword: string;
   milestoneStaTime: string;
   milestoneEndTime: string;

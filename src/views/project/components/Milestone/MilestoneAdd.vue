@@ -73,7 +73,6 @@ const form = reactive({
   projectMilestoneTypes: [] as string[]
 });
 const ossids = ref([]);
-const tagOptions = ref<{ label: string; value: number }[]>([]);
 const selectedTag = ref<string>('');
 const projectMilestoneType = ref([]);
 const fileUpload = ref();
@@ -88,8 +87,6 @@ watch(
   () => props.visible,
   (newValue) => {
     if (newValue) {
-      milestoneCategorySelectList();
-      // Reset the form fields
       Object.assign(form, {
         projectId: props.projectId,
         milestoneTitle: '',
@@ -117,10 +114,6 @@ const addTag = () => {
 
 const handleCloseTag = (tag: string) => {
   form.projectMilestoneTypes.splice(form.projectMilestoneTypes.indexOf(tag), 1);
-};
-
-const milestoneCategorySelectList = async () => {
-  console.log('选择标签');
 };
 
 const getMilestoneTagOptions = () => {

@@ -5,10 +5,12 @@ import {
   combinedSearchDataSetList,
   deleteParams,
   queryProjectData,
-  ProjectDetailsVO, ProjectBaseInfoVO
+  ProjectDetailsVO,
+  ProjectBaseInfoVO
 } from '@/api/project/myProject/types';
 import { AxiosPromise } from 'axios';
 import { ProjectBaseInfoBO } from '@/api/project/funds/types';
+import { UnwrapRef } from 'vue';
 
 // 新增大事记
 export function milestoneAdd(data: MilestoneFrom) {
@@ -20,29 +22,29 @@ export function milestoneAdd(data: MilestoneFrom) {
 }
 
 // 查询大事记
-export function queryMilestoneList(data: combinedSearchDataList, pageQuery: PageQuery) {
+export function queryMilestoneList(data: combinedSearchDataList) {
   return request({
     url: '/project/list/milestonequery',
     method: 'post',
-    data: data,
-    params: pageQuery
+    data: data
   });
 }
 
 // 查询大事记类别
-export function queryMilestoneCategorySelectSetList(params: combinedSearchDataSetList) {
+export function queryMilestoneCategorySelectSetList(projectId: number) {
   return request({
     url: '/project/list/milestoneCategorySelectSet',
     method: 'get',
-    params: params
+    params: {
+      projectId
+    }
   });
 }
 
-export function getMilestoneCategorySelectList(pageQuery: PageQuery) {
+export function getMilestoneCategorySelectList() {
   return request({
     url: '/project/list/milestoneCategorySelect',
-    method: 'get',
-    data: pageQuery
+    method: 'get'
   });
 }
 
