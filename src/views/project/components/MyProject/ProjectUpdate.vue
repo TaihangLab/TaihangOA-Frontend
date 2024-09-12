@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :model-value="visible" fullscreen title="新增项目" @update:model-value="updateVisible" @close="reset()">
+  <el-dialog :model-value="visible" fullscreen title="修改项目" @update:model-value="updateVisible" @close="reset()">
     <el-container>
       <el-header>
         <el-card shadow="hover">
@@ -84,39 +84,41 @@ import {
   categoryOptions4,
   categoryOptions5,
   reorganizeData,
-  reorganizeJJData
+  reorganizeJJData,
+  clearCategories,
+  clearContent
 } from '@/api/project/funds/fundkeys';
-import ProjectInfo from '@/views/project/components/Project/ProjectInfo.vue';
-import ProjectSpecialFund from '@/views/project/components/Project/ProjectSpecialFund.vue';
-import ProjectSelfFund from '@/views/project/components/Project/ProjectSelfFund.vue';
-import ProjectMember from '@/views/project/components/Project/ProjectMember.vue';
-import TotalFunds from '@/views/project/components/Project/TotalFunds.vue';
-import FundsSource from '@/views/project/components/Project/FundSource.vue';
-import ProjectIndicator from '@/views/project/components/Project/ProjectIndicator.vue';
-import ProjectPlan from '@/views/project/components/Project/ProjectPlans.vue';
-import OtherAttachment from '@/views/project/components/Project/OtherAttachment.vue';
-import ProjectProgress from '@/views/project/components/Project/ProjectProgress.vue';
+import ProjectInfo from '@/views/project/components/MyProject/ProjectInfo.vue';
+import ProjectSpecialFund from '@/views/project/components/MyProject/ProjectSpecialFund.vue';
+import ProjectSelfFund from '@/views/project/components/MyProject/ProjectSelfFund.vue';
+import ProjectMember from '@/views/project/components/MyProject/ProjectMember.vue';
+import TotalFunds from '@/views/project/components/MyProject/TotalFunds.vue';
+import FundsSource from '@/views/project/components/MyProject/FundSource.vue';
+import ProjectIndicator from '@/views/project/components/MyProject/ProjectIndicator.vue';
+import ProjectPlan from '@/views/project/components/MyProject/ProjectPlans.vue';
+import OtherAttachment from '@/views/project/components/MyProject/OtherAttachment.vue';
+import ProjectProgress from '@/views/project/components/MyProject/ProjectProgress.vue';
 import { ElMessage, ElLoading } from 'element-plus';
 import { addProject, getProject, updateProject } from '@/api/project/myProject/project';
+import { nextTick } from 'vue';
+import { OssForm, OssVO } from '@/api/system/oss/types';
 
 const TOTAL_STEPS = 9;
 const props = defineProps<{ visible: boolean; updateId: string }>();
 const emits = defineEmits(['update:visible', 'reloadProjectList']);
 
 const stepID = ref(0);
-const isStepHover = ref(false);
 const nextButtonText = ref('下一步');
 const titles = ref(['项目信息', '项目成员', '项目经费', '专项经费', '自筹经费', '经费来源', '项目指标', '项目计划', '项目申报附件', '项目推进情况']);
 
 const projectInfoForm = ref({});
-const projectMemberForm = ref({ members: [], items: [] });
+const projectMemberForm = ref({ items: [] });
 const projectFundsForm = ref({});
 const zxFundsDetailForm = ref({}); // 弃用
 const zcFundsDetailForm = ref({}); // 弃用
 const projectIndicatorForm = ref({});
 const projectPlanForm = ref({});
 const fundsSourceForm = ref({});
-const mainAttachmentForm = ref({});
 const otherAttachmentForm = ref({ uploadList: [] });
 const projectProgressForm = ref({});
 const cards1Form = ref([]);
@@ -127,39 +129,11 @@ const zcCards1Form = ref([]);
 const zcCards2Form = ref([]);
 const zcCards3Form = ref([]);
 const zcTableDataForm = ref([]);
-const projectAllFundsForm = ref([]);
-const categoryOption1 = ref([]);
+const projectSpecialFundForm = ref([]);
+const categoryOption1 = ref(categoryOptions1);
 const categoryOption2 = ref([]);
 const categoryOption4 = ref([]);
 const categoryOption5 = ref([]);
-
-onMounted(async () => {
-  if (props.updateId) {
-    await getProject(
-      props.updateId,
-      projectInfoForm.value,
-      projectMemberForm.value,
-      projectFundsForm.value,
-      zxFundsDetailForm.value,
-      zcFundsDetailForm.value,
-      fundsSourceForm.value,
-      projectIndicatorForm.value,
-      projectPlanForm.value,
-      otherAttachmentForm.value,
-      projectProgressForm.value,
-      projectAllFundsForm.value
-    ).then(() => {
-      categoryOption1.value = categoryOptions1;
-      categoryOption2.value = categoryOptions2;
-      categoryOption4.value = categoryOptions4;
-      categoryOption5.value = categoryOptions5;
-      reorganizeData(categoryOption1.value, projectAllFundsForm.value, cards1Form.value, cards2Form.value, tableDataForm.value);
-      reorganizeData(categoryOption2.value, projectAllFundsForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
-      reorganizeJJData(categoryOption4.value, projectAllFundsForm.value, cards3Form.value);
-      reorganizeJJData(categoryOption5.value, projectAllFundsForm.value, zcCards3Form.value);
-    });
-  }
-});
 
 const next = () => {
   if (stepID.value++ > TOTAL_STEPS - 1) {
@@ -242,8 +216,7 @@ const submit = async () => {
         loading.close();
       });
     emits('update:visible', false);
-    // 这行代码会导致修改后重新加载页面
-    // setTimeout(() => location.reload(), 900);
+
     return;
   }
 
@@ -279,8 +252,6 @@ const submit = async () => {
       loading.close();
     });
   emits('update:visible', false);
-  // 这行代码会导致修改后重新加载页面
-  // setTimeout(() => location.reload(), 900);
 };
 
 const projectFundForm = (cards1Form: any[], cards2Form: any[], tableDataForm: any[], result: any) => {
@@ -324,4 +295,87 @@ const closeDialog = () => {
 const confirmDialog = () => {
   emits('update:visible', false);
 };
+
+// 遍历函数，将空数组替换为包含 { value: '' } 的对象数组
+function transformTableData(data: Array<Array<Array<{ value: string }>>>): Array<Array<Array<{ value: string }>>> {
+  return data.map((row: Array<Array<{ value: string }>>) =>
+    row.map((cell: Array<{ value: string }>) => (cell.length === 0 ? [{ value: '' }] : cell))
+  );
+}
+
+// 定义获取项目详情的逻辑
+async function fetchProjectDetails(projectId: string) {
+  if (projectId) {
+    // 启动加载动画
+    const loading = ElLoading.service({ fullscreen: true, lock: true, text: '加载中...' });
+
+    try {
+      projectSpecialFundForm.value = [];
+      // 调用 getProject 方法
+      await getProject(
+        projectId,
+        projectInfoForm.value,
+        projectMemberForm.value,
+        projectFundsForm.value,
+        zxFundsDetailForm.value,
+        zcFundsDetailForm.value,
+        fundsSourceForm.value,
+        projectIndicatorForm.value,
+        projectPlanForm.value,
+        otherAttachmentForm.value,
+        projectProgressForm.value,
+        projectSpecialFundForm.value
+      );
+
+      // 数据处理
+      console.log('projectId', projectId);
+      categoryOption1.value = categoryOptions1;
+      categoryOption2.value = categoryOptions2;
+      categoryOption4.value = categoryOptions4;
+      categoryOption5.value = categoryOptions5;
+      reorganizeData(categoryOption1.value, projectSpecialFundForm.value, cards1Form.value, cards2Form.value, tableDataForm.value);
+      reorganizeData(categoryOption2.value, projectSpecialFundForm.value, zcCards1Form.value, zcCards2Form.value, zcTableDataForm.value);
+      reorganizeJJData(categoryOption4.value, projectSpecialFundForm.value, cards3Form.value);
+      reorganizeJJData(categoryOption5.value, projectSpecialFundForm.value, zcCards3Form.value);
+      // 清楚数据中首地址为空的情况
+      cards1Form.value.splice(0, 1);
+      cards2Form.value.splice(0, 1);
+      cards3Form.value.splice(0, 1);
+      tableDataForm.value.splice(0, 1);
+      tableDataForm.value = transformTableData(tableDataForm.value);
+      if (cards3Form.value.length > 0 && cards3Form.value[cards3Form.value.length - 1].content === '') {
+        cards3Form.value.pop();
+      }
+
+      zcCards1Form.value.splice(0, 1);
+      zcCards2Form.value.splice(0, 1);
+      zcCards3Form.value.splice(0, 1);
+      zcTableDataForm.value.splice(0, 1);
+      zcTableDataForm.value = transformTableData(zcTableDataForm.value);
+      if (zcCards3Form.value.length > 0 && zcCards3Form.value[zcCards3Form.value.length - 1].content === '') {
+        zcCards3Form.value.pop();
+      }
+      await nextTick(); // 确保 DOM 更新完成
+    } catch (error) {
+      // 捕获并显示错误信息
+      ElMessage.error('项目加载失败: ' + error);
+    } finally {
+      // 关闭加载动画
+      loading.close();
+    }
+  }
+}
+
+// 监听 updateId 的变化
+watch(
+  async () => props.updateId,
+  (newUpdateId) => {
+    fetchProjectDetails(props.updateId);
+  }
+);
+
+// 组件挂载时执行
+onMounted(async () => {
+  await fetchProjectDetails(props.updateId);
+});
 </script>

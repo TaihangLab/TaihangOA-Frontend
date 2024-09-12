@@ -207,7 +207,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
-import ProjectFunds from '@/views/project/components/Project/ProjectFunds.vue';
+import ProjectFunds from '@/views/project/components/MyProject/ProjectFunds.vue';
 import { getProjectDetails } from '@/api/project/myProject/project';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
 
