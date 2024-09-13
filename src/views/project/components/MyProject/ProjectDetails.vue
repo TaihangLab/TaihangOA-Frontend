@@ -181,10 +181,12 @@
               </template>
               <div style="margin-top: 5px"></div>
               <el-descriptions class="margin-top" :column="1" border>
-                <el-descriptions-item label="推进情况" :span="1" width="200px"
+                <el-descriptions-item label="推进情况" :span="1" width="200px" label-align="center"
                   >{{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
                 </el-descriptions-item>
-                <el-descriptions-item label="完成进度" :span="1">{{ projectDetails.projectInfoVO.completionProgress }}</el-descriptions-item>
+                <el-descriptions-item label="完成进度" :span="1" label-align="center">{{
+                  projectDetails.projectInfoVO.completionProgress
+                }}</el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
 
@@ -195,25 +197,25 @@
               </template>
               <div style="margin-top: 5px"></div>
               <el-descriptions class="margin-top" title="" :column="2" border>
-                <el-descriptions-item label="经费总额" :span="2" width="200px">{{
+                <el-descriptions-item label="经费总额" :span="2" width="200px" label-align="center">{{
                   projectDetails.projectFundsVO.totalFundsAll
                 }}</el-descriptions-item>
-                <el-descriptions-item label="专项到款总额" :span="1" width="200px"
+                <el-descriptions-item label="专项到款总额" :span="1" width="200px" label-align="center"
                   >{{ projectDetails.projectFundsVO.totalFundsZxDk }}
                 </el-descriptions-item>
-                <el-descriptions-item label="专项经费总额" :span="1" width="200px">{{
+                <el-descriptions-item label="专项经费总额" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectFundsVO.totalFundsZx
                 }}</el-descriptions-item>
-                <el-descriptions-item label="已完成自筹投资" :span="1" width="200px">{{
+                <el-descriptions-item label="已完成自筹投资" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectFundsVO.zctzDone
                 }}</el-descriptions-item>
-                <el-descriptions-item label="已完成专项投资" :span="1" width="200px">{{
+                <el-descriptions-item label="已完成专项投资" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectFundsVO.zxtzDone
                 }}</el-descriptions-item>
-                <el-descriptions-item label="自筹经费公司配套" :span="1" width="200px">{{
+                <el-descriptions-item label="自筹经费公司配套" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectFundsVO.zcGspt
                 }}</el-descriptions-item>
-                <el-descriptions-item label="专项经费公司留存(计划)" :span="1" width="200px"
+                <el-descriptions-item label="专项经费公司留存(计划)" :span="1" width="200px" label-align="center"
                   >{{ projectDetails.projectFundsVO.zxGslc }}
                 </el-descriptions-item>
               </el-descriptions>
@@ -225,17 +227,19 @@
               </template>
               <div style="margin-top: 5px"></div>
               <el-descriptions class="margin-top" border :column="2">
-                <el-descriptions-item label="获奖情况（项）" :span="1" width="200px">{{
+                <el-descriptions-item label="获奖情况（项）" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectInfoVO.awardDetails
                 }}</el-descriptions-item>
-                <el-descriptions-item label="论文情况（项）" :span="1" width="200px"
+                <el-descriptions-item label="论文情况（项）" :span="1" width="200px" label-align="center"
                   >{{ projectDetails.projectInfoVO.publicationDetails }}
                 </el-descriptions-item>
-                <el-descriptions-item label="专利情况" :span="1" width="200px">{{ projectDetails.projectInfoVO.patentDetails }}</el-descriptions-item>
-                <el-descriptions-item label="软著情况" :span="1" width="200px"
+                <el-descriptions-item label="专利情况" :span="1" width="200px" label-align="center">{{
+                  projectDetails.projectInfoVO.patentDetails
+                }}</el-descriptions-item>
+                <el-descriptions-item label="软著情况" :span="1" width="200px" label-align="center"
                   >{{ projectDetails.projectInfoVO.softwareCopyrightDetails }}
                 </el-descriptions-item>
-                <el-descriptions-item label="标准情况" :span="1" width="200px">{{
+                <el-descriptions-item label="标准情况" :span="1" width="200px" label-align="center">{{
                   projectDetails.projectInfoVO.standardDetails
                 }}</el-descriptions-item>
               </el-descriptions>
