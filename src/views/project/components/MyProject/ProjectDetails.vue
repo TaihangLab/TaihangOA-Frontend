@@ -99,7 +99,7 @@
         <el-tab-pane label="项目成员" name="fourth">
           <div>
             <div style="margin-top: 5px"></div>
-            <el-table v-loading="loading" :data="transformedUserList" style="margin: 0; padding: 0">
+            <el-table v-loading="loading" :data="projectDetails.projectUserVoList" style="margin: 0; padding: 0">
               <el-table-column label="用户名称" align="center" prop="nickName" :show-overflow-tooltip="true" />
               <el-table-column label="职称" align="center" prop="jobTitle" :show-overflow-tooltip="true">
                 <template #default="scope">
@@ -113,9 +113,12 @@
               </el-table-column>
               <el-table-column label="手机号码" align="center" prop="phonenumber" :show-overflow-tooltip="true" />
               <el-table-column label="所属部门" align="center" prop="deptName" :show-overflow-tooltip="true" />
-              <el-table-column label="项目角色" align="center" prop="projectUserRole" :show-overflow-tooltip="true">
+              <el-table-column label="项目角色" align="center" prop="projectUserRoles" :show-overflow-tooltip="true">
                 <template #default="scope">
-                  {{ pro_user_role[scope.row.projectUserRole]?.label || '未知' }}
+                  <!-- 遍历 projectUserRoles 数组，根据角色ID显示对应的角色标签 -->
+                  <span v-for="(role, index) in scope.row.projectUserRoles" :key="index">
+                    {{ pro_user_role[role]?.label || '未知' }}<span v-if="index < scope.row.projectUserRoles.length - 1">, </span>
+                  </span>
                 </template>
               </el-table-column>
             </el-table>
