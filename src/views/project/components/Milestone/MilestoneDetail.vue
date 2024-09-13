@@ -299,8 +299,7 @@ function editMilestone(item: any) {
 }
 
 async function deleteMilestone(item: any) {
-  const milestoneId = item.milestoneId;
-  await milestoneDelete({ milestoneId: milestoneId }).then(() => {
+  await milestoneDelete(item.milestoneId).then(() => {
     fetchMilestoneList();
   });
 }

@@ -12,10 +12,6 @@ export interface MilestoneFrom {
   projectMilestoneTypes: string[];
 }
 
-export interface deleteParams {
-  milestoneId: number;
-}
-
 export interface combinedSearchDataList {
   projectId: number | null;
   keyword: string;

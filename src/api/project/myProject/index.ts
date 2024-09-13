@@ -2,7 +2,6 @@ import request from '@/utils/request';
 import {
   MilestoneFrom,
   combinedSearchDataList,
-  deleteParams,
   queryProjectData,
   ProjectDetailsVO,
   ProjectBaseInfoVO,
@@ -41,11 +40,13 @@ export function queryMilestoneCategorySelectSetList(projectId: number) {
 }
 
 // 删除大事记
-export function milestoneDelete(params: deleteParams) {
+export function milestoneDelete(milestoneId: number) {
   return request({
     url: `/project/my/milestonedelete`,
     method: 'delete',
-    params: params
+    params: {
+      milestoneId
+    }
   });
 }
 
@@ -84,5 +85,5 @@ export function editProjectMileStone(data: ProjectMilestoneBo): AxiosPromise<any
     url: '/project/my/milestoneedit',
     method: 'post',
     data: data
-  })
+  });
 }
