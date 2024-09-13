@@ -38,7 +38,7 @@
             <el-descriptions-item label="项目经费总额" width="80px" label-align="center">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
             <el-descriptions-item label="专项经费" width="80px" label-align="center">{{ projectDetails.projectFundsVO.totalFundsZx }}</el-descriptions-item>
             <el-descriptions-item label="自筹经费" width="80px" label-align="center" >{{ projectDetails.projectFundsVO.totalFundsZc }}</el-descriptions-item>
-            <el-descriptions-item ></el-descriptions-item>
+            <el-descriptions-item></el-descriptions-item>
             <el-descriptions-item label="项目简介" width="80px" label-align="center" :span="2">{{ projectDetails.projectInfoVO.projectDescription }}</el-descriptions-item>
           </el-descriptions>
         </el-tab-pane>
@@ -119,7 +119,7 @@
         </el-tab-pane>
         <el-tab-pane label="项目申报附件" name="sixth">
           <div style="margin-top: 5px"></div>
-          <el-table v-loading="loading" :data="projectDetails.projectAttachmentVOList" style="margin: 0; padding: 0">
+          <el-table v-loading="loading" :data="projectDetails.projectAttachmentVOList">
             <el-table-column :label="'文件名称'" align="center" prop="originalName" :show-overflow-tooltip="true" />
             <el-table-column :label="'文件格式'" align="center" prop="fileSuffix" :show-overflow-tooltip="true">
               <template #default="scope">
@@ -136,7 +136,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :label="'上传人'" align="center" prop="createBy" :show-overflow-tooltip="true" />
+            <el-table-column :label="'上传人'" align="center" prop="createByName" :show-overflow-tooltip="true" />
             <el-table-column :label="'上传时间'" align="center" prop="createTime" :show-overflow-tooltip="true" />
             <el-table-column :label="'操作'" align="center">
               <template #default="scope">

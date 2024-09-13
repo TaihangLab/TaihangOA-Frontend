@@ -169,11 +169,7 @@ defineExpose({
 });
 
 const data = reactive({
-  projectLevels: [
-    // { name: '国家', value: 0 },
-    // { name: '省部', value: 1 },
-    // { name: '企业', value: 2 }
-  ]
+  projectLevels: []
 });
 
 const getProjectLevelsOptions = () => {
