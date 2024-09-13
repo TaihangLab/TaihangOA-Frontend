@@ -184,7 +184,7 @@ const form = reactive({
   milestoneRemark: '',
   milestoneDate: '',
   ossIds: [],
-  projectMilestoneTypes: [] ,
+  projectMilestoneTypes: [],
   milestoneId: undefined,
   sysOsses: [] as any[]
 });
@@ -310,11 +310,9 @@ function confirmDeleteMilestone(item: any) {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
-  })
-    .then(() => {
-      // 用户点击确定按钮时执行删除逻辑
-      deleteMilestone(item);
-    })
+  }).then(() => {
+    deleteMilestone(item);
+  });
 }
 
 function editMilestoneBtn() {
@@ -345,29 +343,25 @@ const fetchMilestoneList = async () => {
     milestoneEndTime: milestoneEndTime.value,
     milestoneType: searchForm.value.milestoneCategorySelectSet.join(',')
   };
-  await queryMilestoneList(combinedSearchData)
-    .then((resp) => {
-      // 根据 milestoneDate 对 timelineItems 进行排序
-      timelineItems.value = resp.data.sort((a: any, b: any) => {
-        return new Date(a.milestoneDate).getTime() - new Date(b.milestoneDate).getTime();
-      });
+  await queryMilestoneList(combinedSearchData).then((resp) => {
+    timelineItems.value = resp.data.sort((a: any, b: any) => {
+      return new Date(a.milestoneDate).getTime() - new Date(b.milestoneDate).getTime();
+    });
 
-      // 清空 milestoneIds 和 categoryTypeSet 数组
-      milestoneIds.value = [];
-      categoryTypeSet.value = [];
+    milestoneIds.value = [];
+    categoryTypeSet.value = [];
 
-      // 获取标签数据
-      timelineItems.value.forEach((item: any) => {
-        milestoneIds.value.push(item.milestoneId);
-        const types = Array.from(item.categoryTypeSet);
-        types.forEach((type) => {
-          if (!categoryTypeSet.value.includes(type)) {
-            categoryTypeSet.value.push(type);
-          }
-        });
+    timelineItems.value.forEach((item: any) => {
+      milestoneIds.value.push(item.milestoneId);
+      const types = Array.from(item.categoryTypeSet);
+      types.forEach((type) => {
+        if (!categoryTypeSet.value.includes(type)) {
+          categoryTypeSet.value.push(type);
+        }
       });
-      updateTimelineDisplay();
-    })
+    });
+    updateTimelineDisplay();
+  });
 };
 
 const getMilestoneTypes = () => {
@@ -384,7 +378,6 @@ const getMilestoneTypes = () => {
 // 方法：获取里程碑类别选择集列表
 const milestoneCategorySelectSetList = async () => {
   await queryMilestoneCategorySelectSetList(props.projectId).then((resp) => {
-    // 将数字值转换为 labelMappings 中的文字描述
     categorySelect.value = resp.data.map((item: any) => ({
       label: getLabel(item),
       value: item
