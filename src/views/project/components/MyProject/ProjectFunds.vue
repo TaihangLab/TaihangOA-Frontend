@@ -65,19 +65,39 @@
               <template #label> {{ '\xa0\xa0\xa0' }}设备费 </template>
               {{ props.projectFundForm.sbfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.sbfGzsbZxZj !== 0" label-style="width: 20%; text-align: center; " :span="1" width="150px">
+            <el-descriptions-item
+              v-if="props.projectFundForm.sbfGzsbZxZj !== 0"
+              label-style="width: 20%; text-align: center; "
+              :span="1"
+              width="150px"
+            >
               <template #label> 购置设备费 </template>
               {{ props.projectFundForm.sbfGzsbZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.sbfSzsbZxZj !== 0" label-style="width: 20%; text-align: center; " :span="1" width="150px">
+            <el-descriptions-item
+              v-if="props.projectFundForm.sbfSzsbZxZj !== 0"
+              label-style="width: 20%; text-align: center; "
+              :span="1"
+              width="150px"
+            >
               <template #label> 试制设备费 </template>
               {{ props.projectFundForm.sbfSzsbZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.sbfSbsjgzZxZj !== 0" label-style="width: 20%; text-align: center; " :span="1" width="150px">
+            <el-descriptions-item
+              v-if="props.projectFundForm.sbfSbsjgzZxZj !== 0"
+              label-style="width: 20%; text-align: center; "
+              :span="1"
+              width="150px"
+            >
               <template #label> 设备升级改造费 </template>
               {{ props.projectFundForm.sbfSbsjgzZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.sbfSbzlZxZj !== 0" label-style="width: 20%; text-align: center; " :span="1" width="150px">
+            <el-descriptions-item
+              v-if="props.projectFundForm.sbfSbzlZxZj !== 0"
+              label-style="width: 20%; text-align: center; "
+              :span="1"
+              width="150px"
+            >
               <template #label> 设备租赁费 </template>
               {{ props.projectFundForm.sbfSbzlZxZj }}
             </el-descriptions-item>
@@ -103,47 +123,47 @@
               <template #label> 测试化验加工费 </template>
               {{ props.projectFundForm.ywfCshyjgfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfRldlfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfRldlfZxZj !== 0" width="150px">
               <template #label> 燃料动力费 </template>
               {{ props.projectFundForm.ywfRldlfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfBgfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfBgfZxZj !== 0" width="150px">
               <template #label> 办公费 </template>
               {{ props.projectFundForm.ywfBgfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfYscbfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfYscbfZxZj !== 0" width="150px">
               <template #label> 印刷/出版费 </template>
               {{ props.projectFundForm.ywfYscbfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfZscqswfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfZscqswfZxZj !== 0" width="150px">
               <template #label> 知识产权事务费 </template>
               {{ props.projectFundForm.ywfZscqswfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfClsyfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfClsyfZxZj !== 0" width="150px">
               <template #label> 车辆使用费 </template>
               {{ props.projectFundForm.ywfClsyfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfChlfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfChlfZxZj !== 0" width="150px">
               <template #label> 差旅费 </template>
               {{ props.projectFundForm.ywfChlfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfHyhwfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfHyhwfZxZj !== 0" width="150px">
               <template #label> 会议/会务费 </template>
               {{ props.projectFundForm.ywfHyhwfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfGnxzfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfGnxzfZxZj !== 0" width="150px">
               <template #label> 国内协作费 </template>
               {{ props.projectFundForm.ywfGnxzfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfGjhzjlfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfGjhzjlfZxZj !== 0" width="150px">
               <template #label> 国际合作交流费 </template>
               {{ props.projectFundForm.ywfGjhzjlfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfHyclgjhzyjlfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfHyclgjhzyjlfZxZj !== 0" width="150px">
               <template #label> 会议/差旅/国际合作与交流费 </template>
               {{ props.projectFundForm.ywfHyclgjhzyjlfZxZj }}
             </el-descriptions-item>
-            <el-descriptions-item v-if="props.projectFundForm.ywfCbwxxxcbzscqswfZxZj !== 0"  width="150px">
+            <el-descriptions-item v-if="props.projectFundForm.ywfCbwxxxcbzscqswfZxZj !== 0" width="150px">
               <template #label> 出版/文献/信息传播/知识产权事务费 </template>
               {{ props.projectFundForm.ywfCbwxxxcbzscqswfZxZj }}
             </el-descriptions-item>
@@ -360,7 +380,7 @@
             </el-descriptions-item>
           </el-descriptions>
           <el-descriptions v-if="props.projectFundForm.ywfZcZj !== 0" class="margin-top" :column="3" border>
-            <el-descriptions-item :span="3" width="150px" >
+            <el-descriptions-item :span="3" width="150px">
               <template #label> {{ '\xa0\xa0\xa0' }}业务费 </template>
               {{ props.projectFundForm.ywfZcZj }}
             </el-descriptions-item>
