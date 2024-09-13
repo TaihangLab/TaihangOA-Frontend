@@ -5,59 +5,59 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions :label-style="{ width: '15%' }" :content-style="{ width: '20%' }" border>
-            <el-descriptions-item label="项目名称">
+          <el-descriptions border>
+            <el-descriptions-item label="项目名称" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目任务书编号">
+            <el-descriptions-item label="项目任务书编号" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}
             </el-descriptions-item>
-            <el-descriptions-item label="负责课题">
+            <el-descriptions-item label="负责课题" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.assignedSubjectSection }}
             </el-descriptions-item>
-            <el-descriptions-item label="课题任务书编号">
+            <el-descriptions-item label="课题任务书编号" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目牵头单位">
+            <el-descriptions-item label="项目牵头单位" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.leadingUnit }}
             </el-descriptions-item>
-            <el-descriptions-item label="是否牵头单位">
+            <el-descriptions-item label="是否牵头单位" width="120px" :span="1">
               {{ pro_cooperative_unit[projectDetails.projectInfoVO.hasCooperativeUnit]?.label || '未知' }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目专员/联系人">
+            <el-descriptions-item label="项目专员/联系人" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectContact }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目级别">
+            <el-descriptions-item label="项目级别" width="120px" :span="1">
               {{ pro_level_type[projectDetails.projectInfoVO.projectLevel]?.label || '未知' }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目来源">
+            <el-descriptions-item label="项目来源" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectSource }}
             </el-descriptions-item>
-            <el-descriptions-item label="立项时间">
+            <el-descriptions-item label="立项时间" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectEstablishTime }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目计划验收时间">
+            <el-descriptions-item label="项目计划验收时间" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectScheduledCompletionTime }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目执行时间（年）">
+            <el-descriptions-item label="项目执行时间（年）" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.projectDuration }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目推进情况">
+            <el-descriptions-item label="项目推进情况" width="120px" :span="1">
               {{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
             </el-descriptions-item>
-            <el-descriptions-item label="合作单位">
+            <el-descriptions-item label="合作单位" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.collaboratingUnit }}
             </el-descriptions-item>
-            <el-descriptions-item label="涉及专家、团队">
+            <el-descriptions-item label="涉及专家、团队" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.expertTeam }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目经费总额">
+            <el-descriptions-item label="项目经费总额" width="120px" :span="1">
               {{ projectDetails.projectFundsVO.totalFundsAll }}
             </el-descriptions-item>
-            <el-descriptions-item label="专项经费">
+            <el-descriptions-item label="专项经费" width="120px" :span="1">
               {{ projectDetails.projectFundsVO.totalFundsZx }}
             </el-descriptions-item>
-            <el-descriptions-item label="自筹经费">
+            <el-descriptions-item label="自筹经费" width="120px" :span="1">
               {{ projectDetails.projectFundsVO.totalFundsZc }}
             </el-descriptions-item>
           </el-descriptions>

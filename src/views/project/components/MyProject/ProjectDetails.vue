@@ -10,62 +10,52 @@
             class="margin-top"
             title=""
             :column="2"
-            :label-style="{ width: '25%' }"
-            :content-style="{ width: '25%' }"
             border
             :data="projectDetails"
           >
-            <el-descriptions-item label="项目名称">{{ projectDetails.projectInfoVO.assignedSubjectName }}</el-descriptions-item>
-            <el-descriptions-item label="项目任务书编号">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}</el-descriptions-item>
-            <el-descriptions-item label="负责课题">{{ projectDetails.projectInfoVO.assignedSubjectSection }}</el-descriptions-item>
-            <el-descriptions-item label="课题任务书编号">{{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }}</el-descriptions-item>
-            <el-descriptions-item label="项目牵头单位">{{ projectDetails.projectInfoVO.leadingUnit }}</el-descriptions-item>
-            <el-descriptions-item label="是否牵头单位"
+            <el-descriptions-item label="项目名称" width="80px" label-align="center">{{ projectDetails.projectInfoVO.assignedSubjectName }}</el-descriptions-item>
+            <el-descriptions-item label="项目任务书编号" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectAssignmentSerialNo }}</el-descriptions-item>
+            <el-descriptions-item label="负责课题" width="80px" label-align="center">{{ projectDetails.projectInfoVO.assignedSubjectSection }}</el-descriptions-item>
+            <el-descriptions-item label="课题任务书编号" width="80px" label-align="center">{{ projectDetails.projectInfoVO.subjectAssignmentSerialNo }}</el-descriptions-item>
+            <el-descriptions-item label="项目牵头单位" width="80px" label-align="center">{{ projectDetails.projectInfoVO.leadingUnit }}</el-descriptions-item>
+            <el-descriptions-item label="是否牵头单位" width="80px" label-align="center"
               >{{ pro_cooperative_unit[projectDetails.projectInfoVO.hasLeadingRole]?.label || '未知' }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目负责人">{{ projectDetails.projectInfoVO.projectLeader }}</el-descriptions-item>
-            <el-descriptions-item label="项目专员/联系人">{{ projectDetails.projectInfoVO.projectContact }}</el-descriptions-item>
-            <el-descriptions-item label="项目级别"
+            <el-descriptions-item label="项目负责人" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectLeader }}</el-descriptions-item>
+            <el-descriptions-item label="项目专员/联系人" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectContact }}</el-descriptions-item>
+            <el-descriptions-item label="项目级别" width="80px" label-align="center"
               >{{ pro_level_type[projectDetails.projectInfoVO.projectLevel]?.label || '未知' }}
             </el-descriptions-item>
-            <el-descriptions-item label="项目来源">{{ projectDetails.projectInfoVO.projectSource }}</el-descriptions-item>
-            <el-descriptions-item label="立项时间">{{ projectDetails.projectInfoVO.projectEstablishTime }}</el-descriptions-item>
-            <el-descriptions-item label="项目计划验收时间">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime }} </el-descriptions-item>
-            <el-descriptions-item label="项目执行时间（年）">{{ projectDetails.projectInfoVO.projectDuration }}</el-descriptions-item>
-            <el-descriptions-item label="项目推进情况">{{
+            <el-descriptions-item label="项目来源" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectSource }}</el-descriptions-item>
+            <el-descriptions-item label="立项时间" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectEstablishTime }}</el-descriptions-item>
+            <el-descriptions-item label="项目计划验收时间" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectScheduledCompletionTime }} </el-descriptions-item>
+            <el-descriptions-item label="项目执行时间（年）" width="80px" label-align="center">{{ projectDetails.projectInfoVO.projectDuration }}</el-descriptions-item>
+            <el-descriptions-item label="项目推进情况" width="80px" label-align="center">{{
               pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知'
             }}</el-descriptions-item>
-            <el-descriptions-item label="合作单位">{{ projectDetails.projectInfoVO.collaboratingUnit }}</el-descriptions-item>
-            <el-descriptions-item label="涉及专家、团队">{{ projectDetails.projectInfoVO.expertTeam }}</el-descriptions-item>
-            <el-descriptions-item label="项目经费总额">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
-            <el-descriptions-item label="专项经费">{{ projectDetails.projectFundsVO.totalFundsZx }}</el-descriptions-item>
-            <el-descriptions-item label="自筹经费">{{ projectDetails.projectFundsVO.totalFundsZc }}</el-descriptions-item>
+            <el-descriptions-item label="合作单位" width="80px" label-align="center">{{ projectDetails.projectInfoVO.collaboratingUnit }}</el-descriptions-item>
+            <el-descriptions-item label="涉及专家、团队" width="80px" label-align="center">{{ projectDetails.projectInfoVO.expertTeam }}</el-descriptions-item>
+            <el-descriptions-item label="项目经费总额" width="80px" label-align="center">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
+            <el-descriptions-item label="专项经费" width="80px" label-align="center">{{ projectDetails.projectFundsVO.totalFundsZx }}</el-descriptions-item>
+            <el-descriptions-item label="自筹经费" width="80px" label-align="center" >{{ projectDetails.projectFundsVO.totalFundsZc }}</el-descriptions-item>
+            <el-descriptions-item ></el-descriptions-item>
+            <el-descriptions-item label="项目简介" width="80px" label-align="center" :span="2">{{ projectDetails.projectInfoVO.projectDescription }}</el-descriptions-item>
           </el-descriptions>
-          <el-collapse>
-            <el-collapse-item style="font-size: 20px" name="2">
-              <template #title>
-                <span style="font-size: 14px">项目简介</span>
-              </template>
-              <div class="unselectable-textbox" style="font-size: 14px; color: #606266">
-                {{ projectDetails.projectInfoVO.projectDescription }}
-              </div>
-            </el-collapse-item>
-          </el-collapse>
         </el-tab-pane>
         <el-tab-pane label="项目计划" name="second">
           <div v-if="projectDetails.projectPlanVOList && projectDetails.projectPlanVOList.length > 0">
             <div style="margin-top: 5px"></div>
             <div v-for="(plan, index) in projectDetails.projectPlanVOList" :key="index">
               <el-descriptions class="margin-top" :column="2" border>
-                <el-descriptions-item label-style="width: 15%; text-align: center; width: auto;" content-style="width: 30%">
+                <el-descriptions-item :span="1" width="150px" :labelAlign="'center'">
                   <template #label>开始时间</template>
                   {{ plan.stageStartDate }}
                 </el-descriptions-item>
-                <el-descriptions-item label-style="width: 15%; text-align: center; width: auto;" content-style="width: 30%">
+                <el-descriptions-item :span="1" width="150px" :labelAlign="'center'">
                   <template #label>结束时间</template>
                   {{ plan.stageEndDate }}
                 </el-descriptions-item>
-                <el-descriptions-item label-style="width: 15%; text-align: center; width: auto;" :span="3">
+                <el-descriptions-item :span="3" width="150px" :labelAlign="'center'">
                   <template #label>任务详情</template>
                   {{ plan.stageTask }}
                 </el-descriptions-item>
@@ -79,15 +69,15 @@
             <div style="margin-top: 5px"></div>
             <div v-for="(plan, index) in projectDetails.projectTargetVOList" :key="index">
               <el-descriptions class="margin-top" :column="2" border>
-                <el-descriptions-item label-style="width: 20%; text-align: center; width: auto;" content-style="width: 80%" :span="3">
+                <el-descriptions-item :span="3" width="200px" :labelAlign="'center'">
                   <template #label>项目指标</template>
                   {{ plan.targetName }}
                 </el-descriptions-item>
-                <el-descriptions-item label-style="width: 20%; text-align: center; width: auto;" content-style="width: 80%" :span="3">
+                <el-descriptions-item :span="3" width="200px" :labelAlign="'center'">
                   <template #label>中期指标值/状态</template>
                   {{ plan.midtermTarget }}
                 </el-descriptions-item>
-                <el-descriptions-item label-style="width: 20%; text-align: center; width: auto;" content-style="width: 80%" :span="3">
+                <el-descriptions-item :span="3" width="200px" :labelAlign="'center'">
                   <template #label>完成时指标值/状态</template>
                   {{ plan.endTarget }}
                 </el-descriptions-item>
@@ -289,3 +279,6 @@ watch(
   }
 );
 </script>
+
+<style scoped>
+</style>
