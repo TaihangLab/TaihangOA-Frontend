@@ -152,10 +152,10 @@
 
 <script setup lang="ts">
 import { defineEmits, defineProps } from 'vue';
-import request from '@/utils/request';
 import FileUpload from '@/components/FileUpload/index.vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { queryMilestoneList, queryMilestoneCategorySelectSetList, milestoneDelete } from '@/api/project/myProject/index';
+import { queryMilestoneList, queryMilestoneCategorySelectSetList, milestoneDelete, editProjectMileStone } from '@/api/project/myProject/index';
+import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{
   visible: boolean;
@@ -173,19 +173,19 @@ const milestoneIds = ref<string[]>([]);
 const ossids = ref<string[]>([]);
 const categoryTypeSet = ref<any[]>([]);
 const categorySelect = ref<any[]>([]);
-const tagOptions = ref<any[]>([]); // 标签选项从 milestoneCategorySelectList 方法中获取
 const selectedTag = ref(''); // 用户选择的标签（中文文字）
 const { pro_milestone_type } = toRefs<any>(proxy?.useDict('pro_milestone_type'));
 const projectMilestoneTypes = ref<string[]>([]); // 用于存储用户选择的标签（中文文字）
+const milestoneTypes = ref([]);
 
 const form = reactive({
   projectId: props.projectId,
   milestoneTitle: '',
   milestoneRemark: '',
   milestoneDate: '',
-  ossIds: [] as string[],
-  projectMilestoneTypes: [] as string[],
-  milestoneId: '',
+  ossIds: [],
+  projectMilestoneTypes: [] ,
+  milestoneId: undefined,
   sysOsses: [] as any[]
 });
 
@@ -194,58 +194,6 @@ const searchForm = ref({
   dateRange: [] as Date[],
   milestoneCategorySelectSet: [] as string[]
 });
-
-const labelMappings: Record<number, string> = {
-  0: '其他',
-  1: '申报书',
-  2: '任务书',
-  3: '科研协作合同',
-  4: '专项经费文件',
-  5: '经费管理表',
-  6: '中期文件',
-  7: '验收文件',
-  8: '结题文件',
-  9: '知识产权',
-  10: '论文',
-  11: '专利',
-  12: '软著',
-  13: '标准',
-  14: '示范应用',
-  15: '获奖',
-  16: '报告',
-  17: '专家咨询',
-  18: '经费变更',
-  19: '人员变更',
-  20: '批复文件',
-  21: '通知',
-  22: '合同'
-};
-
-const labelIdMappings: Record<string, number> = {
-  '其他': 0,
-  '申报书': 1,
-  '任务书': 2,
-  '科研协作合同': 3,
-  '专项经费文件': 4,
-  '经费管理表': 5,
-  '中期文件': 6,
-  '验收文件': 7,
-  '结题文件': 8,
-  '知识产权': 9,
-  '论文': 10,
-  '专利': 11,
-  '软著': 12,
-  '标准': 13,
-  '示范应用': 14,
-  '获奖': 15,
-  '报告': 16,
-  '专家咨询': 17,
-  '经费变更': 18,
-  '人员变更': 19,
-  '批复文件': 20,
-  '通知': 21,
-  '合同': 22
-};
 
 const rules = {
   milestoneTitle: [{ required: true, message: '请输入名称', trigger: 'blur' }],
@@ -330,7 +278,11 @@ function addTag() {
 
 // 辅助方法，根据标签获取对应的数字 ID
 function getLabelId(label: string): number {
-  return labelIdMappings[label] !== undefined ? labelIdMappings[label] : -1;
+  if (Array.isArray(milestoneTypes.value)) {
+    const foundItem = milestoneTypes.value.find((item) => item.milestoneTypeName === label);
+    return foundItem ? parseInt(foundItem.milestoneTypeId, 10) : -1;
+  }
+  return -1;
 }
 
 function editMilestone(item: any) {
@@ -363,9 +315,6 @@ function confirmDeleteMilestone(item: any) {
       // 用户点击确定按钮时执行删除逻辑
       deleteMilestone(item);
     })
-    .catch(() => {
-      // 用户点击取消按钮时不执行任何操作
-    });
 }
 
 function editMilestoneBtn() {
@@ -376,16 +325,11 @@ function editMilestoneBtn() {
   }
   form.projectMilestoneTypes = projectMilestoneTypes.value;
   form.ossIds = ossids.value;
-  // 请求修改接口
-  request({
-    url: '/project/my/milestoneedit',
-    method: 'put',
-    data: form
-  })
+  editProjectMileStone(form)
     .then(() => {
       ElMessage.success('修改成功');
       eventsDialogVisibleEdit.value = false;
-      fetchMilestoneList();
+      fetchMilestoneList(); // 更新列表
     })
     .catch(() => {
       ElMessage.error('修改失败');
@@ -422,12 +366,19 @@ const fetchMilestoneList = async () => {
           }
         });
       });
-
       updateTimelineDisplay();
     })
-    .catch((error) => {
-      console.error('获取数据时出错：', error);
+};
+
+const getMilestoneTypes = () => {
+  getDicts('pro_milestone_type').then((resp) => {
+    resp.data.forEach((item) => {
+      milestoneTypes.value.push({
+        milestoneTypeId: item.dictValue,
+        milestoneTypeName: item.dictLabel
+      });
     });
+  });
 };
 
 // 方法：获取里程碑类别选择集列表
@@ -442,12 +393,10 @@ const milestoneCategorySelectSetList = async () => {
 };
 
 function getLabel(typeId: number) {
-  // 如果标签值在labelMappings中有对应的文字描述，则返回对应的描述，否则返回标签值本身
-  return labelMappings[typeId] || typeId.toString();
+  return milestoneTypes.value.find((item) => item.milestoneTypeId === typeId.toString())?.milestoneTypeName || typeId.toString();
 }
 
 function getLabelType(typeId: number) {
-  // 根据标签类型返回不同的颜色标签类型
   switch (typeId) {
     case 0:
       return 'default'; // 其他
@@ -503,7 +452,6 @@ function getLabelType(typeId: number) {
 }
 
 function getTextColor(typeId: number) {
-  // 根据标签类型返回不同的字体颜色
   switch (typeId) {
     case 0:
       return '#999'; // 其他 - 灰色
@@ -559,7 +507,6 @@ function getTextColor(typeId: number) {
 function handleQuery() {
   // 判断是否选择了时间范围
   if (searchForm.value.dateRange && searchForm.value.dateRange.length === 2) {
-    // 将日期转换为字符串格式
     milestoneStaTime.value = searchForm.value.dateRange[0].toISOString().split('T')[0]; // yyyy-mm-dd 格式
     milestoneEndTime.value = searchForm.value.dateRange[1].toISOString().split('T')[0]; // yyyy-mm-dd 格式
   } else {
@@ -608,6 +555,7 @@ const handleReset = () => {
 };
 
 onMounted(() => {
+  getMilestoneTypes();
   fetchMilestoneList();
   milestoneCategorySelectSetList();
 });

@@ -118,3 +118,18 @@ export interface ProjectBaseInfoVO {
   zxGslc?: string; // 专项经费公司留存（计划）
   updateTime?: string; // 更新时间
 }
+
+export interface ProjectMilestoneBo {
+  milestoneId?: number; // 大事记ID
+  projectId?: number; // 项目ID
+  milestoneTitle?: string; // 大事记名称
+  milestoneRemark?: string; // 大事记描述
+  milestoneDate?: string; // 大事记时间 'yyyy-MM-dd'
+  ossIds?: number[]; // ossID列表
+  keyword?: string; // 搜索关键字
+  milestoneStaTime?: string; // 起始时间 'yyyy-MM-dd'
+  milestoneEndTime?: string; // 结束时间 'yyyy-MM-dd'
+  milestoneCategoryId?: number; // 分类ID
+  milestoneType?: number; // 对应分类
+  projectMilestoneTypes?: number[]; // 分类列表
+}

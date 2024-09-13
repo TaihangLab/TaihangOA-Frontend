@@ -2,15 +2,13 @@ import request from '@/utils/request';
 import {
   MilestoneFrom,
   combinedSearchDataList,
-  combinedSearchDataSetList,
   deleteParams,
   queryProjectData,
   ProjectDetailsVO,
-  ProjectBaseInfoVO
+  ProjectBaseInfoVO, ProjectMilestoneBo
 } from '@/api/project/myProject/types';
 import { AxiosPromise } from 'axios';
 import { ProjectBaseInfoBO } from '@/api/project/funds/types';
-import { UnwrapRef } from 'vue';
 
 // 新增大事记
 export function milestoneAdd(data: MilestoneFrom) {
@@ -38,13 +36,6 @@ export function queryMilestoneCategorySelectSetList(projectId: number) {
     params: {
       projectId
     }
-  });
-}
-
-export function getMilestoneCategorySelectList() {
-  return request({
-    url: '/project/list/milestoneCategorySelect',
-    method: 'get'
   });
 }
 
@@ -85,4 +76,12 @@ export function getAllProjectList(data: ProjectBaseInfoBO, pageQuery: PageQuery)
     params: pageQuery,
     data: data
   });
+}
+
+export function editProjectMileStone(data: ProjectMilestoneBo): AxiosPromise<any> {
+  return request({
+    url: '/project/my/milestoneedit',
+    method: 'post',
+    data: data
+  })
 }
