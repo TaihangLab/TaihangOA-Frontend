@@ -24,13 +24,6 @@ export interface combinedSearchDataList {
   milestoneType: string;
 }
 
-export interface combinedSearchDataSetList {
-  projectId: number;
-  keyword: string;
-  milestoneStaTime: string;
-  milestoneEndTime: string;
-}
-
 export interface queryProjectData {
   assignedSubjectName?: undefined; // 项目名称
   projectLevel?: undefined; // 项目级别

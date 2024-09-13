@@ -5,7 +5,8 @@ import {
   deleteParams,
   queryProjectData,
   ProjectDetailsVO,
-  ProjectBaseInfoVO, ProjectMilestoneBo
+  ProjectBaseInfoVO,
+  ProjectMilestoneBo
 } from '@/api/project/myProject/types';
 import { AxiosPromise } from 'axios';
 import { ProjectBaseInfoBO } from '@/api/project/funds/types';
