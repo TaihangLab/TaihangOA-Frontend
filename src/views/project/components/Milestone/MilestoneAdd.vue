@@ -61,11 +61,11 @@ import { milestoneAdd } from '@/api/project/myProject';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 
-const props = defineProps<{ visible: boolean; projectId: string }>();
+const props = defineProps<{ visible: boolean; projectId: number }>();
 const emits = defineEmits(['update:visible', 'close-dialog']);
 
 const form = reactive({
-  projectId: Number(props.projectId),
+  projectId: props.projectId,
   milestoneTitle: '',
   milestoneRemark: '',
   milestoneDate: '',
@@ -108,7 +108,6 @@ const handleClose = () => {
 const addTag = () => {
   if (selectedTag.value && !form.projectMilestoneTypes.includes(selectedTag.value)) {
     form.projectMilestoneTypes.push(selectedTag.value);
-    // selectedTag.value = '';
   }
 };
 
@@ -246,31 +245,25 @@ const addMilestone = async () => {
       return type ? type.projectMilestoneTypeId : null;
     })
     .filter((tagId) => tagId !== null) as number[]; // 使用 number[] 类型
-
   form.projectMilestoneTypes = categoryEnumList.map(String); // 将转换后的标签数字列表转换为字符串
-
-  form.ossIds = ossids.value; // 确保通过 .value 访问 ossids
-  console.log(ossids);
-
-  try {
-    await milestoneAdd(form);
-    proxy?.$modal.msgSuccess('新增成功');
-    fileUpload.value?.reset();
-    emits('close-dialog'); // 触发一个事件通知父组件关闭弹窗
-    reset(); // 调用重置函数
-  } catch (error) {
-    console.log(form);
-    console.error('添加里程碑时出错:', error);
-  }
+  form.ossIds = ossids.value;
+  await milestoneAdd(form)
+    .then(() => {
+      proxy?.$modal.msgSuccess('新增成功');
+      fileUpload.value?.reset();
+    })
+    .finally(() => {
+      emits('close-dialog'); // 触发一个事件通知父组件关闭弹窗
+      reset(); // 调用重置函数
+    });
 };
 // 重置函数
 const reset = () => {
-  form.projectId = Number(props.projectId);
+  form.projectId = props.projectId;
   form.milestoneTitle = '';
   form.milestoneRemark = '';
   form.milestoneDate = '';
   form.ossIds = [];
-
   ossids.value = [];
   selectedTag.value = ''; // 重置选择的标签
   form.projectMilestoneTypes = []; // 重置动态标签列表
