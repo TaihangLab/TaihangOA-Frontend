@@ -40,10 +40,10 @@ export function queryMilestoneCategorySelectSetList(projectId: number) {
 }
 
 // 删除大事记
-export function milestoneDelete(milestoneId: number) {
+export function milestoneDelete(milestoneId: number): AxiosPromise<any> {
   return request({
     url: `/project/my/milestonedelete`,
-    method: 'delete',
+    method: 'get',
     params: {
       milestoneId
     }
