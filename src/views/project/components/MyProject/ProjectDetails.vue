@@ -116,7 +116,7 @@
         <el-tab-pane label="项目成员" name="fourth">
           <div>
             <div style="margin-top: 5px"></div>
-            <el-table v-loading="loading" :data="projectDetails.projectUserVoList" style="margin: 0; padding: 0">
+            <el-table v-loading="loading" :data="projectDetails.projectUserVoList" border>
               <el-table-column label="用户名称" align="center" prop="nickName" :show-overflow-tooltip="true" />
               <el-table-column label="职称" align="center" prop="jobTitle" :show-overflow-tooltip="true">
                 <template #default="scope">
@@ -146,7 +146,7 @@
         </el-tab-pane>
         <el-tab-pane label="项目申报附件" name="sixth">
           <div style="margin-top: 5px"></div>
-          <el-table v-loading="loading" :data="projectDetails.projectAttachmentVOList">
+          <el-table v-loading="loading" :data="projectDetails.projectAttachmentVOList" border>
             <el-table-column :label="'文件名称'" align="center" prop="originalName" :show-overflow-tooltip="true" />
             <el-table-column :label="'文件格式'" align="center" prop="fileSuffix" :show-overflow-tooltip="true">
               <template #default="scope">
@@ -180,11 +180,11 @@
                 <span>项目推进情况</span>
               </template>
               <div style="margin-top: 5px"></div>
-              <el-descriptions class="margin-top" title="" :column="1" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
-                <el-descriptions-item label="推进情况" :span="1"
+              <el-descriptions class="margin-top" :column="1" border>
+                <el-descriptions-item label="推进情况" :span="1" width="200px"
                   >{{ pro_progress_status[projectDetails.projectInfoVO.projectProgressStatus]?.label || '未知' }}
                 </el-descriptions-item>
-                <el-descriptions-item label="完成进度" :span="2">{{ projectDetails.projectInfoVO.completionProgress }}</el-descriptions-item>
+                <el-descriptions-item label="完成进度" :span="1">{{ projectDetails.projectInfoVO.completionProgress }}</el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
 
@@ -194,14 +194,28 @@
                 <span style="font-size: 12px; color: #f56c6c">（单位：万元）</span>
               </template>
               <div style="margin-top: 5px"></div>
-              <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
-                <el-descriptions-item label="经费总额" :span="2">{{ projectDetails.projectFundsVO.totalFundsAll }}</el-descriptions-item>
-                <el-descriptions-item label="专项到款总额" :span="1">{{ projectDetails.projectFundsVO.totalFundsZxDk }} </el-descriptions-item>
-                <el-descriptions-item label="专项经费总额" :span="1">{{ projectDetails.projectFundsVO.totalFundsZx }}</el-descriptions-item>
-                <el-descriptions-item label="已完成自筹投资" :span="1">{{ projectDetails.projectFundsVO.zctzDone }}</el-descriptions-item>
-                <el-descriptions-item label="已完成专项投资" :span="1">{{ projectDetails.projectFundsVO.zxtzDone }}</el-descriptions-item>
-                <el-descriptions-item label="自筹经费公司配套" :span="1">{{ projectDetails.projectFundsVO.zcGspt }}</el-descriptions-item>
-                <el-descriptions-item label="专项经费公司留存(计划)" :span="1">{{ projectDetails.projectFundsVO.zxGslc }} </el-descriptions-item>
+              <el-descriptions class="margin-top" title="" :column="2" border>
+                <el-descriptions-item label="经费总额" :span="2" width="200px">{{
+                  projectDetails.projectFundsVO.totalFundsAll
+                }}</el-descriptions-item>
+                <el-descriptions-item label="专项到款总额" :span="1" width="200px"
+                  >{{ projectDetails.projectFundsVO.totalFundsZxDk }}
+                </el-descriptions-item>
+                <el-descriptions-item label="专项经费总额" :span="1" width="200px">{{
+                  projectDetails.projectFundsVO.totalFundsZx
+                }}</el-descriptions-item>
+                <el-descriptions-item label="已完成自筹投资" :span="1" width="200px">{{
+                  projectDetails.projectFundsVO.zctzDone
+                }}</el-descriptions-item>
+                <el-descriptions-item label="已完成专项投资" :span="1" width="200px">{{
+                  projectDetails.projectFundsVO.zxtzDone
+                }}</el-descriptions-item>
+                <el-descriptions-item label="自筹经费公司配套" :span="1" width="200px">{{
+                  projectDetails.projectFundsVO.zcGspt
+                }}</el-descriptions-item>
+                <el-descriptions-item label="专项经费公司留存(计划)" :span="1" width="200px"
+                  >{{ projectDetails.projectFundsVO.zxGslc }}
+                </el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
 
@@ -210,12 +224,20 @@
                 <span>项目成果情况</span>
               </template>
               <div style="margin-top: 5px"></div>
-              <el-descriptions class="margin-top" title="" :column="2" :label-style="{ width: '20%' }" :content-style="{ width: '30%' }" border>
-                <el-descriptions-item label="获奖情况（项）" :span="1">{{ projectDetails.projectInfoVO.awardDetails }}</el-descriptions-item>
-                <el-descriptions-item label="论文情况（项）" :span="1">{{ projectDetails.projectInfoVO.publicationDetails }} </el-descriptions-item>
-                <el-descriptions-item label="专利情况" :span="1">{{ projectDetails.projectInfoVO.patentDetails }}</el-descriptions-item>
-                <el-descriptions-item label="软著情况" :span="1">{{ projectDetails.projectInfoVO.softwareCopyrightDetails }} </el-descriptions-item>
-                <el-descriptions-item label="标准情况" :span="1">{{ projectDetails.projectInfoVO.standardDetails }}</el-descriptions-item>
+              <el-descriptions class="margin-top" border :column="2">
+                <el-descriptions-item label="获奖情况（项）" :span="1" width="200px">{{
+                  projectDetails.projectInfoVO.awardDetails
+                }}</el-descriptions-item>
+                <el-descriptions-item label="论文情况（项）" :span="1" width="200px"
+                  >{{ projectDetails.projectInfoVO.publicationDetails }}
+                </el-descriptions-item>
+                <el-descriptions-item label="专利情况" :span="1" width="200px">{{ projectDetails.projectInfoVO.patentDetails }}</el-descriptions-item>
+                <el-descriptions-item label="软著情况" :span="1" width="200px"
+                  >{{ projectDetails.projectInfoVO.softwareCopyrightDetails }}
+                </el-descriptions-item>
+                <el-descriptions-item label="标准情况" :span="1" width="200px">{{
+                  projectDetails.projectInfoVO.standardDetails
+                }}</el-descriptions-item>
               </el-descriptions>
             </el-collapse-item>
           </el-collapse>
