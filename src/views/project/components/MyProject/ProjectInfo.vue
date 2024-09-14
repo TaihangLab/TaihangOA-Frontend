@@ -157,7 +157,7 @@ import { defineProps, defineEmits, reactive } from 'vue';
 import { ElForm } from 'element-plus';
 import { getDicts } from '@/api/system/dict/data';
 
-const props = defineProps<{ form: any }>();
+const props = defineProps<{ form : any }>();
 const emits = defineEmits(['update:visible']);
 const formRef = ref<InstanceType<typeof ElForm>>();
 
@@ -177,7 +177,7 @@ const getProjectLevelsOptions = () => {
     resp.data.forEach((item) => {
       data.projectLevels.push({
         name: item.dictLabel,
-        value: item.dictValue
+        value: Number(item.dictValue)
       });
     });
   });
