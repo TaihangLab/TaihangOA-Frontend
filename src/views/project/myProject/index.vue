@@ -111,14 +111,7 @@
             :show-overflow-tooltip="true"
           >
           </el-table-column>
-          <el-table-column
-            label="项目推进情况"
-            :resizable="false"
-            prop="projectProgressStatus"
-            :formatter="projectProgressStatuss"
-            width="130"
-            :show-overflow-tooltip="true"
-          >
+          <el-table-column label="项目推进情况" :resizable="false" prop="projectProgressStatus" width="130" :show-overflow-tooltip="true">
             <template #default="scope">
               {{ pro_progress_status[scope.row.hasLeadingRole]?.label || '未知' }}
             </template>
@@ -199,16 +192,14 @@
 import { ref } from 'vue';
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
 import ProjectAddDialog from '@/views/project/components/MyProject/ProjectAdd.vue';
-import { getAllProjectList } from '@/api/project/myProject';
+import { deleteProject, getAllProjectList } from '@/api/project/myProject';
 import { userTreeSelect } from '@/api/system/user';
 import { ProjectBaseInfoBO } from '@/api/project/funds/types';
-import { getProjectList } from '@/api/project/funds';
 import MilestoneAddDialog from '@/views/project/components/Milestone/MilestoneAdd.vue';
 import ProjectUpdateDialog from '@/views/project/components/MyProject/ProjectUpdate.vue';
 import ProjectDetailDialog from '@/views/project/components/MyProject/ProjectDetails.vue';
 import MilestoneDetailDialog from '@/views/project/components/Milestone/MilestoneDetail.vue';
 import { ProjectBaseInfoVO } from '@/api/project/myProject/types';
-import { deleteProject } from '@/api/project/myProject/project';
 
 const loading = ref(true);
 const projectList = ref<ProjectBaseInfoVO[]>([]);
@@ -216,7 +207,6 @@ const queryFormRef = ref<ElFormInstance>();
 const establishDateRange = ref<[DateModelType, DateModelType]>(['', '']);
 const scheduledCompletionDateRange = ref<[DateModelType, DateModelType]>(['', '']);
 const userOptions = ref<any[]>([]);
-const projectLevel = ref<number>(undefined);
 const total = ref(0);
 const showSearch = ref(true);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
@@ -289,9 +279,7 @@ const handleUpdate = (row: ProjectBaseInfoVO) => {
 const handleDelete = (row: ProjectBaseInfoVO) => {
   proxy?.$modal.confirm(`负责课题：${row.assignedSubjectSection}，确认删除该数据项？`).then(() => {
     deleteProject(row.projectId).then(() => {
-      getProjectList().then(() => {
-        ElMessage.success('删除成功');
-      });
+      resetQuery();
     });
   });
 };
@@ -309,16 +297,16 @@ const getProjectList = async () => {
 const handleQuery = () => {
   // 检查 establishDateRange 是否为空
   if (establishDateRange.value && establishDateRange.value[0] && establishDateRange.value[1]) {
-    form.value.projectEstablishTimeSta = establishDateRange.value[0];
-    form.value.projectEstablishTimeEnd = establishDateRange.value[1];
+    form.value.projectEstablishTimeSta = <string>establishDateRange.value[0];
+    form.value.projectEstablishTimeEnd = <string>establishDateRange.value[1];
   } else {
     form.value.projectEstablishTimeSta = null; // 或者 ''
     form.value.projectEstablishTimeEnd = null; // 或者 ''
   }
   // 检查 scheduledCompletionDateRange 是否为空
   if (scheduledCompletionDateRange.value && scheduledCompletionDateRange.value[0] && scheduledCompletionDateRange.value[1]) {
-    form.value.projectScheduledCompletionTimeSta = scheduledCompletionDateRange.value[0];
-    form.value.projectScheduledCompletionTimeEnd = scheduledCompletionDateRange.value[1];
+    form.value.projectScheduledCompletionTimeSta = <string>scheduledCompletionDateRange.value[0];
+    form.value.projectScheduledCompletionTimeEnd = <string>scheduledCompletionDateRange.value[1];
   } else {
     form.value.projectScheduledCompletionTimeSta = null; // 或者 ''
     form.value.projectScheduledCompletionTimeEnd = null; // 或者 ''
@@ -338,6 +326,10 @@ const resetQuery = () => {
 
 const handleSelectionChange = (val: any) => {
   console.log(val);
+};
+
+const handleExport = () => {
+  console.log('导出');
 };
 
 onMounted(() => {

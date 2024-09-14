@@ -104,7 +104,7 @@ import { nextTick } from 'vue';
 import { OssForm, OssVO } from '@/api/system/oss/types';
 
 const TOTAL_STEPS = 9;
-const props = defineProps<{ visible: boolean; updateId: string }>();
+const props = defineProps<{ visible: boolean; updateId: number }>();
 const emits = defineEmits(['update:visible', 'reloadProjectList']);
 
 const stepID = ref(0);
@@ -194,8 +194,6 @@ const submit = async () => {
       projectInfoForm.value,
       projectMemberForm.value,
       projectFundsForm.value,
-      zxFundsDetailForm.value, // 弃用
-      zcFundsDetailForm.value, // 弃用
       fundsSourceForm.value,
       projectIndicatorForm.value,
       projectPlanForm.value,
@@ -304,7 +302,7 @@ function transformTableData(data: Array<Array<Array<{ value: string }>>>): Array
 }
 
 // 定义获取项目详情的逻辑
-async function fetchProjectDetails(projectId: string) {
+async function fetchProjectDetails(projectId: number) {
   if (projectId) {
     // 启动加载动画
     const loading = ElLoading.service({ fullscreen: true, lock: true, text: '加载中...' });

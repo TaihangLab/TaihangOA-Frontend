@@ -144,7 +144,7 @@
       <el-row :gutter="20" type="flex" justify="start">
         <el-col :span="24">
           <el-form-item label-width="120px" label="项目简介" prop="description">
-            <el-input v-model="form.description" type="textarea"  :autosize="{ minRows: 3, maxRows: 6 }"></el-input>
+            <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 3, maxRows: 6 }"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -177,7 +177,7 @@ const getProjectLevelsOptions = () => {
     resp.data.forEach((item) => {
       data.projectLevels.push({
         name: item.dictLabel,
-        value: Number(item.dictValue)
+        value: item.dictValue
       });
     });
   });

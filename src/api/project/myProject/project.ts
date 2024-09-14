@@ -1,6 +1,5 @@
 import request from '@/utils/request';
 import { filterList } from '@/api/project/myProject/utils';
-import Vue from 'vue';
 import { ElLoading } from 'element-plus';
 
 /**
@@ -948,12 +947,10 @@ export function getProject(
 }
 
 export function updateProject(
-  projectId: string,
+  projectId: number,
   projectInfoForm,
   projectMemberForm,
   projectFundsForm,
-  zxFundsDetailForm,
-  zcFundsDetailForm,
   fundsSourceForm,
   projectIndicatorForm,
   projectPlanForm,
@@ -1181,26 +1178,6 @@ export function updateProject(
        *  附件列表
        */
       'ossIdList': otherAttachmentForm.uploadList
-    }
-  });
-}
-
-export function deleteProject(projectId: string) {
-  return request({
-    url: '/project/my/delete',
-    method: 'get',
-    params: {
-      projectId: projectId
-    }
-  });
-}
-
-export function getProjectDetails(projectId: string) {
-  return request({
-    url: '/project/list/getDetails',
-    method: 'get',
-    params: {
-      projectId: projectId
     }
   });
 }

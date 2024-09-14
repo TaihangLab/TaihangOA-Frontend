@@ -254,12 +254,12 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, watch } from 'vue';
 import ProjectFunds from '@/views/project/components/MyProject/ProjectFunds.vue';
-import { getProjectDetails } from '@/api/project/myProject/project';
 import { ProjectDetailsVO } from '@/api/project/myProject/types';
+import { getProjectDetails } from '@/api/project/myProject';
 
 const props = defineProps<{
   visible: boolean;
-  projectId: string;
+  projectId: number;
 }>();
 const emits = defineEmits(['update:visible']);
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;

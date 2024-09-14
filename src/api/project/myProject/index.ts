@@ -80,6 +80,16 @@ export function getAllProjectList(data: ProjectBaseInfoBO, pageQuery: PageQuery)
   });
 }
 
+export function deleteProject(projectId: number) {
+  return request({
+    url: '/project/my/delete',
+    method: 'get',
+    params: {
+      projectId: projectId
+    }
+  });
+}
+
 export function editProjectMileStone(data: ProjectMilestoneBo): AxiosPromise<any> {
   return request({
     url: '/project/my/milestoneedit',

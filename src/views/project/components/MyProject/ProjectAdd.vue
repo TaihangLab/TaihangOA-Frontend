@@ -242,8 +242,6 @@ const submit = async () => {
         loading.close();
       });
     emits('update:visible', false);
-    // 这行代码会导致修改后重新加载页面
-    // setTimeout(() => location.reload(), 900);
     return;
   }
 
@@ -279,8 +277,6 @@ const submit = async () => {
       loading.close();
     });
   emits('update:visible', false);
-  // 这行代码会导致修改后重新加载页面
-  // setTimeout(() => location.reload(), 900);
 };
 
 const projectFundForm = (cards1Form: any[], cards2Form: any[], tableDataForm: any[], result: any) => {

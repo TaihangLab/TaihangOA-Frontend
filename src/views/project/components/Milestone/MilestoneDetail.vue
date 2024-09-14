@@ -159,7 +159,7 @@ import { getDicts } from '@/api/system/dict/data';
 
 const props = defineProps<{
   visible: boolean;
-  updateId: string;
+  updateId: number;
   projectId: number;
 }>();
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
