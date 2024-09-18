@@ -30,19 +30,19 @@
               <template #label> 专项间接经费 </template>
               {{ props.projectFundForm.totalFundsZxJj }}
             </el-descriptions-item>
-            <el-descriptions-item label-style="text-align: center; " :content-style="{ width: '10%' }">
+            <el-descriptions-item label-style="text-align: center; ">
               <template #label> 自筹经费 </template>
               {{ props.projectFundForm.totalFundsZc }}
             </el-descriptions-item>
-            <el-descriptions-item label-style="text-align: center; " :content-style="{ width: '10%' }">
+            <el-descriptions-item label-style="text-align: center; ">
               <template #label> 自筹设备费 </template>
               {{ props.projectFundForm.sbfZc }}
             </el-descriptions-item>
-            <el-descriptions-item label-style="text-align: center; " :content-style="{ width: '10%' }">
+            <el-descriptions-item label-style="text-align: center; ">
               <template #label> 自筹直接经费 </template>
               {{ props.projectFundForm.totalFundsZcZj }}
             </el-descriptions-item>
-            <el-descriptions-item label-style="text-align: center; " :content-style="{ width: '10%' }">
+            <el-descriptions-item label-style="text-align: center; ">
               <template #label> 自筹间接经费 </template>
               {{ props.projectFundForm.totalFundsZcJj }}
             </el-descriptions-item>
@@ -183,7 +183,7 @@
             </el-descriptions-item>
           </el-descriptions>
           <el-descriptions v-if="props.projectFundForm.clfZxZj !== 0" class="margin-top" :column="3" border>
-            <el-descriptions-item label-style="font-weight: 550; width: 18%;" content-style="width: 72%" :span="3">
+            <el-descriptions-item width="150px" :span="3">
               <template #label> {{ '\xa0\xa0\xa0' }}材料费 </template>
               {{ props.projectFundForm.clfZxZj }}
             </el-descriptions-item>
@@ -231,7 +231,7 @@
             </el-descriptions-item>
           </el-descriptions>
           <el-descriptions v-if="props.projectFundForm.kyfwfZxZj !== 0" class="margin-top" :column="3" border>
-            <el-descriptions-item label-style="font-weight: 550; width: 18%;" content-style="width: 72%" :span="3">
+            <el-descriptions-item width="150px" :span="3">
               <template #label> {{ '\xa0\xa0\xa0' }}科研服务费 </template>
               {{ props.projectFundForm.kyfwfZxZj }}
             </el-descriptions-item>
@@ -380,7 +380,7 @@
             </el-descriptions-item>
           </el-descriptions>
           <el-descriptions v-if="props.projectFundForm.ywfZcZj !== 0" class="margin-top" :column="3" border>
-            <el-descriptions-item :span="3" width="150px">
+            <el-descriptions-item width="150px" :span="3">
               <template #label> {{ '\xa0\xa0\xa0' }}业务费 </template>
               {{ props.projectFundForm.ywfZcZj }}
             </el-descriptions-item>
