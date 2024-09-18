@@ -1,6 +1,12 @@
 <template>
-  <el-drawer v-loading="loading" :model-value="visible" title="项目指标推进情况" @update:model-value="updateVisible" @close="closeTargetDetail">
-    <el-collapse v-model="activeNames" accordion @change="handleCollapseChange">
+  <el-drawer
+    :model-value="visible"
+    :title="`${props.projectName || ''}推进情况`"
+    @update:model-value="updateVisible"
+    @close="closeTargetDetail"
+    v-loading="loading"
+  >
+    <el-collapse v-model="activeNames" accordion @change="handleCollapseChange" style="margin-top: -15px">
       <el-collapse-item v-for="item in targetList" :key="item.targetId" :name="item.targetId">
         <template #title>
           <span style="font-weight: bold; font-size: 16px">{{ item.targetName }}</span>
@@ -12,7 +18,7 @@
           </div>
         </el-card>
         <el-card v-if="progressData[item.targetId] && progressData[item.targetId].length > 0" style="margin-bottom: 6px" shadow="hover">
-          <el-timeline style="margin-left: -30px" v-loading="loading">
+          <el-timeline style="margin-left: -30px">
             <el-timeline-item
               v-for="progress in progressData[item.targetId]"
               :key="progress.progressId"
@@ -47,8 +53,9 @@ const activeNames = ref<number | string>('');
 const progressData = ref<Record<number, ProjectTargetProgressVO[]>>({});
 const loading = ref(true);
 const props = defineProps<{
-  projectId: string | number | undefined;
+  projectId: number | undefined;
   visible: boolean;
+  projectName: string;
 }>();
 
 const initForm: ProjectTargetBO = {

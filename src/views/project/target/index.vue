@@ -91,7 +91,12 @@
       />
     </el-card>
     <TargetEdit :visible="targetEditDialog" :project-id="editProjectId" @update:visible="targetEditDialog = $event"></TargetEdit>
-    <TargetDetail :visible="targetDetailDialog" :project-id="detailProjectId" @update:visible="targetDetailDialog = $event"></TargetDetail>
+    <TargetDetail
+      :visible="targetDetailDialog"
+      :project-id="detailProjectId"
+      :project-name="projectName"
+      @update:visible="targetDetailDialog = $event"
+    ></TargetDetail>
   </div>
 </template>
 
@@ -116,6 +121,7 @@ const targetEditDialog = ref(false);
 const targetDetailDialog = ref(false);
 const detailProjectId = ref<number>();
 const editProjectId = ref<number>();
+const projectName = ref<string>();
 
 const initQueryForm: queryProjectData = {
   assignedSubjectName: undefined,
@@ -160,12 +166,14 @@ const showTargetEditDialog = (projectId: number) => {
 const showTargetDetailDialog = (projectId: number) => {
   targetDetailDialog.value = true;
   detailProjectId.value = projectId;
+  projectName.value = projectList.value.find((item) => item.projectId == projectId)?.assignedSubjectName;
+  console.log('showTargetDetailDialog', projectName);
 };
 
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: number[]) => {
-  single.value = selection.length != 1;
-  multiple.value = !selection.length;
+  // single.value = selection.length != 1;
+  // multiple.value = !selection.length;
 };
 
 onMounted(() => {
