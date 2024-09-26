@@ -5,7 +5,7 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions border>
+          <el-descriptions border v-loading="loading">
             <el-descriptions-item label="项目名称" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
@@ -139,40 +139,40 @@
         <!-- 经费明细汇总 -->
         <el-tab-pane label="经费明细汇总" name="经费明细汇总" class="budget-summary-tab">
           <div style="margin-top: 5px"></div>
-          <el-table
-            :row-class-name="getRowClassName"
-            :data="tableDataList"
-            style="width: 100%"
-            height="525px"
-            row-key="id"
-            border
-            :cell-style="columnStyle"
-            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-            highlight-current-row
-            @row-mouseenter="handleRowMouseEnter"
-            @row-mouseleave="handleRowMouseLeave"
-          >
-            <el-table-column prop="label" width="180">
-              <template #header>
-                <div style="text-align: center">
-                  <span>预算科目名称</span>
-                  <br />
-                  <span style="font-size: 12px; color: #f56c6c">（单位：万元）</span>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="预算">
-              <el-table-column align="center" label="合计" prop="budget"></el-table-column>
-              <el-table-column align="center" label="专项经费" prop="specialBudget"></el-table-column>
-              <el-table-column align="center" label="自筹经费" prop="selfBudget"></el-table-column>
-            </el-table-column>
-            <el-table-column align="center" label="专项已支付" prop="specialPaid"></el-table-column>
-            <el-table-column align="center" label="专项未支付" prop="specialUnpaid"></el-table-column>
-            <el-table-column align="center" label="自筹已支付" prop="selfPaid"></el-table-column>
-            <el-table-column align="center" label="自筹未支付" prop="selfUnpaid"></el-table-column>
-            <el-table-column align="center" label="已支付" prop="totalPaid"></el-table-column>
-            <el-table-column align="center" label="未支付" prop="totalUnpaid"></el-table-column>
-          </el-table>
+          <el-watermark :font="font" :content="userInfo ? [userInfo.user.nickName, userInfo.user.phonenumber] : []">
+            <el-table
+              :row-class-name="getRowClassName"
+              :data="tableDataList"
+              style="width: 100%"
+              height="525px"
+              row-key="id"
+              border
+              :cell-style="columnStyle"
+              :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+              highlight-current-row
+            >
+              <el-table-column prop="label" width="180">
+                <template #header>
+                  <div style="text-align: center">
+                    <span>预算科目名称</span>
+                    <br />
+                    <span style="font-size: 12px; color: #f56c6c">（单位：万元）</span>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="预算">
+                <el-table-column align="center" label="合计" prop="budget"></el-table-column>
+                <el-table-column align="center" label="专项经费" prop="specialBudget"></el-table-column>
+                <el-table-column align="center" label="自筹经费" prop="selfBudget"></el-table-column>
+              </el-table-column>
+              <el-table-column align="center" label="专项已支付" prop="specialPaid"></el-table-column>
+              <el-table-column align="center" label="专项未支付" prop="specialUnpaid"></el-table-column>
+              <el-table-column align="center" label="自筹已支付" prop="selfPaid"></el-table-column>
+              <el-table-column align="center" label="自筹未支付" prop="selfUnpaid"></el-table-column>
+              <el-table-column align="center" label="已支付" prop="totalPaid"></el-table-column>
+              <el-table-column align="center" label="未支付" prop="totalUnpaid"></el-table-column>
+            </el-table>
+          </el-watermark>
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -186,6 +186,8 @@ import { getProjectDetails } from '@/api/project/myProject';
 import { getFundsAndBalanceByProjectId, getFundsReceivedList, getProjectExpenditureList } from '@/api/project/funds';
 import { ProjectExpenditureBO, ProjectExpenditureVO, ProjectFundsReceivedVo } from '@/api/project/funds/types';
 import { categoryOptions3 } from '@/api/project/funds/fundkeys';
+import { UserInfo, UserInfoVO } from '@/api/system/user/types';
+import { getInfo } from '@/api/login';
 
 const { proxy } = getCurrentInstance() as ComponentInternalInstance;
 const {
@@ -222,17 +224,12 @@ const emits = defineEmits(['update:visible']);
 const activeTab = ref('基本信息');
 const tableDataList = ref<[{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]>(categoryOptions3);
 const hoverRowIndex = ref<number | null>(null);
-
+const font = reactive({
+  color: 'rgba(0, 0, 0, .15)'
+});
+const userInfo = ref<UserInfo | null>({ permissions: [], roles: [], user: null });
 const updateVisible = (value: boolean) => {
   emits('update:visible', value);
-};
-
-const handleRowMouseEnter = (row: TableDataItem, event: Event, rowIndex: number) => {
-  hoverRowIndex.value = rowIndex;
-};
-
-const handleRowMouseLeave = () => {
-  hoverRowIndex.value = null;
 };
 
 const getRowClassName = ({ rowIndex }: { rowIndex: number }) => {
@@ -260,6 +257,17 @@ const fundsAndBalance = ref<any>({
   ProjectBalance: {}
 });
 
+const getCurrentUserInfo = async () => {
+  try {
+    const resp = await getInfo();
+    console.log('获取用户信息成功:', resp);
+    userInfo.value.user = resp.data.user; // 直接赋值
+    console.log('userInfo.value:', userInfo.value);
+  } catch (error) {
+    console.error('获取用户信息失败:', error); // 错误处理
+  }
+};
+
 function handleDownload(row: any) {
   proxy?.$download.oss(row.ossId);
 }
@@ -281,13 +289,15 @@ const columnStyle = ({ columnIndex }) => {
 };
 
 const getProjectDetail = async (projectId: number | string) => {
-  const resp = await getProjectDetails(projectId);
-  projectDetails.projectInfoVO = resp.data.projectInfoVO;
-  projectDetails.projectPlanVOList = resp.data.projectPlanVOList;
-  projectDetails.projectTargetVOList = resp.data.projectTargetVOList;
-  projectDetails.projectUserVoList = resp.data.projectUserVoList;
-  projectDetails.projectFundsVO = resp.data.projectFundsVO;
-  projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
+  await getProjectDetails(projectId).then((resp) => {
+    projectDetails.projectInfoVO = resp.data.projectInfoVO;
+    projectDetails.projectPlanVOList = resp.data.projectPlanVOList;
+    projectDetails.projectTargetVOList = resp.data.projectTargetVOList;
+    projectDetails.projectUserVoList = resp.data.projectUserVoList;
+    projectDetails.projectFundsVO = resp.data.projectFundsVO;
+    projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
+    loading.value = false;
+  });
 };
 
 const getFundsReceive = async (projectId: number | string) => {
@@ -302,10 +312,11 @@ const getExpenditure = async (projectId: number | string) => {
 };
 
 const getFundsAndBalance = async (projectId: number | string) => {
-  const resp = await getFundsAndBalanceByProjectId(projectId);
-  fundsAndBalance.value.projectBalance = resp.data.projectBalance;
-  fundsAndBalance.value.projectFunds = resp.data.projectFunds;
-  await handleData(fundsAndBalance.value.projectFunds, fundsAndBalance.value.projectBalance);
+  await getFundsAndBalanceByProjectId(projectId).then((resp) => {
+    fundsAndBalance.value.projectBalance = resp.data.projectBalance;
+    fundsAndBalance.value.projectFunds = resp.data.projectFunds;
+    handleData(fundsAndBalance.value.projectFunds, fundsAndBalance.value.projectBalance);
+  });
 };
 
 const handleData = async (projectFunds, projectBalance) => {
@@ -937,6 +948,11 @@ watch(
   },
   { immediate: true }
 );
+
+onMounted(() => {
+  getCurrentUserInfo();
+  console.log('userInfo', userInfo);
+});
 </script>
 
 <style scoped>
