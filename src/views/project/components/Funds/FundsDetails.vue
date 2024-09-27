@@ -72,7 +72,7 @@
                 <div style="font-weight: bolder; display: block; margin-right: 5px">专项经费到账总额:</div>
               </template>
               <template #suffix>
-                <span style="color: red; font-size: small">万元</span>
+                <span style="color: red; font-size: small; font-weight: bolder">万元</span>
               </template>
             </el-statistic>
           </el-card>
