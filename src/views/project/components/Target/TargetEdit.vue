@@ -3,7 +3,7 @@
     <div>
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button v-hasPermi="['project:expense:receivedAdd']" type="primary" plain icon="plus" @click="handleAdd"> 新增推进情况 </el-button>
+          <el-button v-hasPermi="['project:target:addProgress']" type="primary" plain icon="plus" @click="handleAdd"> 新增推进情况 </el-button>
         </el-col>
       </el-row>
       <div style="margin-top: 10px"></div>
@@ -25,10 +25,10 @@
             </el-table-column>
             <el-table-column label="操作" :resizable="false" align="center" width="165px" fixed="right">
               <template #default="{ row }">
-                <el-button v-hasPermi="['project:expense:receivedEdit']" type="text" icon="edit" size="small" @click="handleEdit(row)"
+                <el-button v-hasPermi="['project:target:updateProgress']" type="text" icon="edit" size="small" @click="handleEdit(row)"
                   >修改</el-button
                 >
-                <el-button v-hasPermi="['project:expense:receivedDelete']" type="text" icon="delete" size="small" @click="handleDelete(row)"
+                <el-button v-hasPermi="['project:target:deleteProgress']" type="text" icon="delete" size="small" @click="handleDelete(row)"
                   >删除</el-button
                 >
               </template>

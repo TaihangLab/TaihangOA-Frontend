@@ -70,7 +70,7 @@
         <template #header>
           <el-row :gutter="10">
             <el-col :span="1.5">
-              <el-button type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
+              <el-button v-has-permi="['project:my:add']" type="primary" plain icon="Plus" @click="showAddDialog">新增</el-button>
             </el-col>
             <el-col :span="1.5">
               <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
@@ -129,19 +129,37 @@
           <el-table-column fixed="right" label="操作" width="180">
             <template #default="scope">
               <el-tooltip content="查看大事记" placement="top">
-                <el-button link type="primary" icon="Notebook" @click="showMilestoneDetailDialog(scope.row)"></el-button>
+                <el-button
+                  v-has-permi="['project:list:queryMilestone']"
+                  link
+                  type="primary"
+                  icon="Notebook"
+                  @click="showMilestoneDetailDialog(scope.row)"
+                ></el-button>
               </el-tooltip>
               <el-tooltip content="新增大事记" placement="top">
-                <el-button link type="primary" icon="DocumentAdd" @click="showMilestoneAddDialog(scope.row)"></el-button>
+                <el-button
+                  v-has-permi="['project:my:milestoneadd']"
+                  link
+                  type="primary"
+                  icon="DocumentAdd"
+                  @click="showMilestoneAddDialog(scope.row)"
+                ></el-button>
               </el-tooltip>
               <el-tooltip content="详情" placement="top">
-                <el-button link type="primary" icon="Reading" @click="showDetailDialog(scope.row)"></el-button>
+                <el-button
+                  v-has-permi="['project:list:getDetails']"
+                  link
+                  type="primary"
+                  icon="Reading"
+                  @click="showDetailDialog(scope.row)"
+                ></el-button>
               </el-tooltip>
               <el-tooltip content="修改" placement="top">
-                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
+                <el-button v-has-permi="['project:my:edit']" link type="primary" icon="Edit" @click="handleUpdate(scope.row)"></el-button>
               </el-tooltip>
               <el-tooltip content="删除" placement="top">
-                <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
+                <el-button v-has-permi="['project:my:delete']" link type="primary" icon="Delete" @click="handleDelete(scope.row)"></el-button>
               </el-tooltip>
             </template>
           </el-table-column>

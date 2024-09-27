@@ -62,7 +62,7 @@
           <template #default="scope">
             <el-tooltip content="指标详情" placement="top">
               <el-button
-                v-hasPermi="['system:role:edit']"
+                v-hasPermi="['project:target:detail']"
                 link
                 type="primary"
                 icon="Reading"
@@ -70,13 +70,7 @@
               ></el-button>
             </el-tooltip>
             <el-tooltip content="编辑指标" placement="top">
-              <el-button
-                v-hasPermi="['system:role:edit']"
-                link
-                type="primary"
-                icon="Edit"
-                @click="showTargetEditDialog(scope.row.projectId)"
-              ></el-button>
+              <el-button link type="primary" icon="Edit" @click="showTargetEditDialog(scope.row.projectId)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>

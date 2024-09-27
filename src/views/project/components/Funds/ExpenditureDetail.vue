@@ -38,7 +38,7 @@
         <el-form-item style="width: 500px">
           <el-button type="primary" icon="search" @click="handleQuery">搜索</el-button>
           <el-button icon="refresh" @click="resetQuery">重置</el-button>
-          <el-button type="success" icon="download" @click="handleExport">导出</el-button>
+          <el-button v-hasPermi="['project:expense:export']" type="success" icon="download" @click="handleExport">导出</el-button>
         </el-form-item>
       </el-form>
       <el-table
@@ -46,8 +46,6 @@
         :data="expenditureDetailList"
         border
         style="width: 100%; max-height: 800px; overflow-y: auto"
-        :row-style="{ height: '50px' }"
-        :cell-style="{ padding: '0px' }"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>

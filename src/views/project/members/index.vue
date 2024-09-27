@@ -71,7 +71,13 @@
         <el-table-column fixed="right" label="操作" width="70px">
           <template #default="scope">
             <el-tooltip content="详情" placement="top">
-              <el-button v-hasPermi="['system:role:edit']" link type="primary" icon="Reading" @click="showDetailDialog(scope.row.userId)"></el-button>
+              <el-button
+                v-hasPermi="['project:user:getDetails']"
+                link
+                type="primary"
+                icon="Reading"
+                @click="showDetailDialog(scope.row.userId)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>

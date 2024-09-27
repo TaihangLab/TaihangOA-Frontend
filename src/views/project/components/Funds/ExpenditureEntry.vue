@@ -3,16 +3,16 @@
     <div style="max-height: 700px">
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:add']" type="primary" plain icon="plus" @click="handleAdd(props.projectId)">新增</el-button>
+          <el-button v-hasPermi="['project:expense:add']" type="primary" plain icon="plus" @click="handleAdd(props.projectId)">新增</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="info" plain icon="upload" @click="handleImport">导入</el-button>
+          <el-button v-hasPermi="['project:expense:import']" type="info" plain icon="upload" @click="handleImport">导入</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
+          <el-button v-hasPermi="['project:expense:add']" type="success" icon="Check" plain @click="addFunds">提交</el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button v-hasPermi="['system:user:import']" type="warning" icon="Refresh" plain @click="refreshData">重置</el-button>
+          <el-button type="warning" icon="Refresh" plain @click="refreshData">重置</el-button>
         </el-col>
       </el-row>
       <el-table ref="multipleTable" :data="expenditureData" border style="width: 100%; max-height: 500px; overflow-y: auto">

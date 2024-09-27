@@ -55,7 +55,7 @@
           <template #default="scope">
             <el-tooltip content="详情" placement="top">
               <el-button
-                v-hasPermi="['system:role:edit']"
+                v-hasPermi="['project:expense:fundsAndBalance']"
                 link
                 type="primary"
                 icon="Reading"
@@ -64,7 +64,7 @@
             </el-tooltip>
             <el-tooltip content="查看支出" placement="top">
               <el-button
-                v-hasPermi="['system:role:edit']"
+                v-hasPermi="['project:expense:view']"
                 link
                 type="primary"
                 icon="view"
@@ -72,17 +72,11 @@
               ></el-button>
             </el-tooltip>
             <el-tooltip content="支出录入" placement="top">
-              <el-button
-                v-hasPermi="['system:role:edit']"
-                link
-                type="primary"
-                icon="document-add"
-                @click="showExpenditureEditDialog(scope.row.projectId)"
-              ></el-button>
+              <el-button link type="primary" icon="document-add" @click="showExpenditureEditDialog(scope.row.projectId)"></el-button>
             </el-tooltip>
             <el-tooltip content="经费到账" placement="top">
               <el-button
-                v-hasPermi="['system:role:edit']"
+                v-hasPermi="['project:expense:receivedList']"
                 link
                 type="primary"
                 icon="Money"
