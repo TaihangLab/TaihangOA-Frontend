@@ -5,7 +5,7 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions border v-loading="loading">
+          <el-descriptions v-loading="loading" border>
             <el-descriptions-item label="项目名称" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
@@ -66,6 +66,17 @@
         <!-- 经费到账 -->
         <el-tab-pane label="经费到账" name="经费到账">
           <div style="margin-top: 5px"></div>
+          <el-card style="margin: 0; padding: 0" shadow="hover">
+            <el-statistic :value="projectDetails.projectFundsVO.totalFundsZxDk" style="margin-left: 20px">
+              <template #prefix>
+                <div style="font-weight: bolder; display: block; margin-right: 5px">专项经费到账总额:</div>
+              </template>
+              <template #suffix>
+                <span style="color: red; font-size: small">万元</span>
+              </template>
+            </el-statistic>
+          </el-card>
+          <div style="margin-top: 15px"></div>
           <el-table style="margin: 0; padding: 0" :data="fundsReceivedList" border>
             <el-table-column align="center" prop="amountReceived" :show-overflow-tooltip="true">
               <template #header>
