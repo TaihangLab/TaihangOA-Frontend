@@ -29,11 +29,11 @@
     <el-card header="项目经费情况" shadow="hover">
       <el-form ref="form" :model="form" label-position="left">
         <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label-width="125px" label="专项到款总额">
-              <el-input v-model.number="$props.form.totalFundsZxDk" type="number"></el-input>
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="8">-->
+          <!--            <el-form-item label-width="125px" label="专项到款总额">-->
+          <!--              <el-input v-model.number="$props.form.totalFundsZxDk" type="number"></el-input>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
           <el-col :span="8">
             <el-form-item label-width="125px" label="已完成自筹投资">
               <el-input v-model.number="$props.form.zctzDone" type="number"></el-input>

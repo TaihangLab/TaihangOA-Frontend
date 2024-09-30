@@ -309,6 +309,7 @@ const getProjectDetail = async (projectId: number | string) => {
     projectDetails.projectAttachmentVOList = resp.data.projectAttachmentVOList;
     loading.value = false;
   });
+  loading.value = false;
 };
 
 const getFundsReceive = async (projectId: number | string) => {
