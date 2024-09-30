@@ -67,7 +67,7 @@
         <el-tab-pane label="经费到账" name="经费到账">
           <div style="margin-top: 5px"></div>
           <el-card style="margin: 0; padding: 0" shadow="hover">
-            <el-statistic :value="projectDetails.projectFundsVO.totalFundsZxDk" style="margin-left: 20px">
+            <el-statistic :value="projectDetails.projectFundsVO.totalFundsZxDk" precision="6" style="margin-left: 20px">
               <template #prefix>
                 <div style="font-weight: bolder; display: block; margin-right: 5px">专项经费到账总额:</div>
               </template>
