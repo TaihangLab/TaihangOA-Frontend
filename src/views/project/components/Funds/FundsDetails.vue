@@ -5,7 +5,7 @@
         <!-- 基本信息 -->
         <el-tab-pane label="基本信息" name="基本信息">
           <div style="margin-top: 5px"></div>
-          <el-descriptions v-loading="loading" border>
+          <el-descriptions border>
             <el-descriptions-item label="项目名称" width="120px" :span="1">
               {{ projectDetails.projectInfoVO.assignedSubjectName }}
             </el-descriptions-item>
