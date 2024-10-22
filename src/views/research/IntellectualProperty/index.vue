@@ -71,7 +71,7 @@
             <el-button v-hasPermi="['project:ip:add']" type="primary" plain icon="Plus" @click="handleAdd">新增 </el-button>
           </el-col>
           <el-col :span="1.5">
-            <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+            <el-button type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearchRef" @query-table="resetQuery"></right-toolbar>
         </el-row>
@@ -432,7 +432,13 @@ const onSubmit = () => {
 };
 
 const handleExport = () => {
-  proxy.$modal.msgError('导出功能未实现');
+  proxy?.download(
+    'ip/export',
+    {
+      ...ipParams.value
+    },
+    `ip_${new Date().getTime()}.xlsx`
+  );
 };
 
 // 组件挂载时执行

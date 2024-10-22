@@ -222,11 +222,10 @@ const handleSelectionChange = (selection: any[]) => {
 };
 
 function handleExport() {
-  const selectedIds = selectedExpenditures.value.map((expenditure) => expenditure.expenditureId);
   proxy?.download(
     '/project/funds/exportData',
     {
-      selectedIds
+      ...form.value
     },
     `支出明细数据_${new Date().getTime()}.xlsx`
   );

@@ -38,7 +38,7 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+            <el-button type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearch" @query-table="resetQuery"></right-toolbar>
         </el-row>
@@ -180,11 +180,11 @@ const resetQuery = () => {
 /** 导出按钮操作 */
 const handleExport = () => {
   proxy?.download(
-    'project/members/export',
+    'project/user/exportData',
     {
-      ...queryParams.value
+      ...form.value
     },
-    `members_${new Date().getTime()}.xlsx`
+    `member_${new Date().getTime()}.xlsx`
   );
 };
 
