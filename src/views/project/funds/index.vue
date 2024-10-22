@@ -28,7 +28,7 @@
       <template #header>
         <el-row :gutter="10">
           <el-col :span="1.5">
-            <el-button disabled type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+            <el-button type="warning" plain icon="Download" @click="handleExport">导出</el-button>
           </el-col>
           <right-toolbar v-model:showSearch="showSearch" @query-table="getAllProjectList"></right-toolbar>
         </el-row>
@@ -137,7 +137,6 @@ const { pro_level_type } = toRefs<any>(proxy?.useDict('pro_level_type'));
 const projectList = ref<ProjectFundsManagementVO[]>([]);
 const loading = ref(true);
 const showSearch = ref(true);
-const ids = ref<Array<string | number>>([]);
 const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
@@ -239,11 +238,11 @@ const resetQuery = () => {
 /** 导出按钮操作 */
 const handleExport = () => {
   proxy?.download(
-    'system/role/export',
+    'project/funds/exportListData',
     {
-      ...queryParams.value
+      ...form.value
     },
-    `role_${new Date().getTime()}.xlsx`
+    `funds_${new Date().getTime()}.xlsx`
   );
 };
 /** 多选框选中数据 */
