@@ -213,7 +213,7 @@
 <script setup lang="ts" name="IntellectualProperty">
 import { ref } from 'vue';
 import IntellectualDetails from '../components/IntellectualProperty/IntellectualDetail.vue';
-import api, { getProjectIdNameMap } from '@/api/research/IntellectualProperty/index';
+import api, { exportIntellectualPropertyList, getProjectIdNameMap } from '@/api/research/IntellectualProperty/index';
 import { Option } from 'element-plus/es/components/segmented/src/types';
 import { userTreeSelect } from '@/api/system/user';
 import { IntellectualPropertyBO, IntellectualPropertyDetailVO, IntellectualPropertyVO } from '@/api/research/IntellectualProperty/types';
@@ -432,13 +432,16 @@ const onSubmit = () => {
 };
 
 const handleExport = () => {
-  proxy?.download(
-    'ip/export',
-    {
-      ...ipParams.value
-    },
-    `ip_${new Date().getTime()}.xlsx`
-  );
+  exportIntellectualPropertyList(data.ipParams)
+    .then((response) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `知识产权_${new Date().getTime()}.xlsx`; // 设置下载文件名
+      link.click();
+      window.URL.revokeObjectURL(url);
+    });
 };
 
 // 组件挂载时执行

@@ -44,7 +44,7 @@
         </el-row>
       </template>
 
-      <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" style="width: 100%" @selection-change="handleSelectionChange">
+      <el-table ref="memberTableRef" v-loading="loading" border :data="memberList" style="width: 100%">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="姓名" fixed="left" prop="nickName" :show-overflow-tooltip="true" width="190" />
         <el-table-column label="所属公司" prop="companyName" :show-overflow-tooltip="true" width="200" />
@@ -99,7 +99,7 @@
 <script setup name="Members" lang="ts">
 import { ref } from 'vue';
 import MemberDetail from '@/views/project/components/Member/MemberDetails.vue';
-import { getAllList } from '@/api/project/members';
+import { exportProjectMemberList, getAllList } from '@/api/project/members';
 import { ProjectUserBo, ProjectUserVo } from '@/api/project/members/types';
 import { getProjectTree } from '@/api/research/IntellectualProperty';
 import { userTreeSelect } from '@/api/system/user';
@@ -179,17 +179,16 @@ const resetQuery = () => {
 
 /** 导出按钮操作 */
 const handleExport = () => {
-  proxy?.download(
-    'project/user/exportData',
-    {
-      ...form.value
-    },
-    `member_${new Date().getTime()}.xlsx`
-  );
-};
-
-const handleSelectionChange = () => {
-  console.log('handleSelectionChange');
+  exportProjectMemberList(data.form)
+    .then((response) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `项目成员_${new Date().getTime()}.xlsx`; // 设置下载文件名
+      link.click();
+      window.URL.revokeObjectURL(url);
+    })
 };
 
 onMounted(() => {

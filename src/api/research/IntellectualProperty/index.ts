@@ -66,6 +66,16 @@ export function getIntellectualPropertyList(PageQuery: PageQuery, data: Intellec
   });
 }
 
+//导出知识产权列表
+export function exportIntellectualPropertyList(data: IntellectualPropertyBO): AxiosPromise<Blob> {
+  return request({
+    url: '/ip/export',
+    method: 'post',
+    data: data,
+    responseType: 'blob'
+  });
+}
+
 export default {
   addIntellectualProperty,
   deleteIntellectualProperty,

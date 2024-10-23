@@ -22,3 +22,13 @@ export function getAllList(PageQuery: PageQuery, data: ProjectUserBo): AxiosProm
     data: data
   });
 }
+
+//导出项目成员列表
+export function exportProjectMemberList(data: ProjectUserBo): AxiosPromise<Blob> {
+  return request({
+    url: '/project/user/exportData',
+    method: 'post',
+    data: data,
+    responseType: 'blob'
+  });
+}

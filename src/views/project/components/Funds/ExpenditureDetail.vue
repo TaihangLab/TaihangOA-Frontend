@@ -46,9 +46,7 @@
         :data="expenditureDetailList"
         border
         style="width: 100%; max-height: 800px; overflow-y: auto"
-        @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column label="日期" :resizable="false" align="center" width="100px">
           <template #default="scope">
             {{ formatDate(scope.row.expenditureDate) }}
@@ -118,7 +116,11 @@
 <script setup Name="ExpenditureDetail" lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { exportExpenditure, getProjectExpenditureList, rollBackProjectExpenditure } from '@/api/project/funds';
+import {
+  exportExpenditureData,
+  getProjectExpenditureList,
+  rollBackProjectExpenditure
+} from '@/api/project/funds';
 import { formatDate } from '@/utils';
 import { getDicts } from '@/api/system/dict/data';
 import { ProjectExpenditureBO, ProjectExpenditureVO } from '@/api/project/funds/types';
@@ -217,18 +219,17 @@ const resetQuery = () => {
   fetchProjectExpenditureList();
 };
 
-const handleSelectionChange = (selection: any[]) => {
-  selectedExpenditures.value = selection;
-};
-
 function handleExport() {
-  proxy?.download(
-    '/project/funds/exportData',
-    {
-      ...form.value
-    },
-    `支出明细数据_${new Date().getTime()}.xlsx`
-  );
+  exportExpenditureData(data.form)
+    .then((response) => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url; // 设置 href 为 Blob URL
+      link.download = `支出明细_${new Date().getTime()}.xlsx`; // 设置下载文件名
+      link.click();
+      window.URL.revokeObjectURL(url);
+    })
 }
 watch(
   () => props.projectId,

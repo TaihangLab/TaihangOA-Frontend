@@ -19,7 +19,7 @@ export function getProjectList(pageQuery: PageQuery, bodyData: ProjectBaseInfoBO
   });
 }
 
-export function exportListData(bodyData: ProjectBaseInfoBO): AxiosPromise<Blob> {
+export function exportFundsData(bodyData: ProjectBaseInfoBO): AxiosPromise<Blob> {
   return request({
     url: 'project/funds/exportListData',
     method: 'post',
@@ -62,11 +62,11 @@ export function importExpenditureData(file: File): AxiosPromise<any> {
 }
 
 // 导出支出信息
-export function exportExpenditure(ids: number[]): AxiosPromise<Blob> {
+export function exportExpenditureData(bodyData:ProjectExpenditureBO): AxiosPromise<Blob> {
   return request({
     url: '/project/funds/exportData',
     method: 'post',
-    data: ids,
+    data: bodyData,
     responseType: 'blob'
   });
 }
