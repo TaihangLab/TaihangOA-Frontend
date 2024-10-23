@@ -235,22 +235,48 @@ const resetQuery = () => {
   handleQuery();
 };
 
+// const handleExport = () => {
+//   // proxy?.download(
+//   //   'project/funds/exportListData',
+//   //   {
+//   //     ...data.form
+//   //   },
+//   //   `funds_${new Date().getTime()}.xlsx`
+//   // );
+//   exportListData(data.form).then((response) => {
+//     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+//     const link = document.createElement('a');
+//     link.href = window.URL.createObjectURL(blob);
+//     link.download = `funds_${new Date().getTime()}.xlsx`;
+//     link.click();
+//   });
+// };
 /** 导出按钮操作 */
 const handleExport = () => {
-  // proxy?.download(
-  //   'project/funds/exportListData',
-  //   {
-  //     ...form.value
-  //   },
-  //   `funds_${new Date().getTime()}.xlsx`
-  // );
-  exportListData(data.form).then((response) => {
-    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `funds_${new Date().getTime()}.xlsx`;
-    link.click();
-  });
+  const bodyData = data.form; // 获取请求体数据
+
+  exportListData(bodyData)
+    .then((response) => {
+      // 创建 Blob 对象
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+
+      // 创建一个临时的 Blob URL
+      const url = window.URL.createObjectURL(blob);
+
+      // 创建一个链接元素
+      const link = document.createElement('a');
+      link.href = url; // 设置 href 为 Blob URL
+      link.download = `funds_${new Date().getTime()}.xlsx`; // 设置下载文件名
+
+      // 触发下载
+      link.click();
+
+      // 清理 Blob URL
+      window.URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('文件下载失败:', error);
+    });
 };
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: number[]) => {
