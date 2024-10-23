@@ -128,7 +128,7 @@ import { ref } from 'vue';
 import ExpenditureEntry from '../components/Funds/ExpenditureEntry.vue';
 import FundsReceived from '@/views/project/components/Funds/FundsReceived.vue';
 import { ProjectBaseInfoBO, ProjectFundsManagementVO } from '@/api/project/funds/types';
-import { getProjectList } from '@/api/project/funds';
+import { exportExpenditure, exportListData, getProjectList } from '@/api/project/funds';
 import ExpenditureDetail from '@/views/project/components/Funds/ExpenditureDetail.vue';
 import FundsDetail from '@/views/project/components/Funds/FundsDetails.vue';
 
@@ -237,13 +237,20 @@ const resetQuery = () => {
 
 /** 导出按钮操作 */
 const handleExport = () => {
-  proxy?.download(
-    'project/funds/exportListData',
-    {
-      ...form.value
-    },
-    `funds_${new Date().getTime()}.xlsx`
-  );
+  // proxy?.download(
+  //   'project/funds/exportListData',
+  //   {
+  //     ...form.value
+  //   },
+  //   `funds_${new Date().getTime()}.xlsx`
+  // );
+  exportListData(data.form).then((response) => {
+    const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `funds_${new Date().getTime()}.xlsx`;
+    link.click();
+  });
 };
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: number[]) => {

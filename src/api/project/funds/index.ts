@@ -19,6 +19,15 @@ export function getProjectList(pageQuery: PageQuery, bodyData: ProjectBaseInfoBO
   });
 }
 
+export function exportListData(bodyData: ProjectBaseInfoBO): AxiosPromise<Blob> {
+  return request({
+    url: 'project/funds/exportListData',
+    method: 'post',
+    data: bodyData,
+    responseType: 'blob' // 确保响应类型为 blob，以处理文件下载
+  });
+}
+
 export function addProjectExpenditure(bodyData: ProjectExpenditureBO[]): AxiosPromise<any> {
   return request({
     url: '/project/funds/add',
