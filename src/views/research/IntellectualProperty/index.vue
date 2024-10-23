@@ -33,7 +33,7 @@
               <el-cascader
                 v-model="ipParams.userId"
                 :options="userOptions"
-                :props="{ value: 'id', label: 'label', children: 'children', emitPath: false}"
+                :props="{ value: 'id', label: 'label', children: 'children', emitPath: false }"
                 clearable
                 :show-all-levels="false"
                 placeholder="请选择项目成员"
@@ -432,16 +432,15 @@ const onSubmit = () => {
 };
 
 const handleExport = () => {
-  exportIntellectualPropertyList(data.ipParams)
-    .then((response) => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `知识产权_${new Date().getTime()}.xlsx`; // 设置下载文件名
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
+  exportIntellectualPropertyList(data.ipParams).then((response) => {
+    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `知识产权_${new Date().getTime()}.xlsx`; // 设置下载文件名
+    link.click();
+    window.URL.revokeObjectURL(url);
+  });
 };
 
 // 组件挂载时执行

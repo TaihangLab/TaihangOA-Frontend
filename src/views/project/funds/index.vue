@@ -237,21 +237,20 @@ const resetQuery = () => {
 
 /** 导出按钮操作 */
 const handleExport = () => {
-  exportFundsData(data.form)
-    .then((response) => {
-      // 创建 Blob 对象
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-      // 创建一个临时的 Blob URL
-      const url = window.URL.createObjectURL(blob);
-      // 创建一个链接元素
-      const link = document.createElement('a');
-      link.href = url; // 设置 href 为 Blob URL
-      link.download = `项目经费_${new Date().getTime()}.xlsx`; // 设置下载文件名
-      // 触发下载
-      link.click();
-      // 清理 Blob URL
-      window.URL.revokeObjectURL(url);
-    })
+  exportFundsData(data.form).then((response) => {
+    // 创建 Blob 对象
+    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    // 创建一个临时的 Blob URL
+    const url = window.URL.createObjectURL(blob);
+    // 创建一个链接元素
+    const link = document.createElement('a');
+    link.href = url; // 设置 href 为 Blob URL
+    link.download = `项目经费_${new Date().getTime()}.xlsx`; // 设置下载文件名
+    // 触发下载
+    link.click();
+    // 清理 Blob URL
+    window.URL.revokeObjectURL(url);
+  });
 };
 /** 多选框选中数据 */
 const handleSelectionChange = (selection: number[]) => {

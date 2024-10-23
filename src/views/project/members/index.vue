@@ -188,7 +188,7 @@ const handleExport = () => {
       link.download = `项目成员_${new Date().getTime()}.xlsx`; // 设置下载文件名
       link.click();
       window.URL.revokeObjectURL(url);
-    })
+    });
 };
 
 onMounted(() => {
