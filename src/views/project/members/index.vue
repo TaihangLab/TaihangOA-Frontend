@@ -179,16 +179,15 @@ const resetQuery = () => {
 
 /** 导出按钮操作 */
 const handleExport = () => {
-  exportProjectMemberList(data.form)
-    .then((response) => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `项目成员_${new Date().getTime()}.xlsx`; // 设置下载文件名
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
+  exportProjectMemberList(data.form).then((response) => {
+    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `项目成员_${new Date().getTime()}.xlsx`; // 设置下载文件名
+    link.click();
+    window.URL.revokeObjectURL(url);
+  });
 };
 
 onMounted(() => {

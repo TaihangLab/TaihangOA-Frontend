@@ -62,7 +62,7 @@ export function importExpenditureData(file: File): AxiosPromise<any> {
 }
 
 // 导出支出信息
-export function exportExpenditureData(bodyData:ProjectExpenditureBO): AxiosPromise<Blob> {
+export function exportExpenditureData(bodyData: ProjectExpenditureBO): AxiosPromise<Blob> {
   return request({
     url: '/project/funds/exportData',
     method: 'post',
