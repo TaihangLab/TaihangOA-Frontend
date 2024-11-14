@@ -159,8 +159,6 @@ const data = reactive({
 });
 const { form, queryParams } = toRefs(data);
 
-const selectedExpenditures = ref<any[]>([]);
-
 const initOptions = () => {
   const dicts = [
     { key: 'pro_first_subject', ref: firstLevelSubjectOptions },
