@@ -1,9 +1,8 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">山西云时代项目管理系统</h3>
       <div class="title-box">
-        <h3 class="title">RuoYi-Vue-Plus多租户管理系统</h3>
+        <h3 class="title">山西云时代项目管理系统</h3>
         <lang-select />
       </div>
       <el-form-item v-if="tenantEnabled" prop="tenantId">
@@ -74,7 +73,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2024 山西太行实验室 All Rights Reserved.</span>
+      <span>Copyright © 2025 山西太行实验室 All Rights Reserved.</span>
     </div>
   </div>
 </template>
