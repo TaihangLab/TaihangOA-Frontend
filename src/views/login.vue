@@ -304,7 +304,7 @@ onMounted(() => {
       border-radius: 8px;
       border: 1px solid rgba(144, 144, 144, 0.25);
       transition: all 0.3s;
-      
+
       &:focus {
         border-color: rgba(76, 175, 80, 0.6);
         box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
@@ -358,7 +358,7 @@ onMounted(() => {
     color: #4CAF50;
     text-decoration: none;
     transition: all 0.3s;
-    
+
     &:hover {
       color: #367c39;
       text-decoration: underline;
@@ -383,7 +383,7 @@ onMounted(() => {
     vertical-align: middle;
     border-radius: 4px;
     transition: all 0.3s ease;
-    
+
     &:hover {
       opacity: 0.9;
     }
@@ -417,11 +417,11 @@ onMounted(() => {
     width: 400px;
     height: auto;
   }
-  
+
   .login-left {
     display: none;
   }
-  
+
   .login-right {
     width: 100%;
   }
