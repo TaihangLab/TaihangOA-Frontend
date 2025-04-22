@@ -9,6 +9,7 @@
       </el-row>
     </div>
     <!-- 轮播器 -->
+
     <el-carousel :interval="4000" type="card" height="300px" style="margin-top: 10px">
       <el-carousel-item>
         <a href="https://www.baidu.com" target="_blank">
@@ -26,6 +27,7 @@
         </a>
       </el-carousel-item>
     </el-carousel>
+
     <!-- 公告和成员信息 -->
     <el-row style="margin-top: 10px">
       <!-- 公告 -->
