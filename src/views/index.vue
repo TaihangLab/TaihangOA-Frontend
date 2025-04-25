@@ -1,16 +1,21 @@
 <template>
   <div class="home">
     <!-- 标题 -->
-    <div id="curtain" style="width: 100%; height: 100px">
-      <el-row justify="center" align="middle" style="height: 100px" class="background-title">
-        <el-col :span="24">
-          <h1 class="centered-title" style="margin-top: -8px" data-text="山西云时代技术有限公司">{{ titleText }}</h1>
-        </el-col>
-      </el-row>
+    <div id="header-section">
+      <div class="header-container">
+        <div class="company-logo">
+          <img src="../assets/images/logo.png" alt="公司Logo" class="logo-image" />
+        </div>
+        <div class="company-title">
+          <h1>山西云时代技术有限公司</h1>
+          <div class="title-divider"></div>
+          <p>专注技术创新 · 引领行业未来</p>
+        </div>
+      </div>
     </div>
     <!-- 轮播器 -->
 
-    <el-carousel :interval="4000" type="card" height="300px" style="margin-top: 10px">
+    <el-carousel :interval="4000" type="card" height="300px" style="margin-top: 20px">
       <el-carousel-item>
         <a href="https://www.baidu.com" target="_blank">
           <img src="../assets/images/主页轮播器1.jpg" alt="Image 1" style="width: 100%" />
@@ -454,36 +459,58 @@ onUnmounted(() => {
   padding: 20px;
 }
 
-#curtain {
-  position: relative;
+// 新的标题样式
+#header-section {
+  width: 100%;
+  padding: 30px 0;
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.background-title {
-  background-color: #4158d0;
-  background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
 }
 
-.centered-title {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 60px;
-  white-space: nowrap;
-  font-weight: bold;
-  font-family: 'Microsoft YaHei';
+.company-logo {
+  margin-right: 30px;
 }
 
-.centered-title::before {
-  content: attr(data-text);
-  position: absolute;
-  transform: rotateX(180deg);
-  transform-origin: bottom;
-  line-height: 52px;
-  background: linear-gradient(0deg, #000 0, transparent 80%);
-  -webkit-background-clip: text;
-  color: transparent;
-  opacity: 0.5;
+.logo-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.company-title {
+  text-align: left;
+}
+
+.company-title h1 {
+  font-size: 32px;
+  color: #2c3e50;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-family: "Microsoft YaHei", sans-serif;
+}
+
+.title-divider {
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, #5e72e4, #825ee4);
+  margin: 12px 0;
+}
+
+.company-title p {
+  font-size: 16px;
+  color: #6c757d;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 @keyframes slideInLeft {
